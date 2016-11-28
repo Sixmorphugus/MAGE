@@ -12,3 +12,4 @@ Unfinished game engine with:
 - Resource management
 
 #Ish good, ja!
+You can easily compile the engine with CMake (https://cmake.org/). There is no documentation to use it yet, however: the API is still in active development.
