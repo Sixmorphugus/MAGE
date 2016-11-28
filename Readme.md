@@ -1,5 +1,5 @@
 #Multiplatform Arcade Game Engine
-Unfinished game engine with:
+Unfinished SFML-based game engine with:
 - Scripting engine (chai)
 - Object oriented design
 - Shader support
