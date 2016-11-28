@@ -1,8 +1,8 @@
 #pragma once
-#include "StdAfx.h"
+#include "platform.h"
 
 // basic taggable object
-class taggable {
+class MAGEDLL taggable {
 public:
 	taggable();
 	bool hasTag(std::string tag);

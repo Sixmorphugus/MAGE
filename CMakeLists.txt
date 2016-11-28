@@ -1,8 +1,23 @@
 cmake_minimum_required(VERSION 3.6)
 
+######################
+# COMPILE PROPERTIES
+
+# all of this is contained in the MAGE project
 project(MAGE)
 
-set(MAGE_SRC "src/Game.cpp")
+# MAGE's files
+file(GLOB MAGE_SRC
+    "include/*.h"
+    "src/*.cpp"
+)
+
+# make everything output to the same place (we do not have to copy sfml's libs to where MAGE is if MAGE already outputs next to them)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+######################
+# COMPILE DEPENDENCIES
 
 add_subdirectory(extlibs) # find all externals
 
@@ -12,13 +27,23 @@ set(MAGE_SFML_INCLUDE ${CMAKE_SOURCE_DIR}/extlibs/SFML/include)
 
 set(MAGE_CHAI_INCLUDE ${CMAKE_SOURCE_DIR}/extlibs/chaiscript)
 
+######################
+# COMPILE DATA
+
 # Multipurpose Arcade Game Engine (Core)
 add_library(MAGE SHARED ${MAGE_SRC})
 include_directories("./include")
 
 target_compile_definitions(MAGE PRIVATE MAGEDLL_EXPORT) # tell MAGE's header files that they are exporting functions, not importing them
 
-# SFML + chai
+# set flags for the engine to compile properly
+if(MSVC)
+	SET(CMAKE_CXX_FLAGS "/EHsc /bigobj")
+elseif(CMAKE_COMPILER_IS_GNUCC)
+	SET(CMAKE_CXX_FLAGS "-std=c++0x")
+endif()
+
+# Link libraries - include required files
 target_link_libraries(MAGE ${MAGE_SFML_LIB})
 include_directories(${MAGE_SFML_INCLUDE})
 
@@ -29,15 +54,20 @@ if(UNIX)
 	target_link_libraries(MAGE dl)
 endif()
 
-# add the version number
+######################
+# POST-COMPILE
+
+# update the version number upon each compilation
 add_custom_command(
     TARGET MAGE
     PRE_BUILD
     COMMAND ${CMAKE_COMMAND} -DPROJECT_SOURCE_DIR="${PROJECT_SOURCE_DIR}" -DPROJECT_BINARY_DIR="${PROJECT_BINARY_DIR}" -P "${CMAKE_CURRENT_LIST_DIR}/version.cmake"
 )
 
-# ----
-# content of version.cmake
+######################
+# PRE-COMPILE
+
+# get the initial git version number (sadly this repeats code)
 
 # find git version number
 execute_process(
@@ -51,12 +81,11 @@ if(NOT GIT_VERSION)
 	set(GIT_VERSION 0)
 endif()
 
-
-
+# build.h will therefore contain our build number accurately enough to use
 configure_file (
   "${PROJECT_SOURCE_DIR}/build.h.in"
   "${PROJECT_BINARY_DIR}/build.h"
-  )
+)
 
 # ----
 
@@ -92,11 +121,4 @@ if(MSVC)
 		<DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
 	  </PropertyGroup>
 	</Project>")
-endif()
-
-# copy SFML dll files
-if(WIN32)
-	add_custom_command(TARGET MAGE POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-            ${SFML_DLLS} $<TARGET_FILE_DIR:MAGE>)
 endif()
