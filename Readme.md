@@ -1,4 +1,6 @@
 #Multiplatform Arcade Game Engine
+[Imgur](http://i.imgur.com/Ajlee5V.png)
+
 Unfinished SFML-based game engine with:
 - Scripting engine (chai)
 - Object oriented design
