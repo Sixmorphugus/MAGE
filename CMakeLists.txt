@@ -64,6 +64,10 @@ add_custom_command(
     COMMAND ${CMAKE_COMMAND} -DPROJECT_SOURCE_DIR="${PROJECT_SOURCE_DIR}" -DPROJECT_BINARY_DIR="${PROJECT_BINARY_DIR}" -P "${CMAKE_CURRENT_LIST_DIR}/version.cmake"
 )
 
+# copy base to the binary dir
+add_custom_command(TARGET MAGE POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/base $<TARGET_FILE_DIR:MAGE>/base)
+
 ######################
 # PRE-COMPILE
 
