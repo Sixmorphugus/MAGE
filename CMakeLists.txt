@@ -8,8 +8,8 @@ project(MAGE)
 
 # MAGE's files
 file(GLOB MAGE_SRC
-    "include/*.h"
-    "src/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/MAGE/*.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
 )
 
 # make everything output to the same place (we do not have to copy sfml's libs to where MAGE is if MAGE already outputs next to them)
@@ -23,9 +23,9 @@ add_subdirectory(extlibs) # find all externals
 
 # options for externals - use all sfml libs but network
 set(MAGE_SFML_LIB sfml-main sfml-system sfml-window sfml-graphics sfml-audio)
-set(MAGE_SFML_INCLUDE ${CMAKE_SOURCE_DIR}/extlibs/SFML/include)
+set(MAGE_SFML_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/extlibs/SFML/include)
 
-set(MAGE_CHAI_INCLUDE ${CMAKE_SOURCE_DIR}/extlibs/chaiscript)
+set(MAGE_CHAI_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/extlibs/chaiscript)
 
 ######################
 # COMPILE DATA
