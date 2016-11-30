@@ -32,7 +32,7 @@ set(MAGE_CHAI_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/extlibs/chaiscript)
 
 # Multipurpose Arcade Game Engine (Core)
 add_library(MAGE SHARED ${MAGE_SRC})
-include_directories("./include")
+include_directories("./include/MAGE")
 
 target_compile_definitions(MAGE PRIVATE MAGEDLL_EXPORT) # tell MAGE's header files that they are exporting functions, not importing them
 
