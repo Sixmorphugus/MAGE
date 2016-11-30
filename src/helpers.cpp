@@ -290,6 +290,10 @@ DeclareScriptingCustom(fun(&directionToVector), "directionToVector");
 DeclareScriptingCustom(fun(&generateVector), "generateVector");
 DeclareScriptingCustom(fun(&dot), "dot");
 DeclareScriptingCustom(fun(&clamp), "clamp");
+DeclareScriptingCustom(fun<float, float>(&sin), "sin");
+DeclareScriptingCustom(fun<float, float>(&cos), "cos");
+DeclareScriptingCustom(fun<float, float>(&tan), "tan");
+DeclareScriptingCustom(fun<float, float>(&abs), "abs");
 
 DeclareScriptingCustom(fun(&highestOf<float>), "highestOf");
 DeclareScriptingCustom(fun(&lowestOf<float>), "lowestOf");
