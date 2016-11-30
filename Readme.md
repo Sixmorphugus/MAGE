@@ -12,6 +12,7 @@ Unfinished SFML-based game engine with:
 - Animation
 - Scheduling and tweening
 - Resource management
+- Tilemap support
 
 #Ish good, ja!
 You can easily compile the engine with help from CMake (https://cmake.org/) to generate a visual studio project. If you're going to make a game with it, however:
