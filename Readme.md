@@ -14,8 +14,8 @@ Unfinished SFML-based game engine with:
 - Resource management
 
 #Ish good, ja!
-You can easily compile the engine with CMake (https://cmake.org/). If you're going to make a game with it, however:
-- Wait for me to actually finish and document the engine.
+You can easily compile the engine with help from CMake (https://cmake.org/) to generate a visual studio project. If you're going to make a game with it, however:
+- Wait for me to actually finish and document the engine (for now, the "documentation" is typing dump() in the console)
 - Use the MAGEDevkit (https://github.com/Sixmorphugus/MAGEDevkit) which includes a cool level editor and example project already written in for you.
 
 #Using MAGE on its own
