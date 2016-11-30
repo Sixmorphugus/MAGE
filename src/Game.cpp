@@ -237,9 +237,10 @@ void Game::draw() {
 	uiCamera->render(getRenderWindow());
 	onGameUiDraw.notify(getRenderWindow());
 
+	getRenderWindow().setView(*uiCamera.get());
+
 	// draw in the fps
 	if (showFps) {
-		getRenderWindow().setView(*uiCamera.get());
 		pDrawInfo(getRenderWindow(), sf::RenderStates(), sf::Vector2f(4.f, 4.f),
 			"Multipurpose Arcade Game Engine r" + BUILDSTRING + "\n" +
 			"FPS: " + std::to_string(fps) + "\n" +
