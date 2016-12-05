@@ -1,18 +1,20 @@
 #pragma once
-#include "basic.h"
+#include "objBasic.h"
+
+namespace mage {
 
 // casts light
-class MAGEDLL light : public objBasic
+class MAGEDLL objLight : public objBasic
 {
 public:
-	light(float posX, float posY, textureData sprite, textureData lightSprite);
+	objLight(float posX, float posY, textureData sprite, textureData lightSprite);
 
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 	virtual void registerProperties();
 
 	virtual void update(sf::Time elapsed);
 
-	CLONEABLE(light);
+	CLONEABLE(objLight);
 public:
 	sf::Color lightColor;
 	sf::Vector2f lightOffset;
@@ -21,3 +23,5 @@ public:
 
 	sf::Sprite lSpr;
 };
+
+}

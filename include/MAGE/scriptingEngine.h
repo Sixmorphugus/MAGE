@@ -8,6 +8,8 @@
 #include "hook.h"
 #include "helperMacros.h"
 
+namespace mage {
+
 class Game;
 
 // -------------------------------------------------------------
@@ -54,7 +56,7 @@ private:
 	bool init;
 };
 
-// hacky shit right here
+// hacky object to register things with
 class MAGEDLL seScriptingEngineRegistration
 {
 public:
@@ -65,9 +67,20 @@ public:
 	seScriptingEngineRegistration(ModulePtr vt); // registers a module
 };
 
+// -------------------------------------------------------------
+// FUNCTIONS
+// -------------------------------------------------------------
+
+MAGEDLL void chaiPrint(const std::string& data, const std::string& file, const std::string& function, int line);
+MAGEDLL void chaiCrash(const std::string &data);
+
+MAGEDLL void handleEvalError(const chaiscript::exception::eval_error &e);
+
+} // namespace mage {
+
 #define StartScriptingDeclaration namespace {
 #define EndScriptingDeclaration }
-#define DeclareScriptingCustom(...) StartScriptingDeclaration seScriptingEngineRegistration UNIQUE_NAME(se)(__VA_ARGS__); EndScriptingDeclaration
+#define DeclareScriptingCustom(...) StartScriptingDeclaration mage::seScriptingEngineRegistration UNIQUE_NAME(se)(__VA_ARGS__); EndScriptingDeclaration
 #define DeclareScriptingCopyOperator(obj) DeclareScriptingCustom(fun([](obj &o1, obj o2) { o1 = o2; }), "=");
 #define DeclareScriptingNamed(arg, name) DeclareScriptingCustom(arg, name);
 #define DeclareScriptingBaseClass(base, derived) DeclareScriptingCustom(base_class<base, derived>());
@@ -82,12 +95,3 @@ public:
 #define DeclareScriptingCastingFunction(name, inp, out) DeclareScriptingCustom(fun([](inp* o1) { return dynamic_cast<out*>(o1); }), name)
 
 #define BIND_COPY_OPERATOR(obj) chai->add(fun([&](obj &o1, obj o2) { o1 = o2; }), "="); // internal legacy system use only
-
-// -------------------------------------------------------------
-// FUNCTIONS
-// -------------------------------------------------------------
-
-MAGEDLL void chaiPrint(const std::string& data, const std::string& file, const std::string& function, int line);
-MAGEDLL void chaiCrash(const std::string &data);
-
-MAGEDLL void handleEvalError(const chaiscript::exception::eval_error &e);

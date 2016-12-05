@@ -1,6 +1,8 @@
 #pragma once
 #include "platform.h"
 
+namespace mage {
+
 class sfShaderResource;
 
 class MAGEDLL shadable {
@@ -21,3 +23,5 @@ public:
 private:
 	std::weak_ptr<sfShaderResource> shader;
 };
+
+} // namespace mage

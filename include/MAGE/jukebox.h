@@ -2,7 +2,9 @@
 #include "StdAfx.h"
 #include "SfmlAfx.h"
 
-// simple af class for loading music sounds from the game and playing them in one place.
+namespace mage {
+
+// simple class for loading music sounds from the game and playing them in one place.
 class Game;
 class sfMusicResource;
 
@@ -38,3 +40,4 @@ private:
 	float pitchShiftPitch;
 };
 
+} // namespace mage

@@ -1,8 +1,9 @@
 #pragma once
 #include "StdAfx.h"
 #include "platform.h"
-#include "scriptingEngine_evalError.h"
+#include "scriptingEngine.h"
 
+namespace mage {
 // very simple implementation of the observer design pattern.
 class basic;
 
@@ -84,6 +85,8 @@ public:
 private:
 	std::vector<Observer> observers;
 };
+
+} // namespace mage
 
 #define DeclareScriptingHook(name, ...) \
 DeclareScriptingCustom(user_type< hook<__VA_ARGS__> >(), name); \

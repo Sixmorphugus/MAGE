@@ -2,8 +2,10 @@
 #include "StdAfx.h"
 #include "SfmlAfx.h"
 
+namespace mage {
+
 // creates/disposes of sf::Sound objects manually to layer sounds properly
-class sfSoundBufferResource;
+class resourceSoundBuffer;
 
 class MAGEDLL mixer
 {
@@ -11,8 +13,8 @@ public:
 	mixer();
 	~mixer();
 
-	void play(std::shared_ptr<sfSoundBufferResource> sound, sf::Vector2f pan = sf::Vector2f(), bool replaceSame = true, bool generatePitch = false);
-	void stop(std::shared_ptr<sfSoundBufferResource> sound);
+	void play(std::shared_ptr<resourceSoundBuffer> sound, sf::Vector2f pan = sf::Vector2f(), bool replaceSame = true, bool generatePitch = false);
+	void stop(std::shared_ptr<resourceSoundBuffer> sound);
 	void silence();
 
 	void update();
@@ -24,9 +26,10 @@ public:
 private:
 	struct channel {
 		sf::Sound player;
-		std::shared_ptr<sfSoundBufferResource> source;
+		std::shared_ptr<resourceSoundBuffer> source;
 	};
 
 	std::vector<channel*> channels;
 };
 
+} // namespace mage

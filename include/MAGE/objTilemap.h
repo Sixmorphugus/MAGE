@@ -1,18 +1,20 @@
 #pragma once
-#include "basic.h"
+#include "objBasic.h"
 
-class MAGEDLL tilemap :
+namespace mage {
+
+class MAGEDLL objTilemap :
 	public objBasic
 {
 public:
 	class MAGEDLL tile {
 	public:
-		tile(tilemap* parent, sf::Vector2i position, int id);
+		tile(objTilemap* parent, sf::Vector2i position, int id);
 		tile();
 
 		void refreshVerts();
 
-		tilemap* getParent();
+		objTilemap* getParent();
 
 		sf::Vector2i mapPos;
 		sf::FloatRect pos;
@@ -26,11 +28,11 @@ public:
 		bool colNorth;
 		bool colWest;
 	private:
-		tilemap* prt;
+		objTilemap* prt;
 	};
 
 public:
-	tilemap(float x, float y, textureData sprite);
+	objTilemap(float x, float y, textureData sprite);
 
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 	virtual void drawShadows(sf::RenderTarget &target) const;
@@ -43,7 +45,7 @@ public:
 	virtual std::string serialize();
 	virtual bool deserialize(std::string data);
 
-	CLONEABLE(tilemap)
+	CLONEABLE(objTilemap)
 
 	void resize(unsigned int w, unsigned int h, int newT = -1);
 	sf::Vector2u size() const;
@@ -80,3 +82,5 @@ private:
 	sf::Vector2i scalarSize;
 	std::vector<sf::Vertex> drawData, shadowData;
 };
+
+} // namespace mage

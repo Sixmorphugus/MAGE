@@ -1,72 +1,14 @@
-// Chris's all-fulfilling Input script for SFML
-// "Seems legit!"
-
 #pragma once
-#include "StdAfx.h"
-#include "SfmlAfx.h"
-#include "hook.h"
+#include "inputs.h"
 
-class MAGEDLL input {
-public:
-	virtual void processEvent(sf::Event evt) = 0;
-	virtual void update() = 0;
-};
-
-// MOUSE
-// ---------------------------------------------------
-class MAGEDLL mouseMngr : public input
-{
-public:
-	mouseMngr();
-
-	void processEvent(sf::Event evt);
-	void update();
-
-	void scrollReset();
-	void reset();
-
-	bool getLeftDown();
-	bool getRightDown();
-	bool getMiddleDown();
-
-	bool getLeftPressed();
-	bool getRightPressed();
-	bool getMiddlePressed();
-
-	bool getLeftReleased();
-	bool getRightReleased();
-	bool getMiddleReleased();
-
-	void setDefaultButtonTextures();
-
-public:
-	hook<mouseMngr*> onLeftPressed;
-	hook<mouseMngr*> onRightPressed;
-	hook<mouseMngr*> onMiddlePressed;
-	hook<mouseMngr*> onLeftReleased;
-	hook<mouseMngr*> onRightReleased;
-	hook<mouseMngr*> onMiddleReleased;
-
-	sf::Vector2f position;
-
-	sf::Vector2f lpPosition;
-	sf::Vector2f lrPosition;
-
-	std::string mouseLeftTexture, mouseRightTexture, mouseMiddleTexture;
-
-	int scroll;
-	bool justUsed;
-
-private:
-	int leftState, rightState, middleState;
-};
+namespace mage {
 
 // KEYBOARD
 // ---------------------------------------------------
-class MAGEDLL keyboardMngr : public input
+class MAGEDLL inputKeyboard : public input
 {
 public:
-	keyboardMngr();
+	inputKeyboard();
 
 	class MAGEDLL keybind {
 	public:
@@ -83,8 +25,8 @@ public:
 		keybind(std::initializer_list<sf::Keyboard::Key> keysIn, bool rebindable = false);
 
 	public:
-		hook<keybind*> onPressed;
-		hook<keybind*> onReleased;
+		hook<inputKeyboard*, keybind*> onPressed;
+		hook<inputKeyboard*, keybind*> onReleased;
 
 		std::vector<sf::Keyboard::Key> keys;
 		std::vector<bool> keysIn;
@@ -125,32 +67,24 @@ private:
 	std::map<std::string, keybind> bindings;
 };
 
-bool keyboardMngr::keybind::getDown() {
+bool inputKeyboard::keybind::getDown() {
 	return s > 0;
 }
 
-bool keyboardMngr::keybind::getPressed() {
+bool inputKeyboard::keybind::getPressed() {
 	return s == 2;
 }
 
-bool keyboardMngr::keybind::getReleased() {
+bool inputKeyboard::keybind::getReleased() {
 	return s == -1;
 }
 
-bool keyboardMngr::keybind::getUp() {
+bool inputKeyboard::keybind::getUp() {
 	return s <= 0;
 }
 
-bool keyboardMngr::keybind::getIdle() {
+bool inputKeyboard::keybind::getIdle() {
 	return s == 0;
 }
 
-// CONTROLLA (COCO-COLA)
-// ---------------------------------------------------
-class controllerMngr : public input {
-	controllerMngr(int listenToIndex);
-
-	void processEvent(sf::Event evt);
-	void update();
-	// TODO
-};
+} // namespace mage

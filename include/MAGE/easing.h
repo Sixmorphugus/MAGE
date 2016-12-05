@@ -1,6 +1,8 @@
 #pragma once
 #include "StdAfx.h"
 
+namespace mage {
+
 /*
 Tweens need an easing function. The tween easing systems are:
 - Linear (doesn't do anything with its easeMode)
@@ -52,3 +54,5 @@ namespace ease {
 		float out(unsigned int step, unsigned int numSteps);
 	}
 }
+
+} // namespace mage

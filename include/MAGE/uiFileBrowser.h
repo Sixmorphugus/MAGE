@@ -1,14 +1,16 @@
 #pragma once
-#include "basic.h"
+#include "uiBasic.h"
 
-class menu;
-class boxMenu;
-class boxTextEntry;
+namespace mage {
 
-class MAGEDLL fileBrowser : public uiBasic
+class uiMenu;
+class uiBoxMenu;
+class uiBoxTextEntry;
+
+class MAGEDLL uiFileBrowser : public uiBasic
 {
 public:
-	fileBrowser(float x, float y);
+	uiFileBrowser(float x, float y);
 
 	void update(sf::Time elapsed);
 	void draw(sf::RenderTarget& target, sf::RenderStates states);
@@ -29,7 +31,9 @@ private:
 	std::string input;
 	std::string path;
 
-	boxMenu* fbMenu;
-	menu* opMenu;
-	boxTextEntry* fbTextEntry;
+	uiBoxMenu* fbMenu;
+	uiMenu* opMenu;
+	uiBoxTextEntry* fbTextEntry;
 };
+
+} // namespace mage

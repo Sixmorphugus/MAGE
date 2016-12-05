@@ -6,8 +6,10 @@
 #include "prefabs.h"
 #include "serializable.h"
 #include "helpers.h"
-#include "mageResources.h"
+#include "resourceGroup.h"
 #include "shaders.h"
+
+namespace mage {
 
 // because we're a header that the Game.h file directly uses, templates in here cannot access theGame() like everything else can.
 // we can however access other subsystem headers (i.e. prefabs.h)
@@ -98,7 +100,7 @@ template<class T = basic> class group : public groupBase
 {
 public:
 	group();
-	group(std::shared_ptr<mageGroupResource> gr); // creates group with saved objects (grabbing them from the resource when asked to and then forgetting the resource that was attached)
+	group(std::shared_ptr<resourceGroup> gr); // creates group with saved objects (grabbing them from the resource when asked to and then forgetting the resource that was attached)
 													  // you can of course create a group from another group
 
 	// replace the copy constructor and assignment operator with set
@@ -173,7 +175,7 @@ inline group<T>::group()
 }
 
 template<class T>
-inline group<T>::group(std::shared_ptr<mageGroupResource> gr)
+inline group<T>::group(std::shared_ptr<resourceGroup> gr)
 {
 	if (!gr)
 		return;
@@ -632,12 +634,14 @@ inline void group<T>::clearObjects()
 	}
 }
 
+} // namespace mage
+
 // group types
 // these all have to be custom because commas in the template list can really mess stuff up
 #define DeclareScriptingGroup(heldType, name) \
 DeclareScriptingCustom(user_type<group<heldType>>(), name) \
 DeclareScriptingCustom(constructor<group<heldType>()>(), name); \
-DeclareScriptingCustom(constructor<group<heldType>(std::shared_ptr<mageGroupResource>)>(), name); \
+DeclareScriptingCustom(constructor<group<heldType>(std::shared_ptr<resourceGroup>)>(), name); \
 DeclareScriptingCustom(base_class<groupBase, group<heldType>>()); \
 DeclareScriptingCustom(base_class<serializable, group<heldType>>()); \
 DeclareScriptingCustom(base_class<shadable, group<heldType>>()); \

@@ -1,6 +1,8 @@
 #pragma once
 #include "platform.h"
 
+namespace mage {
+
 // basic taggable object
 class MAGEDLL taggable {
 public:
@@ -10,3 +12,5 @@ public:
 public:
 	std::vector<std::string> tags;
 };
+
+} // namespace mage

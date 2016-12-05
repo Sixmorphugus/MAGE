@@ -1,11 +1,13 @@
 #pragma once
-#include "basic.h"
+#include "objBasic.h"
+
+namespace mage {
 
 // can slide across the ground, bounce off other objects etc.
-class MAGEDLL physicsObject : public objBasic
+class MAGEDLL objPhysics : public objBasic
 {
 public:
-	physicsObject(float posX, float posY, textureData sprite);
+	objPhysics(float posX, float posY, textureData sprite);
 	
 	void init();
 
@@ -19,7 +21,7 @@ public:
 
 	virtual void registerProperties();
 
-	CLONEABLE(physicsObject);
+	CLONEABLE(objPhysics);
 public:
 	sf::Vector2f velocity; // movement per frame
 	float density; // how quickly the object slows down per frame (0-1)
@@ -28,3 +30,5 @@ public:
 	hook<basic*, basic*> onImpact;
 	hook<basic*> onImpulse;
 };
+
+} // namespace mage

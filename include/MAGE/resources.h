@@ -6,6 +6,8 @@
 
 #include "platform.h"
 
+namespace mage {
+
 class resourceMngr;
 
 class loadingScreen;
@@ -31,18 +33,6 @@ public:
 private:
 	bool loaded = false;
 	std::weak_ptr<resource> selfRef;
-};
-
-// basic class for a resource using ONE file.
-class MAGEDLL filepathResource : public resource
-{
-public:
-	filepathResource();
-	filepathResource(std::string filepath);
-
-	virtual bool load();
-public:
-	std::string filepath;
 };
 
 class MAGEDLL resourceMngr {
@@ -133,6 +123,8 @@ inline std::vector<std::shared_ptr<T>> resourceMngr::listType(std::string tag)
 
 	return rcList;
 }
+
+} // namespace mage
 
 #define DeclareScriptingResource(name) \
 DeclareScriptingType(name); \

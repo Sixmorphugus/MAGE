@@ -2,10 +2,11 @@
 #include "StdAfx.h"
 #include "SfmlAfx.h"
 
-// basic rewrite of thor's animator class.
+namespace mage {
 
+// basic rewrite of thor's animator class.
 class basic;
-class sfTextureResource;
+class resourceTexture;
 
 class MAGEDLL animator
 {
@@ -17,7 +18,7 @@ public:
 	};
 
 public:
-	animator(std::shared_ptr<sfTextureResource> obj);
+	animator(std::shared_ptr<resourceTexture> obj);
 
 	void update(sf::Sprite &spr, sf::Time elapsed);
 
@@ -42,7 +43,7 @@ public:
 	std::vector<unsigned int> getFrameList();
 
 public:
-	std::shared_ptr<sfTextureResource> textureUsed;
+	std::shared_ptr<resourceTexture> textureUsed;
 	std::vector<sf::IntRect> frameRects;
 
 private:
@@ -60,3 +61,4 @@ private:
 	sf::Time toFrameEnd;
 };
 
+} // namespace mage
