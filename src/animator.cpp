@@ -1,11 +1,13 @@
-#include "animationManager.h"
+#include "animator.h"
 #include "platform.h"
 
 #include "Game.h"
 
-#include "sfResources.h"
+#include "resourceTexture.h"
 
-animator::animator(std::shared_ptr<sfTextureResource> obj)
+using namespace mage;
+
+animator::animator(std::shared_ptr<resourceTexture> obj)
 {
 	textureUsed = obj;
 
@@ -193,6 +195,7 @@ std::vector<unsigned int> animator::getFrameList()
 
 // SE
 #include "scriptingEngine.h"
+using namespace chaiscript;
 
 DeclareScriptingCustom(user_type<animator::animation>(), "animation");
 DeclareScriptingCustom(constructor<animator::animation()>(), "animation");
@@ -202,7 +205,7 @@ DeclareScriptingCustom(fun(&animator::animation::time), "time");
 DeclareScriptingCopyOperator(animator::animation);
 
 DeclareScriptingCustom(user_type<animator>(), "animator");
-DeclareScriptingCustom(constructor<animator(std::shared_ptr<sfTextureResource> in)>(), "animator");
+DeclareScriptingCustom(constructor<animator(std::shared_ptr<resourceTexture> in)>(), "animator");
 DeclareScriptingCustom(constructor<animator(const animator&)>(), "animator");
 DeclareScriptingCustom(fun(&animator::add), "add");
 DeclareScriptingCustom(fun(&animator::textureUsed), "textureUsed");

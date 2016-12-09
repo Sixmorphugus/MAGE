@@ -2,7 +2,8 @@
 
 #include "helpers.h"
 #include "Game.h"
-#include "sfResources.h"
+
+using namespace mage;
 
 namespace groupPrivate {
 	bool compareObjects(std::shared_ptr<basic> i, std::shared_ptr<basic> j) {
@@ -55,6 +56,8 @@ void groupBase::drawUiObjects(sf::RenderTarget & target, sf::RenderStates states
 #include "scriptingEngine.h"
 
 // groupBase
+using namespace chaiscript;
+
 DeclareScriptingType(groupBase);
 DeclareScriptingBaseClass(serializable, groupBase);
 DeclareScriptingBaseClass(shadable, groupBase);

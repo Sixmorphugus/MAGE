@@ -1,10 +1,11 @@
 #include "scriptingEngine.h"
 
 using namespace chaiscript;
+using namespace mage;
 
 // Chaiscript Scripting Engine Objects and binding
 
-#include "helpers.h"
+#include "stringHelpers.h"
 #include "platform.h"
 #include "Game.h"
 

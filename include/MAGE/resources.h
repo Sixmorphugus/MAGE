@@ -135,10 +135,3 @@ DeclareScriptingFunction(&resourceMngr::getAs<name>, "get_" STRING(name));\
 DeclareScriptingFunction(&resourceMngr::listType<name>, "list_" STRING(name));\
 DeclareScriptingListableNamed(std::shared_ptr<name>, STRING(name) "SharedPtrList");\
 DeclareScriptingCastingFunction("to_" STRING(name), resource, name);
-
-#define DeclareScriptingFilepathResource(name) \
-DeclareScriptingResource(name) \
-DeclareScriptingBaseClass(filepathResource, name);\
-DeclareScriptingConstructor(name(std::string), STRING(name));\
-DeclareScriptingFunction(&resourceMngr::addFolder<name>, "addFolderOf_" STRING(name));\
-DeclareScriptingCopyOperator(name);

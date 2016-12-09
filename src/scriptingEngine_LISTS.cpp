@@ -1,6 +1,8 @@
 #include "scriptingEngine.h"
-
 #include "Game.h"
+
+using namespace chaiscript::bootstrap::standard_library;
+using namespace mage;
 
 // chaiscript lists
 void scriptingEngine::bindLists()

@@ -31,7 +31,7 @@ public:
 
 	void drawBindPrompt(sf::RenderTarget &target, sf::RenderStates states, int yPosition, std::vector<std::string> keybindNames, std::string caption) const;
 	float drawInfoSimple(sf::RenderTarget &target, sf::RenderStates states, sf::Vector2f screenPos, std::string info) const;
-	float drawInfo(sf::RenderTarget &target, sf::RenderStates states, sf::Vector2f screenPos, std::string info, sf::Color col, bool center = false, unsigned int charSize = 16, float rot = 0.f, std::shared_ptr<sfFontResource> customFont = nullptr) const;
+	float drawInfo(sf::RenderTarget &target, sf::RenderStates states, sf::Vector2f screenPos, std::string info, sf::Color col, bool center = false, unsigned int charSize = 16, float rot = 0.f, std::shared_ptr<resourceFont> customFont = nullptr) const;
 
 	void drawSelf(sf::RenderTarget &target, sf::RenderStates states, sf::Vector2f screenPos, unsigned int sprite, unsigned int frame = 0, sf::Color col = sf::Color::White) const;
 

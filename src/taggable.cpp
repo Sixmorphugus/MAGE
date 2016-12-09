@@ -1,5 +1,7 @@
 #include "taggable.h"
 
+using namespace mage;
+
 taggable::taggable()
 {
 }

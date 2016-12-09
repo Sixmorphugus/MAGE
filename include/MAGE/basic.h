@@ -201,7 +201,7 @@ public:
 	std::string uiName;
 	bool enforcePixelGrid;
 
-	dispatch::Dynamic_Object vars;
+	chaiscript::dispatch::Dynamic_Object vars;
 
 protected:
 	void registerProperty(std::string name, prop p);
@@ -224,8 +224,8 @@ private:
 
 #define DeclareScriptingBasic(type)\
 DeclareScriptingType(type); \
-DeclareScriptingBaseClass(basic, type); \
-DeclareScriptingBaseClass(serializable, type); \
+DeclareScriptingBaseClass(mage::basic, type); \
+DeclareScriptingBaseClass(mage::serializable, type); \
 DeclareScriptingBaseClass(sf::Transformable, type); \
-DeclareScriptingBaseClass(shadable, type); \
+DeclareScriptingBaseClass(mage::shadable, type); \
 DeclareScriptingCastingFunction("to_" STRING(type), basic, type);

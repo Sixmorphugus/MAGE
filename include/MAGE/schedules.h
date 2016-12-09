@@ -50,6 +50,7 @@ public:
 	int indexOf(std::shared_ptr<schedule> in);
 
 	std::shared_ptr<schedule> get(unsigned int index);
+	template<class T> std::shared_ptr<T> getAs(unsigned int index);
 	unsigned int getCount();
 
 	void endAll();
@@ -60,4 +61,17 @@ private:
 	std::vector<std::shared_ptr<schedule>> tasks;
 };
 
+template<class T>
+inline std::shared_ptr<T> scheduleMngr::getAs(unsigned int index)
+{
+	std::shared_ptr<schedule> s = get(index);
+	return std::dynamic_pointer_cast<T>(s);
 }
+
+} // namespace mage
+
+#define DeclareScriptingSchedule(type) \
+DeclareScriptingType(type, STRING(type)); \
+DeclareScriptingBaseClass(mage::schedule, type); \
+DeclareScriptingFunction(&mage::scheduleMngr::getAs<type>, "get_" STRING(type)); \
+DeclareScriptingCastingFunction("to_" STRING(type), mage::schedule, type);

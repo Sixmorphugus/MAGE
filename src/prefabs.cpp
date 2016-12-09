@@ -1,6 +1,8 @@
 #include "prefabs.h"
 #include "group.h"
 
+using namespace mage;
+
 prefab::prefab()
 {
 	templateObject = nullptr;

@@ -1,15 +1,17 @@
-#include "tilemap.h"
+#include "objTilemap.h"
 
 #include "Game.h"
 
 #include "constants.h"
 
-#include "helpers.h"
+#include "stringHelpers.h"
 #include "group.h"
-#include "view.h"
+#include "viewObj.h"
+
+using namespace mage;
 
 // TILE
-tilemap::tile::tile(tilemap* parent, sf::Vector2i position, int id) {
+objTilemap::tile::tile(objTilemap* parent, sf::Vector2i position, int id) {
 	mapPos = position;
 	sheetId = id;
 	prt = parent;
@@ -29,11 +31,11 @@ tilemap::tile::tile(tilemap* parent, sf::Vector2i position, int id) {
 	colWest = false;
 }
 
-tilemap::tile::tile() {
+objTilemap::tile::tile() {
 	// this should never be needed.
 }
 
-void tilemap::tile::refreshVerts() {
+void objTilemap::tile::refreshVerts() {
 	prt->dirty = true;
 
 	// use parent to infer position
@@ -99,13 +101,13 @@ void tilemap::tile::refreshVerts() {
 	}
 }
 
-tilemap * tilemap::tile::getParent()
+objTilemap * objTilemap::tile::getParent()
 {
 	return prt;
 }
 
 // TILEMAP
-tilemap::tilemap(float x, float y, textureData sp)
+objTilemap::objTilemap(float x, float y, textureData sp)
 	: objBasic(x, y, sp)
 {
 	sfSprite.setColor(sf::Color::Transparent);
@@ -118,7 +120,7 @@ tilemap::tilemap(float x, float y, textureData sp)
 	dirty = (sprites.size() > 0);
 }
 
-void tilemap::resize(unsigned int w, unsigned int h, int newT) {
+void objTilemap::resize(unsigned int w, unsigned int h, int newT) {
 	sf::Vector2u prevSize = size();
 
 	tiles.resize(w);
@@ -148,7 +150,7 @@ void tilemap::resize(unsigned int w, unsigned int h, int newT) {
 	dirty = true;
 }
 
-sf::Vector2u tilemap::size() const {
+sf::Vector2u objTilemap::size() const {
 	if(tiles.size() > 0)
 		return sf::Vector2u(tiles.size(), tiles[0].size());
 	else {
@@ -156,7 +158,7 @@ sf::Vector2u tilemap::size() const {
 	}
 }
 
-void tilemap::generateTileCollisionBoxes()
+void objTilemap::generateTileCollisionBoxes()
 {
 	collisionBoxes.clear();
 
@@ -188,7 +190,7 @@ void tilemap::generateTileCollisionBoxes()
 	}
 }
 
-void tilemap::preUpdate(sf::Time elapsed)
+void objTilemap::preUpdate(sf::Time elapsed)
 {
 	// messy position change tracking
 	if (tilemapOffset != tilemapOffsetCheck) {
@@ -201,7 +203,7 @@ void tilemap::preUpdate(sf::Time elapsed)
 	}
 }
 
-void tilemap::update(sf::Time elapsed) {
+void objTilemap::update(sf::Time elapsed) {
 	if (dirty) {
 		drawData.clear();
 
@@ -223,7 +225,7 @@ void tilemap::update(sf::Time elapsed) {
 	}
 }
 
-void tilemap::refresh()
+void objTilemap::refresh()
 {
 	for (unsigned int i = 0; i < tiles.size(); i++) {
 		for (unsigned int j = 0; j < tiles.size(); j++) {
@@ -234,7 +236,7 @@ void tilemap::refresh()
 	dirty = true;
 }
 
-float tilemap::getDrawBottom() {
+float objTilemap::getDrawBottom() {
 	float btm = getMainBounds().top;
 
 	if (isForeground)
@@ -245,7 +247,7 @@ float tilemap::getDrawBottom() {
 	return btm;
 }
 
-std::string tilemap::getTypeString()
+std::string objTilemap::getTypeString()
 {
 	switch (isForeground) {
 	case true:
@@ -255,7 +257,7 @@ std::string tilemap::getTypeString()
 	}
 }
 
-void tilemap::nextType()
+void objTilemap::nextType()
 {
 	switch (isForeground) {
 	case true:
@@ -267,17 +269,17 @@ void tilemap::nextType()
 	}
 }
 
-sf::Vector2f tilemap::getSize() const
+sf::Vector2f objTilemap::getSize() const
 {
 	return sf::Vector2f(getCurrentSprite()->texture.frameSize.x * size().x, getCurrentSprite()->texture.frameSize.y * size().y);
 }
 
-std::vector<tilemap::tile>& tilemap::operator[](int x)
+std::vector<objTilemap::tile>& objTilemap::operator[](int x)
 {
 	return tiles[x];
 }
 
-void tilemap::draw(sf::RenderTarget &target, sf::RenderStates states) const {
+void objTilemap::draw(sf::RenderTarget &target, sf::RenderStates states) const {
 	states.texture = sfSprite.getTexture();
 
 	if(drawData.size() > 0)
@@ -298,12 +300,12 @@ void tilemap::draw(sf::RenderTarget &target, sf::RenderStates states) const {
 	}
 }
 
-void tilemap::drawShadows(sf::RenderTarget & target) const
+void objTilemap::drawShadows(sf::RenderTarget & target) const
 {
     
 }
 
-void tilemap::drawRow(sf::RenderTarget & target, sf::RenderStates states, unsigned int row) const
+void objTilemap::drawRow(sf::RenderTarget & target, sf::RenderStates states, unsigned int row) const
 {
 	// WARNING: LOTS OF MATHS HERE
 	// calculate where the camera is in relation to us
@@ -342,7 +344,7 @@ void tilemap::drawRow(sf::RenderTarget & target, sf::RenderStates states, unsign
 		target.draw(&drawData2[0], drawData2.size(), sf::Triangles, sfSprite.getTexture());
 }
 
-void tilemap::registerProperties()
+void objTilemap::registerProperties()
 {
 	objBasic::registerProperties();
 
@@ -365,7 +367,7 @@ void tilemap::registerProperties()
 	resize(size().x, size().y);
 }
 
-std::string tilemap::serialize()
+std::string objTilemap::serialize()
 {
 	std::string propData = basic::serialize();
 
@@ -399,7 +401,7 @@ std::string tilemap::serialize()
 	return data.str();
 }
 
-bool tilemap::deserialize(std::string data)
+bool objTilemap::deserialize(std::string data)
 {
 	// I am much more pleased with this version of the tilemap loading code than the last one.
 
@@ -444,28 +446,28 @@ bool tilemap::deserialize(std::string data)
 	return splitData.size() >= 3;
 }
 
-void tilemap::clearTiles() {
+void objTilemap::clearTiles() {
 	resize(size().x, size().y);
 }
 
 #include "scriptingEngine.h"
 
 // tile
-DeclareScriptingTypeNamed(tilemap::tile, "tile");
-DeclareScriptingFunction(&tilemap::tile::colNorth, "colNorth");
-DeclareScriptingFunction(&tilemap::tile::colWest, "colWest");
-DeclareScriptingFunction(&tilemap::tile::getParent, "getParent");
-//DeclareScriptingFunction(&tilemap::tile::mapPos, "mapPos"); omitted on purpose - does fuckall
-DeclareScriptingFunction(&tilemap::tile::pos, "pos");
-DeclareScriptingFunction(&tilemap::tile::refreshVerts, "refreshVerts");
-DeclareScriptingFunction(&tilemap::tile::sheetId, "sheetId");
-DeclareScriptingFunction(&tilemap::tile::tint, "tint");
+DeclareScriptingTypeNamed(objTilemap::tile, "tile");
+DeclareScriptingFunction(&objTilemap::tile::colNorth, "colNorth");
+DeclareScriptingFunction(&objTilemap::tile::colWest, "colWest");
+DeclareScriptingFunction(&objTilemap::tile::getParent, "getParent");
+//DeclareScriptingFunction(&objTilemap::tile::mapPos, "mapPos"); omitted on purpose - does fuckall
+DeclareScriptingFunction(&objTilemap::tile::pos, "pos");
+DeclareScriptingFunction(&objTilemap::tile::refreshVerts, "refreshVerts");
+DeclareScriptingFunction(&objTilemap::tile::sheetId, "sheetId");
+DeclareScriptingFunction(&objTilemap::tile::tint, "tint");
 
 // tilemap
-DeclareScriptingBasic(tilemap);
-DeclareScriptingBaseClass(objBasic, tilemap);
-DeclareScriptingConstructor(tilemap(float, float, basic::textureData), "tilemap");
-DeclareScriptingFunction(&tilemap::clearTiles, "clearTiles");
-DeclareScriptingFunction(&tilemap::generateTileCollisionBoxes, "generateTileCollisionBoxes");
-DeclareScriptingFunction(&tilemap::isForeground, "isForeground");
-DeclareScriptingFunction(&tilemap::size, "size");
+DeclareScriptingBasic(objTilemap);
+DeclareScriptingBaseClass(objBasic, objTilemap);
+DeclareScriptingConstructor(objTilemap(float, float, basic::textureData), "tilemap");
+DeclareScriptingFunction(&objTilemap::clearTiles, "clearTiles");
+DeclareScriptingFunction(&objTilemap::generateTileCollisionBoxes, "generateTileCollisionBoxes");
+DeclareScriptingFunction(&objTilemap::isForeground, "isForeground");
+DeclareScriptingFunction(&objTilemap::size, "size");

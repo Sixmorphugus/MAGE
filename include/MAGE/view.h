@@ -57,7 +57,7 @@ protected:
 public:
 	// things that affect rendering
 	std::weak_ptr<groupBase> group;
-	std::shared_ptr<sfShaderResource> shader;
+	std::shared_ptr<resourceShader> shader;
 
 	sf::Vector2f zoomZero;
 	bool respectPixelGrid;
@@ -67,3 +67,10 @@ public:
 };
 
 } // namespace mage
+
+#define DeclareScriptingView(type) \
+DeclareScriptingBaseClass(sf::View, type);\
+DeclareScriptingBaseClass(shadable, type);\
+DeclareScriptingBaseClass(view, type);\
+DeclareScriptingConstructor(type(), STRING(type));\
+DeclareScriptingConstructor(type(sf::Vector2f, std::shared_ptr<groupBase>), STRING(type));

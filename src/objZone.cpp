@@ -1,15 +1,17 @@
-#include "zone.h"
+#include "objZone.h"
 
 #include "Game.h"
 
-zone::zone(float x, float y, float sizeX, float sizeY):
+using namespace mage;
+
+objZone::objZone(float x, float y, float sizeX, float sizeY):
 	objBasic(x, y, textureData(nullptr))
 {
 	zoneSize.x = sizeX;
 	zoneSize.y = sizeY;
 }
 
-void zone::update(sf::Time elapsed)
+void objZone::update(sf::Time elapsed)
 {
 	// keep collision boxes up to date
 	if (collisionBoxes.size() != 1) {
@@ -40,17 +42,17 @@ void zone::update(sf::Time elapsed)
 }
 
 // by default these do nothing, derive the object
-void zone::objectEnterZone(std::shared_ptr<objBasic> obj)
+void objZone::objectEnterZone(std::shared_ptr<objBasic> obj)
 {
 	onObjectEnterZone.notify(this, obj.get());
 }
 
-void zone::objectLeaveZone(std::shared_ptr<objBasic> obj)
+void objZone::objectLeaveZone(std::shared_ptr<objBasic> obj)
 {
 	onObjectLeaveZone.notify(this, obj.get());
 }
 
-bool zone::isInZone(objBasic * obj)
+bool objZone::isInZone(objBasic * obj)
 {
 	for (unsigned int i = 0; i < objectsInZone[0].size(); i++) {
 		if (objectsInZone[0][i].get() == obj) {
@@ -61,7 +63,7 @@ bool zone::isInZone(objBasic * obj)
 	return false;
 }
 
-bool zone::wasInZone(objBasic * obj)
+bool objZone::wasInZone(objBasic * obj)
 {
 	for (unsigned int i = 0; i < objectsInZone[1].size(); i++) {
 		if (objectsInZone[1][i].get() == obj) {

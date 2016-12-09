@@ -10,7 +10,6 @@
 ▐    ▐                      ▐        
  
  Multiplatform Arcade Game Engine
-   Property of Chris Sixsmith.
         See licence.txt.
 */
 
@@ -33,8 +32,8 @@ class scheduleMngr;
 class prefabMngr;
 class scriptingEngine;
 
-class uiView;
-class objView;
+class viewUi;
+class viewObj;
 
 class objTilemap;
 
@@ -46,13 +45,13 @@ class resourceTexture;
 // It holds all of the managers and the window.
 // It has our main loop.
 // It has all of the top-down functions that examine global listings.
-// It currently has the camera & viewport built in.
-// It times and measures game logic.
-// It is not the game, however, and if the game only consisted of the Game class it would be a shit game,
+
+// It is not THE game; if the game only consisted of the Game class it would be a broken game,
 //  missing many important subsystems.
 
 // You can and should derive this for your own applications.
 // The macro DefineGame(classname) will allow you to have your game instance run instead of main().
+// Alternatively, you can just use the base game class with DefineGame(Game). Writing your own classes is still trivial with the scripting engine functions.
 
 class MAGEDLL Game
 {
@@ -128,15 +127,15 @@ public:
 	std::shared_ptr<gameStateMngr> states;
 	std::shared_ptr<gameState> state;
 
-	std::shared_ptr<uiView> uiCamera;
-	std::shared_ptr<objView> worldCamera;
+	std::shared_ptr<viewUi> uiCamera;
+	std::shared_ptr<viewObj> worldCamera;
 
 	hook<> onGameInitDone;
 	hook<> onGamePreUpdate;
 	hook<> onGameUpdate;
-	hook<sf::RenderTarget&> onGameDraw;
-	hook<sf::RenderTarget&> onGameUiDraw;
-	hook<sf::RenderTarget&> onGameWorldDraw;
+	hook<> onGameDraw;
+	hook<> onGameUiDraw; // our render target isn't stored shared, so we can't pass it shared
+	hook<> onGameWorldDraw;
 	hook<> onGameDone;
 
 	unsigned int mouseMode;

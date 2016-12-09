@@ -16,3 +16,10 @@ public:
 };
 
 }
+
+#define DeclareScriptingFilepathResource(name) \
+DeclareScriptingResource(name) \
+DeclareScriptingBaseClass(resourceFilepath, name);\
+DeclareScriptingConstructor(name(std::string), STRING(name));\
+DeclareScriptingFunction(&resourceMngr::addFolder<name>, "addFolderOf_" STRING(name));\
+DeclareScriptingCopyOperator(name);

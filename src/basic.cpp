@@ -8,10 +8,16 @@
 #include "gameState.h"
 #include "constants.h"
 #include "scriptingEngine.h"
-#include "helpers.h"
-#include "uiPrimitives.h"
+#include "textHelpers.h"
 #include "prefabs.h"
-#include "sfResources.h"
+#include "resourceTexture.h"
+#include "stringHelpers.h"
+#include "resourceSoundBuffer.h"
+#include "resourceFont.h"
+#include "viewObj.h"
+#include "maths.h"
+
+using namespace mage;
 
 // BASIC PROPERTY CLASS
 // ----------------------------------------------------------------------------
@@ -136,7 +142,7 @@ basic::textureData::textureData()
 {
 }
 
-basic::textureData::textureData(std::shared_ptr<sfTextureResource> spriteResource)
+basic::textureData::textureData(std::shared_ptr<resourceTexture> spriteResource)
 {
 	if(spriteResource)
 		resource = spriteResource;
@@ -144,7 +150,7 @@ basic::textureData::textureData(std::shared_ptr<sfTextureResource> spriteResourc
 	defaultFrameSize = true;
 }
 
-basic::textureData::textureData(std::shared_ptr<sfTextureResource> spriteResource, unsigned int frameWidth, unsigned int frameHeight)
+basic::textureData::textureData(std::shared_ptr<resourceTexture> spriteResource, unsigned int frameWidth, unsigned int frameHeight)
 {
 	if (spriteResource)
 		resource = spriteResource;
@@ -342,7 +348,7 @@ void basic::preUpdate(sf::Time elapsed) {
 	// set sfSprite to the not found image if needed
 	if (curSprite < 0) {
 		if (theGame()->worldObjectsFrozen) {
-			sfSprite = sf::Sprite(*theGame()->resources->getAs<sfTextureResource>("ui_notfound")->get().get());
+			sfSprite = sf::Sprite(*theGame()->resources->getAs<resourceTexture>("ui_notfound")->get().get());
 		}
 		else {
 			sfSprite = sf::Sprite();
@@ -654,235 +660,9 @@ basic::prop& basic::operator[](std::string name)
 	return getProperty(name);
 }
 
-// BASIC WORLD OBJECT
-// ----------------------------------------------------------------------------
-objBasic::objBasic(float x, float y, textureData sd)
-	: basic(x, y, sd)
-{
-	drawBottomOffset = 0;
-	uiName = "";
-}
-
-void objBasic::registerProperties()
-{
-	basic::registerProperties();
-
-	// reg props
-	registerProperty("drawBottomOffset", prop(drawBottomOffset));
-	deleteProperty("drawBottomOffset"); // drawBottomOffset is legacy
-
-	registerProperty("_Z", prop(drawBottomOffset));
-}
-
-void objBasic::update(sf::Time elapsed)
-{
-	basic::update(elapsed);
-
-	if (hasMoved() && getGroup()) {
-		getGroup()->objectListDirty = true;
-	}
-
-	if (!pulledCamera.expired()) {
-		auto l = pulledCamera.lock();
-		l->moveTowards(*this, pulledCameraMultiplier);
-	}
-}
-
-void objBasic::drawShadows(sf::RenderTarget & target) const
-{
-	
-}
-
-void objBasic::draw(sf::RenderTarget & target, sf::RenderStates states) const
-{
-	basic::draw(target, states);
-}
-
-void objBasic::drawCollisionBoxes(sf::RenderTarget & target, sf::RenderStates states) const
-{
-	for (unsigned int i = 0; i < collisionBoxes.size(); i++) {
-		auto colBox = transformedCollisionBox(i);
-
-		sf::RectangleShape rectPreview(sf::Vector2f(colBox.width, colBox.height));
-
-		rectPreview.setOutlineThickness(1.f);
-		rectPreview.setFillColor(sf::Color::Transparent);
-		rectPreview.setOutlineColor(sf::Color::Magenta);
-
-		rectPreview.setPosition(colBox.left, colBox.top);
-
-		target.draw(rectPreview, states);
-	}
-}
-
-void objBasic::setPositionC(sf::Vector2f newPosition)
-{
-	// move object so its first collision box ends up in a certain place
-	if (collisionBoxes.size() > 0)
-		setPosition(newPosition - sf::Vector2f(collisionBoxes[0].left, collisionBoxes[0].top));
-	else
-		setPosition(newPosition);
-}
-
-void objBasic::setPositionC(float x, float y)
-{
-	setPositionC(sf::Vector2f(x, y));
-}
-
-void objBasic::generateCollisionBox(float offL, float offR, float offT, float offB) {
-	// just generates a square box the size of the bounds.
-	sf::FloatRect box(0, 0, sfSprite.getGlobalBounds().width, sfSprite.getGlobalBounds().height);
-
-	box.left += offL;
-	box.width -= offL;
-
-	box.top += offT;
-	box.height -= offT;
-
-	box.width -= offR;
-
-	box.height -= offB;
-
-	collisionBoxes.push_back(box);
-}
-
-void objBasic::generateCollisionBoxWithPercentages(float offL, float offR, float offT, float offB)
-{
-	// just generates a square box the size of the bounds.
-	sf::FloatRect box(0, 0, sfSprite.getGlobalBounds().width, sfSprite.getGlobalBounds().height);
-
-	box.left += offL * sfSprite.getGlobalBounds().width;
-	box.width -= offL * sfSprite.getGlobalBounds().width;
-
-	box.top += offT * sfSprite.getGlobalBounds().height;
-	box.height -= offT * sfSprite.getGlobalBounds().height;
-
-	box.width -= offR * sfSprite.getGlobalBounds().width;
-	box.height -= offB * sfSprite.getGlobalBounds().height;
-
-	collisionBoxes.push_back(box);
-}
-
-sf::FloatRect objBasic::transformedCollisionBox(int id) const {
-	return sf::FloatRect(getPosition().x + (getScale().x *collisionBoxes[id].left),
-		getPosition().y + (getScale().y * collisionBoxes[id].top),
-		getScale().x * collisionBoxes[id].width, 
-		getScale().y * collisionBoxes[id].height);
-}
-
-objBasic::collision objBasic::resolveMovement(float byX, float byY) {
-	return theGame()->resolveMovement(this, (int)byX, (int)byY);
-}
-
-float objBasic::getDrawBottom() {
-	return getMainBounds().top + getMainBounds().height + drawBottomOffset;
-}
-
-void objBasic::playAudio(std::shared_ptr<sfSoundBufferResource> sound, bool replaceSame, bool generatePitch)
-{
-	// use the center of the screen as the "listen" point
-
-	// calculate vector distance without normalisation or pythag
-	sf::Vector2f lp(theGame()->worldCamera->bounds().left + (theGame()->worldCamera->bounds().top / 2.f), theGame()->worldCamera->bounds().top + (theGame()->worldCamera->bounds().height / 2.f)); // find center of camera focus
-	sf::Vector2f dist = getPosition() - lp;
-
-	// play sound
-	theGame()->sound->play(sound, dist, replaceSame, generatePitch);
-}
-
-void objBasic::pullCamera(std::shared_ptr<view> toPull, float multiplier)
-{
-	pulledCamera = toPull;
-	pulledCameraMultiplier = clamp(multiplier, 0.f, 1.f);
-}
-
-void objBasic::stopPullingCamera()
-{
-	pulledCamera.reset();
-}
-
-// BASIC UI (user interface) OBJECT
-// ----------------------------------------------------------------------------
-uiBasic::uiBasic(float x, float y, textureData sd)
-	: basic(x,y, sd)
-{
-}
-
-void uiBasic::worldDraw(sf::RenderTarget &target, sf::RenderStates states) const {
-	onWorldDraw.notify(this);
-}
-
-void uiBasic::registerProperties()
-{
-	basic::registerProperties();
-}
-
-void uiBasic::drawBindPrompt(sf::RenderTarget & target, sf::RenderStates states, int yPosition, std::vector<std::string> keybindNames, std::string caption) const
-{
-	pDrawBindPrompt(target, states, yPosition, keybindNames, caption);
-}
-
-float uiBasic::drawInfoSimple(sf::RenderTarget & target, sf::RenderStates states, sf::Vector2f screenPos, std::string info) const
-{
-	return pDrawInfoSimple(target, states, screenPos, info);
-}
-
-float uiBasic::drawInfo(sf::RenderTarget & target, sf::RenderStates states, sf::Vector2f screenPos, std::string info, sf::Color col, bool center, unsigned int charSize, float rot, std::shared_ptr<sfFontResource> customFont) const
-{
-	return pDrawInfo(target, states, screenPos, info, col, center, charSize, rot, customFont);
-}
-
-void uiBasic::drawSelf(sf::RenderTarget & target, sf::RenderStates states, sf::Vector2f screenPos, unsigned int sprite, unsigned int frame, sf::Color col) const
-{
-	// sanity!
-	if (sprites.size() <= sprite)
-		return;
-
-	if (sprites[sprite].animations.frameRects.size() <= frame)
-		return;
-
-	// drawing can be unsafe because of the sanity checks
-	const sf::Texture* tex = getTexPointer();
-
-	sf::Sprite fakeSprite(*tex, sprites[sprite].animations.frameRects[frame]);
-	fakeSprite.setPosition(screenPos);
-	fakeSprite.setColor(col);
-
-	target.draw(fakeSprite, states);
-}
-
-void uiBasic::bringToFront()
-{
-	theGame()->state->bringToFront(theGame()->state->localIndexOf(this));
-}
-
-bool uiBasic::isMouseOver()
-{
-	sf::Vector2f mousePos(theGame()->mousePos.x, theGame()->mousePos.y);
-	sf::FloatRect bounds = sfSprite.getGlobalBounds();
-
-	return bounds.contains(mousePos);
-}
-
-bool uiBasic::isOnScreen() const
-{
-	return true; // let's just always assume this is visible.
-	// There are never normally enough UI on the screen to lag the game anyway.
-	// And there never will be. Right?
-	// RIGHT?
-	// Yeah I can see myself rewriting this function in the near future.
-}
-
-bool compareObjects(std::shared_ptr<objBasic> i, std::shared_ptr<objBasic> j) {
-	return i->operator<(*j);
-}
-
-bool compareUi(std::shared_ptr<uiBasic> i, std::shared_ptr<uiBasic> j)
-{
-	return i->operator<(*j);
-}
-
 // SE
+using namespace chaiscript;
+
 DeclareScriptingCustom(user_type<basic>(), "basic");
 DeclareScriptingCustom(base_class<sf::Transformable, basic>());
 DeclareScriptingCustom(base_class<sf::Drawable, basic>());
@@ -914,8 +694,8 @@ DeclareScriptingCopyOperator(basic);
 
 DeclareScriptingCustom(user_type<basic::textureData>(), "textureData");
 DeclareScriptingCustom(constructor<basic::textureData()>(), "textureData");
-DeclareScriptingCustom(constructor<basic::textureData(std::shared_ptr<sfTextureResource>)>(), "textureData");
-DeclareScriptingCustom(constructor<basic::textureData(std::shared_ptr<sfTextureResource>, unsigned int, unsigned int)>(), "textureData");
+DeclareScriptingCustom(constructor<basic::textureData(std::shared_ptr<resourceTexture>)>(), "textureData");
+DeclareScriptingCustom(constructor<basic::textureData(std::shared_ptr<resourceTexture>, unsigned int, unsigned int)>(), "textureData");
 DeclareScriptingCustom(fun(&basic::textureData::defaultFrameSize), "defaultFrameSize");
 DeclareScriptingCustom(fun(&basic::textureData::resource), "resource");
 DeclareScriptingCustom(fun(&basic::textureData::frameSize), "frameSize");
@@ -934,26 +714,3 @@ DeclareScriptingCustom(fun(&objBasic::collision::hitY), "hitY");
 DeclareScriptingCustom(fun(&objBasic::collision::involved), "involved");
 DeclareScriptingCustom(fun(&objBasic::collision::main), "main");
 DeclareScriptingCopyOperator(objBasic::collision);
-
-DeclareScriptingBasic(objBasic);
-DeclareScriptingCustom(constructor<objBasic(float, float, basic::textureData)>(), "objBasic");
-DeclareScriptingCustom(fun(&objBasic::collisionBoxes), "collisionBoxes");
-DeclareScriptingCustom(fun(&objBasic::displayText), "displayText");
-DeclareScriptingCustom(fun(&objBasic::drawShadows), "drawShadows");
-DeclareScriptingCustom(fun(&objBasic::generateCollisionBox), "generateCollisionBox");
-DeclareScriptingCustom(fun(&objBasic::generateCollisionBoxWithPercentages), "generateCollisionBoxWithPercentages");
-DeclareScriptingCustom(fun(&objBasic::transformedCollisionBox), "transformedCollisionBox");
-DeclareScriptingCustom(fun(&objBasic::drawBottomOffset), "drawBottomOffset");
-DeclareScriptingCustom(fun(&objBasic::playAudio), "playAudio");
-DeclareScriptingCustom(fun(&objBasic::getPrefabSource), "getPrefabSource");
-DeclareScriptingCustom(fun(&objBasic::pullCamera), "pullCamera");
-DeclareScriptingCustom(fun(&objBasic::stopPullingCamera), "pullCamera");
-DeclareScriptingCustom(fun<void, objBasic, float, float>(&objBasic::setPositionC), "setPositionC");
-DeclareScriptingCustom(fun<void, objBasic, sf::Vector2f>(&objBasic::setPositionC), "setPositionC");
-DeclareScriptingCustom(fun(&objBasic::uiName), "uiName");
-
-DeclareScriptingBasic(uiBasic);
-DeclareScriptingCustom(constructor<uiBasic(float, float, basic::textureData)>(), "uiBasic");
-DeclareScriptingCustom(fun(&uiBasic::drawBindPrompt), "drawBindPrompt");
-DeclareScriptingCustom(fun(&uiBasic::drawInfoSimple), "drawInfoSimple");
-DeclareScriptingCustom(fun(&uiBasic::drawInfo), "drawInfo");

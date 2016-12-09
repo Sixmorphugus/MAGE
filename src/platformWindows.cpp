@@ -3,6 +3,8 @@
 
 #ifdef PLATFORM_WINDOWS
 
+using namespace mage;
+
 #include <windows.h>
 #include <direct.h>
 
@@ -107,7 +109,7 @@ void platform::update() {
 
 		// Read the console events into that buffer, and save how
 		// many events have been read into numEventsRead.
-		ReadConsoleInput(hStdIn, eventBuffer, numEvents, &numEventsRead);
+		ReadConsoleInputA(hStdIn, eventBuffer, numEvents, &numEventsRead);
 
 		for (DWORD i = 0; i < numEventsRead; ++i) {
 			// Check the event type: was it a key?

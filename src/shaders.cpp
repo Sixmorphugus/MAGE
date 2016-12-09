@@ -1,13 +1,15 @@
 #include "shaders.h"
 
-#include "sfResources.h"
+#include "resourceShader.h"
 #include "Game.h"
+
+using namespace mage;
 
 shadable::shadable() {
 	clearShader();
 }
 
-void shadable::setShader(std::shared_ptr<sfShaderResource> shad) {
+void shadable::setShader(std::shared_ptr<resourceShader> shad) {
 	shader = shad;
 }
 
@@ -41,7 +43,7 @@ void shadable::shaderUpdateCustom(sf::Shader* cShader, sf::Vector2f texSize) con
 	cShader->setUniform("delta", theGame()->getDelta());
 }
 
-std::shared_ptr<sfShaderResource> shadable::getShader() const {
+std::shared_ptr<resourceShader> shadable::getShader() const {
 	if (shader.expired())
 		return nullptr;
 

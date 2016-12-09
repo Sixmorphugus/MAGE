@@ -639,20 +639,20 @@ inline void group<T>::clearObjects()
 // group types
 // these all have to be custom because commas in the template list can really mess stuff up
 #define DeclareScriptingGroup(heldType, name) \
-DeclareScriptingCustom(user_type<group<heldType>>(), name) \
-DeclareScriptingCustom(constructor<group<heldType>()>(), name); \
-DeclareScriptingCustom(constructor<group<heldType>(std::shared_ptr<resourceGroup>)>(), name); \
-DeclareScriptingCustom(base_class<groupBase, group<heldType>>()); \
-DeclareScriptingCustom(base_class<serializable, group<heldType>>()); \
-DeclareScriptingCustom(base_class<shadable, group<heldType>>()); \
-DeclareScriptingCustom(fun(&group<heldType>::clearObjects<objBasic>), "clearWorldObjects"); \
-DeclareScriptingCustom(fun(&group<heldType>::clearObjects<uiBasic>), "clearUiObjects"); \
-DeclareScriptingCustom(fun(&group<heldType>::findByUiName), "findByUiName"); \
-DeclareScriptingCustom(fun(&group<heldType>::get), "get"); \
-DeclareScriptingCustom(fun(&group<heldType>::indexOf), "indexOf"); \
-DeclareScriptingCustom(fun(&group<heldType>::localIndexOf), "localIndexOf"); \
-DeclareScriptingCustom(fun(&group<heldType>::combine<>), "combine"); \
-DeclareScriptingCustom(fun(&group<heldType>::set<>), "set"); \
-DeclareScriptingCustom(fun(&group<heldType>::attach), "attach"); \
-DeclareScriptingCopyOperator(group<heldType>); \
-DeclareScriptingCastingFunction("to_" name, groupBase, group<heldType>); // broke my rule here but it seems to be fine -c
+DeclareScriptingCustom(user_type<mage::group<heldType>>(), name) \
+DeclareScriptingCustom(constructor<mage::group<heldType>()>(), name); \
+DeclareScriptingCustom(constructor<mage::group<heldType>(std::shared_ptr<mage::resourceGroup>)>(), name); \
+DeclareScriptingCustom(base_class<mage::groupBase, mage::group<heldType>>()); \
+DeclareScriptingCustom(base_class<mage::serializable, mage::group<heldType>>()); \
+DeclareScriptingCustom(base_class<mage::shadable, mage::group<heldType>>()); \
+DeclareScriptingCustom(fun(&mage::group<heldType>::clearObjects<mage::objBasic>), "clearWorldObjects"); \
+DeclareScriptingCustom(fun(&mage::group<heldType>::clearObjects<mage::uiBasic>), "clearUiObjects"); \
+DeclareScriptingCustom(fun(&mage::group<heldType>::findByUiName), "findByUiName"); \
+DeclareScriptingCustom(fun(&mage::group<heldType>::get), "get"); \
+DeclareScriptingCustom(fun(&mage::group<heldType>::indexOf), "indexOf"); \
+DeclareScriptingCustom(fun(&mage::group<heldType>::localIndexOf), "localIndexOf"); \
+DeclareScriptingCustom(fun(&mage::group<heldType>::combine<>), "combine"); \
+DeclareScriptingCustom(fun(&mage::group<heldType>::set<>), "set"); \
+DeclareScriptingCustom(fun(&mage::group<heldType>::attach), "attach"); \
+DeclareScriptingCopyOperator(mage::group<heldType>); \
+DeclareScriptingCastingFunction("to_" name, mage::groupBase, mage::group<heldType>); // broke my rule here but it seems to be fine -c

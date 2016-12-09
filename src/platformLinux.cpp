@@ -3,6 +3,8 @@
 
 #ifdef PLATFORM_LINUX
 
+using namespace mage;
+
 #include <sys/types.h>
 #include <dirent.h>
 #include <errno.h>

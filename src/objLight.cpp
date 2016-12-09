@@ -1,12 +1,14 @@
-#include "light.h"
+#include "objLight.h"
 
 #include "Game.h"
 #include "helpers.h"
-#include "animationManager.h"
-#include "sfResources.h"
-#include "view.h"
+#include "animator.h"
+#include "resourceTexture.h"
+#include "viewObj.h"
 
-light::light(float posX, float posY, textureData sprite, textureData lightSprite)
+using namespace mage;
+
+objLight::objLight(float posX, float posY, textureData sprite, textureData lightSprite)
 	: objBasic(posX, posY, sprite), lightAnimations(lightSprite.resource.lock())
 {
 	lSpr.setTexture(*lightSprite.resource.lock()->get());
@@ -22,7 +24,7 @@ light::light(float posX, float posY, textureData sprite, textureData lightSprite
 	}
 }
 
-void light::draw(sf::RenderTarget & target, sf::RenderStates states) const
+void objLight::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
 	objBasic::draw(target, states);
 
@@ -38,7 +40,7 @@ void light::draw(sf::RenderTarget & target, sf::RenderStates states) const
 	theGame()->shadowTex.draw(lSpr, states);
 }
 
-void light::registerProperties()
+void objLight::registerProperties()
 {
 	objBasic::registerProperties();
 
@@ -51,7 +53,7 @@ void light::registerProperties()
 	registerProperty("lightOffsetY", prop(lightOffset.y));
 }
 
-void light::update(sf::Time elapsed)
+void objLight::update(sf::Time elapsed)
 {
 	lightAnimations.update(lSpr, elapsed);
 

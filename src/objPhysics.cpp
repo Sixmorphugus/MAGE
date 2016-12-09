@@ -1,29 +1,31 @@
-#include "physicsObject.h"
+#include "objPhysics.h"
 #include "Game.h"
-#include "helpers.h"
+#include "maths.h"
 
-#include "sfResources.h"
+#include "resourceTexture.h"
 
 #include "shaders.h"
 
-physicsObject::physicsObject(float posX, float posY, textureData sprite)
+using namespace mage;
+
+objPhysics::objPhysics(float posX, float posY, textureData sprite)
 	: objBasic(posX, posY, sprite)
 {
 	init();
 }
 
-void physicsObject::init()
+void objPhysics::init()
 {
 	density = 0.1f;
 	weight = 1.f;
 }
 
-void physicsObject::preUpdate(sf::Time elapsed)
+void objPhysics::preUpdate(sf::Time elapsed)
 {
 	objBasic::preUpdate(elapsed);
 }
 
-void physicsObject::update(sf::Time elapsed)
+void objPhysics::update(sf::Time elapsed)
 {
 	objBasic::update(elapsed);
 
@@ -48,7 +50,7 @@ void physicsObject::update(sf::Time elapsed)
 	}
 }
 
-void physicsObject::draw(sf::RenderTarget & target, sf::RenderStates states) const
+void objPhysics::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
 	applyShader(states, getTexSizeF());
 
@@ -61,13 +63,13 @@ void physicsObject::draw(sf::RenderTarget & target, sf::RenderStates states) con
 		target.draw(fakeSprite, states);
 }
 
-void physicsObject::impact(collision cDat)
+void objPhysics::impact(collision cDat)
 {
 	if (cDat.main == this) {
 		// we hit something
 		for (unsigned int i = 0; i < cDat.involved.size(); i++) {
 			objBasic* ob = cDat.involved[i].get();
-			physicsObject* po = dynamic_cast<physicsObject*>(ob);
+			objPhysics* po = dynamic_cast<objPhysics*>(ob);
 
 			if (po) {
 				po->impact(cDat); // notify any physics objects we hit
@@ -80,7 +82,7 @@ void physicsObject::impact(collision cDat)
 		}
 	}
 	else {
-		physicsObject* po = dynamic_cast<physicsObject*>(cDat.main);
+		objPhysics* po = dynamic_cast<objPhysics*>(cDat.main);
 
 		float devisor = 2.f * weight;
 
@@ -97,7 +99,7 @@ void physicsObject::impact(collision cDat)
 	// derive to do more
 }
 
-void physicsObject::impulse(sf::Vector2f position, float force, float radius)
+void objPhysics::impulse(sf::Vector2f position, float force, float radius)
 {
 	// calculate distance and directional angle
 	float dir = directionToVector(getCenter(), position);
@@ -112,7 +114,7 @@ void physicsObject::impulse(sf::Vector2f position, float force, float radius)
 	onImpulse.notify(this);
 }
 
-void physicsObject::registerProperties()
+void objPhysics::registerProperties()
 {
 	objBasic::registerProperties();
 
@@ -125,14 +127,16 @@ void physicsObject::registerProperties()
 }
 
 // SE
-DeclareScriptingCustom(user_type<physicsObject>(), "physicsObject");
-DeclareScriptingCustom(base_class<objBasic, physicsObject>());
-DeclareScriptingBaseClass(basic, physicsObject);
-DeclareScriptingBaseClass(sf::Transformable, physicsObject);
-DeclareScriptingCopyOperator(physicsObject);
-DeclareScriptingCustom(constructor<physicsObject(float, float, basic::textureData)>(), "physicsObject");
-DeclareScriptingCustom(fun(&physicsObject::density), "density");
-DeclareScriptingCustom(fun(&physicsObject::impact), "impact");
-DeclareScriptingCustom(fun(&physicsObject::impulse), "impulse");
-DeclareScriptingCustom(fun(&physicsObject::velocity), "velocity");
-DeclareScriptingCustom(fun(&physicsObject::weight), "weight");
+using namespace chaiscript;
+
+DeclareScriptingCustom(user_type<objPhysics>(), "objPhysics");
+DeclareScriptingCustom(base_class<objBasic, objPhysics>());
+DeclareScriptingBaseClass(basic, objPhysics);
+DeclareScriptingBaseClass(sf::Transformable, objPhysics);
+DeclareScriptingCopyOperator(objPhysics);
+DeclareScriptingCustom(constructor<objPhysics(float, float, basic::textureData)>(), "physicsObject");
+DeclareScriptingCustom(fun(&objPhysics::density), "density");
+DeclareScriptingCustom(fun(&objPhysics::impact), "impact");
+DeclareScriptingCustom(fun(&objPhysics::impulse), "impulse");
+DeclareScriptingCustom(fun(&objPhysics::velocity), "velocity");
+DeclareScriptingCustom(fun(&objPhysics::weight), "weight");

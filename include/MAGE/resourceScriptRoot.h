@@ -20,7 +20,7 @@ public:
 	resourceScriptRoot(std::string filepath);
 
 	bool load();
-	Boxed_Value run();
+	chaiscript::Boxed_Value run();
 };
 
 } // namespace mage 
