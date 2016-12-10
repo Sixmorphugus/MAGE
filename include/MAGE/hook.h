@@ -1,8 +1,8 @@
 #pragma once
 #include "StdAfx.h"
 #include "platform.h"
-#include "scriptingEngine_evalError.h"
 
+namespace mage {
 // very simple implementation of the observer design pattern.
 class basic;
 
@@ -85,9 +85,11 @@ private:
 	std::vector<Observer> observers;
 };
 
+} // namespace mage
+
 #define DeclareScriptingHook(name, ...) \
-DeclareScriptingCustom(user_type< hook<__VA_ARGS__> >(), name); \
-DeclareScriptingCustom(constructor<hook<__VA_ARGS__>()>(), name); \
-DeclareScriptingBaseClass(hookBase, hook<__VA_ARGS__>); \
-DeclareScriptingCustom(fun(&hook<__VA_ARGS__>::registerObserver), "registerObserver"); \
-DeclareScriptingCustom(fun(&hook<__VA_ARGS__>::notify), "notify");
+DeclareScriptingCustom(user_type< mage::hook<__VA_ARGS__> >(), name); \
+DeclareScriptingCustom(constructor<mage::hook<__VA_ARGS__>()>(), name); \
+DeclareScriptingBaseClass(hookBase, mage::hook<__VA_ARGS__>); \
+DeclareScriptingCustom(fun(&mage::hook<__VA_ARGS__>::registerObserver), "registerObserver"); \
+DeclareScriptingCustom(fun(&mage::hook<__VA_ARGS__>::notify), "notify");

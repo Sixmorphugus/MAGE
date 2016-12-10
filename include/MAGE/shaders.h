@@ -1,16 +1,18 @@
 #pragma once
 #include "platform.h"
 
-class sfShaderResource;
+namespace mage {
+
+class resourceShader;
 
 class MAGEDLL shadable {
 public:
 	shadable();
 
-	void setShader(std::shared_ptr<sfShaderResource> shaderResource = nullptr);
+	void setShader(std::shared_ptr<resourceShader> shaderResource = nullptr);
 	void clearShader();
 
-	virtual std::shared_ptr<sfShaderResource> getShader() const;
+	virtual std::shared_ptr<resourceShader> getShader() const;
 
 	void shaderRestartEffect();
 	void shaderUpdate(sf::Vector2f texSize) const;
@@ -19,5 +21,7 @@ public:
 	void applyShader(sf::RenderStates& st, sf::Vector2f texSize = sf::Vector2f(0.f, 0.f)) const;
 
 private:
-	std::weak_ptr<sfShaderResource> shader;
+	std::weak_ptr<resourceShader> shader;
 };
+
+} // namespace mage

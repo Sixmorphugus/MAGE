@@ -4,6 +4,8 @@
 #include "helpers.h"
 #include "scriptingEngine.h"
 
+using namespace mage;
+
 // RESOURCE
 resource::resource() {
 	loaded = false;
@@ -65,21 +67,6 @@ std::string resource::name()
 void resource::setInternalRef(std::shared_ptr<resource> res)
 {
 	selfRef = res;
-}
-
-// FILEPATH RESOURCE
-filepathResource::filepathResource()
-{}
-
-filepathResource::filepathResource(std::string fp)
-{
-	filepath = p::realPath(fp);
-}
-
-bool filepathResource::load()
-{
-	p::log("\tPath: " + filepath);
-	return resource::load();
 }
 
 // RESOURCE MANAGER
@@ -225,19 +212,6 @@ DeclareScriptingFunction(&resource::load, "load");
 DeclareScriptingFunction(&resource::unload, "unload");
 DeclareScriptingFunction(&resource::name, "name");
 DeclareScriptingCopyOperator(resource);
-
-// filepathResource
-DeclareScriptingType(filepathResource);
-DeclareScriptingBaseClass(taggable, filepathResource);
-DeclareScriptingBaseClass(resource, filepathResource);
-DeclareScriptingConstructor(filepathResource(), "filepathResource");
-DeclareScriptingConstructor(filepathResource(std::string), "filepathResource");
-DeclareScriptingFunction(&filepathResource::filepath, "filepath");
-DeclareScriptingCopyOperator(filepathResource);
-
-DeclareScriptingFunction(&resourceMngr::getAs<filepathResource>, "getFilepathResource");
-DeclareScriptingFunction(&resourceMngr::listType<filepathResource>, "listFilepathResources");
-DeclareScriptingFunction(&resourceMngr::addFolder<filepathResource>, "addFolderOfFilepathResources");
 
 // resourceMngr
 DeclareScriptingType(resourceMngr);

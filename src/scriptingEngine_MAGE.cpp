@@ -1,18 +1,15 @@
 #include "scriptingEngine.h"
 
-#include "animationManager.h"
 #include "mixer.h"
 #include "jukebox.h"
-#include "physicsObject.h"
-#include "uiPrimitives.h"
-#include "light.h"
-#include "tilemap.h"
-#include "zone.h"
 #include "gameState.h"
 
 #include "helpers.h"
 
 #include "Game.h"
+
+using namespace mage;
+using namespace chaiscript;
 
 ModulePtr sePreBoundObjects;
 
@@ -100,12 +97,6 @@ void scriptingEngine::bindMAGE()
 
 	// Object bindings registered before main() in the memory.
 	chai->add(sePreBoundObjects);
-
-	// player binding is in player.h now
-
-	// TODO:
-	PLACEHOLDER_BIND(light, objBasic, "light");
-	PLACEHOLDER_BIND(zone, objBasic, "zone");
 
 	// platform.h
 	chai->add(fun(&platform::clearConsoleInput), "clearConsoleInput");

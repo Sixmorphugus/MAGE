@@ -1,6 +1,8 @@
 #include "platform.h"
 #include "Game.h"
 
+using namespace mage;
+
 std::string lastLogged;
 
 std::string platform::getLastLogged() {

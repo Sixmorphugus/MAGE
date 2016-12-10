@@ -1,8 +1,11 @@
 #include "gameState.h"
 
-#include "sfResources.h"
-#include "mageResources.h"
+#include "resourceGameState.h"
+#include "resourceGroup.h"
 #include "Game.h"
+#include "stringHelpers.h"
+
+using namespace mage;
 
 // GAME STATE MANAGER IMPLEMENTATION
 gameStateMngr::gameStateMngr()
@@ -102,7 +105,7 @@ gameState::gameState(Group & gr)
 	group::set<basic, basic>(&gr);
 }
 
-gameState::gameState(std::shared_ptr<mageGroupResource> gr)
+gameState::gameState(std::shared_ptr<resourceGroup> gr)
 {
 	setVarDefaults();
 
@@ -117,7 +120,7 @@ gameState::gameState(std::shared_ptr<mageGroupResource> gr)
 	}
 }
 
-gameState::gameState(std::shared_ptr<mageGameStateResource> gs)
+gameState::gameState(std::shared_ptr<resourceGameState> gs)
 {
 	setVarDefaults();
 
@@ -267,8 +270,8 @@ DeclareScriptingBaseClass(shadable, gameState);
 DeclareScriptingConstructor(gameState(), "gameState");
 DeclareScriptingConstructor(gameState(gameState&), "gameState");
 DeclareScriptingConstructor(gameState(Group&), "gameState");
-DeclareScriptingConstructor(gameState(std::shared_ptr<mageGroupResource>), "gameState");
-DeclareScriptingConstructor(gameState(std::shared_ptr<mageGameStateResource>), "gameState");
+DeclareScriptingConstructor(gameState(std::shared_ptr<resourceGroup>), "gameState");
+DeclareScriptingConstructor(gameState(std::shared_ptr<resourceGameState>), "gameState");
 DeclareScriptingFunction(&gameState::bgCol, "bgCol");
 DeclareScriptingFunction(&gameState::getStateUseTime, "getStateUseTime");
 DeclareScriptingFunction(&gameState::lightingAmb, "lightingAmb");

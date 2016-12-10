@@ -2,9 +2,11 @@
 #include "group.h"
 #include "taggable.h"
 
-class mageGroupResource;
-class mageGameStateResource;
-class sfMusicResource;
+namespace mage {
+
+class resourceGroup;
+class resourceGameState;
+class resourceMusic;
 
 // A state can be loaded into the game in its entirety, which means it erases the old one.
 // It can also be COMBINED with the current state held in the stateMngr.
@@ -21,8 +23,8 @@ class MAGEDLL gameState : public Group, public taggable
 public:
 	gameState(); // creates empty state
 	gameState(Group& gr); // creates state with a group as the main objects (copying them out immediately)
-	gameState(std::shared_ptr<mageGroupResource> gr);
-	gameState(std::shared_ptr<mageGameStateResource> gs);
+	gameState(std::shared_ptr<resourceGroup> gr);
+	gameState(std::shared_ptr<resourceGameState> gs);
 
 	virtual std::string serialize();
 	virtual bool deserialize(std::string serialized);
@@ -101,6 +103,9 @@ inline void gameStateMngr::combineCurrent(std::string name) {
 template<class Filter>
 inline void gameState::set(gameState * gs)
 {
+	if (gs == nullptr)
+		return;
+
 	stateClock.restart();
 
 	bgCol = gs->bgCol;
@@ -109,3 +114,5 @@ inline void gameState::set(gameState * gs)
 
 	Group::set<basic, Filter>(gs);
 }
+
+} // namespace mage

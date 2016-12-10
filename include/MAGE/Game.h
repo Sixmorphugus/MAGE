@@ -10,19 +10,21 @@
 ▐    ▐                      ▐        
  
  Multiplatform Arcade Game Engine
-   Property of Chris Sixsmith.
-       Do not distribute.
+        See licence.txt.
 */
 
 #include "platform.h" // OS stuff
 #include "registry.h"
 #include "hook.h"
-#include "basic.h"
+#include "objBasic.h"
+#include "uiBasic.h"
+
+namespace mage {
 
 class jukebox;
 class mixer;
-class mouseMngr;
-class keyboardMngr;
+class inputMouse;
+class inputKeyboard;
 class gameStateMngr;
 class gameState;
 class resourceMngr;
@@ -30,27 +32,26 @@ class scheduleMngr;
 class prefabMngr;
 class scriptingEngine;
 
-class uiView;
-class worldView;
+class viewUi;
+class viewObj;
 
-class tilemap;
-class player;
+class objTilemap;
 
 class loadingScreen;
 
-class sfTextureResource;
+class resourceTexture;
 
 // The game class is the core of our game.
 // It holds all of the managers and the window.
 // It has our main loop.
 // It has all of the top-down functions that examine global listings.
-// It currently has the camera & viewport built in.
-// It times and measures game logic.
-// It is not the game, however, and if the game only consisted of the Game class it would be a shit game,
+
+// It is not THE game; if the game only consisted of the Game class it would be a broken game,
 //  missing many important subsystems.
 
 // You can and should derive this for your own applications.
 // The macro DefineGame(classname) will allow you to have your game instance run instead of main().
+// Alternatively, you can just use the base game class with DefineGame(Game). Writing your own classes is still trivial with the scripting engine functions.
 
 class MAGEDLL Game
 {
@@ -86,7 +87,7 @@ public:
 	std::vector<sf::FloatRect> getCollidingBoxes(objBasic* obj);
 	std::vector<std::shared_ptr<objBasic>> findObjectsAt(sf::Vector2f pos);
 	std::vector<std::shared_ptr<uiBasic>> findUiAt(sf::Vector2f pos);
-	std::vector<std::shared_ptr<sfTextureResource>> getKeybindTextures(std::string bName);
+	std::vector<std::shared_ptr<resourceTexture>> getKeybindTextures(std::string bName);
 	void physicsImpulse(sf::Vector2f position, float force, float radius, std::vector<objBasic*> exempt);
 	sf::Vector2f findTextSize(std::string text, unsigned int fontScale = 18);
 
@@ -111,8 +112,8 @@ public:
 
 public:
 	// SUBSYSTEMS
-	std::shared_ptr<mouseMngr> mouse;
-	std::shared_ptr<keyboardMngr> keyboard;
+	std::shared_ptr<inputMouse> mouse;
+	std::shared_ptr<inputKeyboard> keyboard;
 
 	std::shared_ptr<jukebox> music;
 	std::shared_ptr<mixer> sound;
@@ -126,19 +127,19 @@ public:
 	std::shared_ptr<gameStateMngr> states;
 	std::shared_ptr<gameState> state;
 
-	std::shared_ptr<uiView> uiCamera;
-	std::shared_ptr<worldView> worldCamera;
+	std::shared_ptr<viewUi> uiCamera;
+	std::shared_ptr<viewObj> worldCamera;
 
 	hook<> onGameInitDone;
 	hook<> onGamePreUpdate;
 	hook<> onGameUpdate;
-	hook<sf::RenderTarget&> onGameDraw;
-	hook<sf::RenderTarget&> onGameUiDraw;
-	hook<sf::RenderTarget&> onGameWorldDraw;
+	hook<> onGameDraw;
+	hook<> onGameUiDraw; // our render target isn't stored shared, so we can't pass it shared
+	hook<> onGameWorldDraw;
 	hook<> onGameDone;
 
 	unsigned int mouseMode;
-	std::shared_ptr<sfTextureResource> mouseTexture;
+	std::shared_ptr<resourceTexture> mouseTexture;
 
 	bool showFps;
 	bool debug;
@@ -190,6 +191,8 @@ private:
 };
 
 MAGEDLL Game* theGame();
+
+} // namespace mage
 
 #define DeclareGame(typ) int main(int argc, char *argv[]) {\
 sf::RenderWindow wind;\

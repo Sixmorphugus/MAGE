@@ -1,6 +1,8 @@
 #include "prefabs.h"
 #include "group.h"
 
+using namespace mage;
+
 prefab::prefab()
 {
 	templateObject = nullptr;
@@ -138,6 +140,8 @@ std::shared_ptr<basic> prefabMngr::newInstance(std::string name, Group* attachTo
 
 // SE Binding
 #include "scriptingEngine.h"
+
+using namespace chaiscript;
 
 // for prefab
 DeclareScriptingType(prefab);

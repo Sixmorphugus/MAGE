@@ -1,6 +1,8 @@
 #include "serializable.h"
 #include "platform.h"
 
+using namespace mage;
+
 std::string serializable::serialize()
 {
 	return "";

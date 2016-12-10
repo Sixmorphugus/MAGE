@@ -2,29 +2,32 @@
 
 #include "helpers.h"
 #include "Game.h"
-#include "sfResources.h"
 
-namespace groupPrivate {
-	bool compareObjects(std::shared_ptr<basic> i, std::shared_ptr<basic> j) {
-		auto woi = dynamic_cast<objBasic*>(i.get());
-		auto woj = dynamic_cast<objBasic*>(j.get());
+using namespace mage;
 
-		if (woi && woj) {
-			return woi->operator<(*woj); // two objBasics
+namespace mage {
+	namespace groupPrivate {
+		bool compareObjects(std::shared_ptr<basic> i, std::shared_ptr<basic> j) {
+			auto woi = dynamic_cast<objBasic*>(i.get());
+			auto woj = dynamic_cast<objBasic*>(j.get());
+
+			if (woi && woj) {
+				return woi->operator<(*woj); // two objBasics
+			}
+
+			p::fatal("A world object group was found to be malformed during a depth ordering operation.");
+			return false; // if this is called, uiObjectStart is in the wrong place
 		}
 
-		p::fatal("A world object group was found to be malformed during a depth ordering operation.");
-		return false; // if this is called, uiObjectStart is in the wrong place
-	}
+		prefabMngr * prefabs()
+		{
+			return theGame()->prefabs.get();
+		}
 
-	prefabMngr * prefabs()
-	{
-		return theGame()->prefabs.get();
-	}
-
-	void drawLoadingScreenFrame(std::string text, int prog, int maxProg)
-	{
-		theGame()->drawLoadingScreenFrame(text, prog, maxProg);
+		void drawLoadingScreenFrame(std::string text, int prog, int maxProg)
+		{
+			theGame()->drawLoadingScreenFrame(text, prog, maxProg);
+		}
 	}
 }
 
@@ -55,6 +58,8 @@ void groupBase::drawUiObjects(sf::RenderTarget & target, sf::RenderStates states
 #include "scriptingEngine.h"
 
 // groupBase
+using namespace chaiscript;
+
 DeclareScriptingType(groupBase);
 DeclareScriptingBaseClass(serializable, groupBase);
 DeclareScriptingBaseClass(shadable, groupBase);

@@ -4,10 +4,15 @@
 #include "SfmlAfx.h"
 
 #include "prefabs.h"
+#include "objBasic.h"
+#include "uiBasic.h"
 #include "serializable.h"
 #include "helpers.h"
-#include "mageResources.h"
+#include "resourceGroup.h"
 #include "shaders.h"
+#include "stringHelpers.h"
+
+namespace mage {
 
 // because we're a header that the Game.h file directly uses, templates in here cannot access theGame() like everything else can.
 // we can however access other subsystem headers (i.e. prefabs.h)
@@ -98,7 +103,7 @@ template<class T = basic> class group : public groupBase
 {
 public:
 	group();
-	group(std::shared_ptr<mageGroupResource> gr); // creates group with saved objects (grabbing them from the resource when asked to and then forgetting the resource that was attached)
+	group(std::shared_ptr<resourceGroup> gr); // creates group with saved objects (grabbing them from the resource when asked to and then forgetting the resource that was attached)
 													  // you can of course create a group from another group
 
 	// replace the copy constructor and assignment operator with set
@@ -173,7 +178,7 @@ inline group<T>::group()
 }
 
 template<class T>
-inline group<T>::group(std::shared_ptr<mageGroupResource> gr)
+inline group<T>::group(std::shared_ptr<resourceGroup> gr)
 {
 	if (!gr)
 		return;
@@ -632,23 +637,25 @@ inline void group<T>::clearObjects()
 	}
 }
 
+} // namespace mage
+
 // group types
 // these all have to be custom because commas in the template list can really mess stuff up
 #define DeclareScriptingGroup(heldType, name) \
-DeclareScriptingCustom(user_type<group<heldType>>(), name) \
-DeclareScriptingCustom(constructor<group<heldType>()>(), name); \
-DeclareScriptingCustom(constructor<group<heldType>(std::shared_ptr<mageGroupResource>)>(), name); \
-DeclareScriptingCustom(base_class<groupBase, group<heldType>>()); \
-DeclareScriptingCustom(base_class<serializable, group<heldType>>()); \
-DeclareScriptingCustom(base_class<shadable, group<heldType>>()); \
-DeclareScriptingCustom(fun(&group<heldType>::clearObjects<objBasic>), "clearWorldObjects"); \
-DeclareScriptingCustom(fun(&group<heldType>::clearObjects<uiBasic>), "clearUiObjects"); \
-DeclareScriptingCustom(fun(&group<heldType>::findByUiName), "findByUiName"); \
-DeclareScriptingCustom(fun(&group<heldType>::get), "get"); \
-DeclareScriptingCustom(fun(&group<heldType>::indexOf), "indexOf"); \
-DeclareScriptingCustom(fun(&group<heldType>::localIndexOf), "localIndexOf"); \
-DeclareScriptingCustom(fun(&group<heldType>::combine<>), "combine"); \
-DeclareScriptingCustom(fun(&group<heldType>::set<>), "set"); \
-DeclareScriptingCustom(fun(&group<heldType>::attach), "attach"); \
-DeclareScriptingCopyOperator(group<heldType>); \
-DeclareScriptingCastingFunction("to_" name, groupBase, group<heldType>); // broke my rule here but it seems to be fine -c
+DeclareScriptingCustom(user_type<mage::group<heldType>>(), name) \
+DeclareScriptingCustom(constructor<mage::group<heldType>()>(), name); \
+DeclareScriptingCustom(constructor<mage::group<heldType>(std::shared_ptr<mage::resourceGroup>)>(), name); \
+DeclareScriptingCustom(base_class<mage::groupBase, mage::group<heldType>>()); \
+DeclareScriptingCustom(base_class<mage::serializable, mage::group<heldType>>()); \
+DeclareScriptingCustom(base_class<mage::shadable, mage::group<heldType>>()); \
+DeclareScriptingCustom(fun(&mage::group<heldType>::clearObjects<mage::objBasic>), "clearWorldObjects"); \
+DeclareScriptingCustom(fun(&mage::group<heldType>::clearObjects<mage::uiBasic>), "clearUiObjects"); \
+DeclareScriptingCustom(fun(&mage::group<heldType>::findByUiName), "findByUiName"); \
+DeclareScriptingCustom(fun(&mage::group<heldType>::get), "get"); \
+DeclareScriptingCustom(fun(&mage::group<heldType>::indexOf), "indexOf"); \
+DeclareScriptingCustom(fun(&mage::group<heldType>::localIndexOf), "localIndexOf"); \
+DeclareScriptingCustom(fun(&mage::group<heldType>::combine<>), "combine"); \
+DeclareScriptingCustom(fun(&mage::group<heldType>::set<>), "set"); \
+DeclareScriptingCustom(fun(&mage::group<heldType>::attach), "attach"); \
+DeclareScriptingCopyOperator(mage::group<heldType>); \
+DeclareScriptingCastingFunction("to_" name, mage::groupBase, mage::group<heldType>); // broke my rule here but it seems to be fine -c

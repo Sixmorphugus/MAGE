@@ -1,10 +1,11 @@
 #include "scriptingEngine.h"
 
 using namespace chaiscript;
+using namespace mage;
 
 // Chaiscript Scripting Engine Objects and binding
 
-#include "helpers.h"
+#include "stringHelpers.h"
 #include "platform.h"
 #include "Game.h"
 
@@ -244,33 +245,34 @@ void scriptingEngine::schedule(sf::Time time, std::function<void()> fun)
 // -------------------------------------------------------------
 // FUNCTIONS
 // -------------------------------------------------------------
-
-void chaiPrint(const std::string& data, const std::string& file, const std::string& function, int line)
-{
-	p::diagnosticLog(p::CHAISCRIPT, file, function, line, data);
-}
-
-void chaiCrash(const std::string &data)
-{
-	p::fatal(data);
-}
-
-void handleEvalError(const chaiscript::exception::eval_error &e)
-{
-	p::warn("Eval exception was thrown;");
-
-	std::string errorToLog = e.pretty_print();
-
-	auto lines = splitString(errorToLog, '\n');
-
-	for (unsigned int i = 0; i < lines.size(); i++) {
-		if (lines[i] == "")
-			continue;
-
-		p::log("\t" + lines[i]);
+namespace mage {
+	void chaiPrint(const std::string& data, const std::string& file, const std::string& function, int line)
+	{
+		p::diagnosticLog(p::CHAISCRIPT, file, function, line, data);
 	}
 
-	if (CRASHWHENEVALFAILS) {
-		p::fatal(errorToLog);
+	void chaiCrash(const std::string &data)
+	{
+		p::fatal(data);
+	}
+
+	void handleEvalError(const chaiscript::exception::eval_error &e)
+	{
+		p::warn("Eval exception was thrown;");
+
+		std::string errorToLog = e.pretty_print();
+
+		auto lines = splitString(errorToLog, '\n');
+
+		for (unsigned int i = 0; i < lines.size(); i++) {
+			if (lines[i] == "")
+				continue;
+
+			p::log("\t" + lines[i]);
+		}
+
+		if (CRASHWHENEVALFAILS) {
+			p::fatal(errorToLog);
+		}
 	}
 }

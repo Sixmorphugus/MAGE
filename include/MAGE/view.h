@@ -3,8 +3,9 @@
 // A view draws the entire part of the group it is assigned to that will fit onto the screen.
 // it wraps sf::View to do this.
 // It will do it with a transparent background unless you tell it otherwise
-// It can be told to focus on a specific object and will stop trying to focus on this object when it stops existing.
-// It can have a shader applied to everything it draws (not working yet) as an entire-view feature.
+// It can have a shader applied to everything it draws as an entire-view feature.
+
+// TODO: A view can have render verteces queued. As rendering finishes, it can draw them in.
 
 // The game has 2 it renders with by default - one for UI and one for the world.
 // Both of these are autocreated and configured
@@ -15,6 +16,8 @@
 
 #include "group.h"
 #include "shaders.h"
+
+namespace mage {
 
 class MAGEDLL view : public sf::View, public shadable {
 public:
@@ -54,7 +57,7 @@ protected:
 public:
 	// things that affect rendering
 	std::weak_ptr<groupBase> group;
-	std::shared_ptr<sfShaderResource> shader;
+	std::shared_ptr<resourceShader> shader;
 
 	sf::Vector2f zoomZero;
 	bool respectPixelGrid;
@@ -63,22 +66,11 @@ public:
 	hook<view*> onRender;
 };
 
-// worldView can see the world objects in a group
-class MAGEDLL worldView : public view {
-public:
-	worldView();
-	worldView(sf::Vector2f size, std::shared_ptr<groupBase> gr = nullptr);
+} // namespace mage
 
-	void render(sf::RenderTarget& target, sf::Color bgCol = sf::Color::Transparent);
-public:
-	bool useStateBounds;
-};
-
-// uiView can see the ui objects in a group
-class MAGEDLL uiView : public view {
-public:
-	uiView();
-	uiView(sf::Vector2f size, std::shared_ptr<groupBase> gr = nullptr);
-
-	void render(sf::RenderTarget& target, sf::Color bgCol = sf::Color::Transparent);
-};
+#define DeclareScriptingView(type) \
+DeclareScriptingBaseClass(sf::View, type);\
+DeclareScriptingBaseClass(shadable, type);\
+DeclareScriptingBaseClass(view, type);\
+DeclareScriptingConstructor(type(), STRING(type));\
+DeclareScriptingConstructor(type(sf::Vector2f, std::shared_ptr<groupBase>), STRING(type));

@@ -2,6 +2,8 @@
 #include "basic.h"
 #include "taggable.h"
 
+namespace mage {
+
 // class for managing a single saved basic which is used as a template.
 class MAGEDLL prefab : public taggable, public serializable {
 public:
@@ -70,3 +72,5 @@ inline std::vector<std::shared_ptr<prefab>> prefabMngr::listType()
 
 	return results;
 }
+
+} // namespace mage

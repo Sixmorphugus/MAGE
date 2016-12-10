@@ -1,8 +1,10 @@
 #include "view.h"
 
-#include "sfResources.h"
+#include "resourceGroup.h"
 #include "helpers.h"
 #include "gameState.h"
+
+using namespace mage;
 
 view::view()
 {
@@ -180,82 +182,10 @@ void view::moveTowards(basic & target, float multiplier)
 	move(dist * multiplier);
 }
 
-// worldView
-worldView::worldView()
-{
-	useStateBounds = true;
-}
-
-worldView::worldView(sf::Vector2f size, std::shared_ptr<groupBase> gr)
-	: view(size, gr)
-{
-	useStateBounds = true;
-}
-
-void worldView::render(sf::RenderTarget & target, sf::Color bgCol)
-{
-	// if the group we're viewing is a gameState, we can use its bounds (though this can be overidden)
-	if (useStateBounds) {
-		auto gs = std::dynamic_pointer_cast<gameState>(group.lock());
-
-		if (gs) {
-			cameraLimits = gs->mapBounds;
-		}
-	}
-
-	view::render(target, bgCol); // this is called here so the pixel grid respect still works after moving the camera
-
-	// draw all the objects in the group
-	sf::RenderStates rs;
-	applyShader(rs, sf::Vector2f(internalRT.getSize().x, internalRT.getSize().y));
-
-	if (!group.expired()) {
-		auto groupLck = group.lock();
-
-		groupLck->drawWorldObjects(internalRT, sf::RenderStates());
-
-		internalRT.display();
-
-		sf::Sprite irtSpr((internalRT.getTexture()));
-		target.draw(irtSpr, rs);
-	}
-}
-
-// uiView
-uiView::uiView()
-{
-}
-
-uiView::uiView(sf::Vector2f size, std::shared_ptr<groupBase> gr)
-	: view(size, gr)
-{
-}
-
-void uiView::render(sf::RenderTarget & target, sf::Color bgCol)
-{
-	view::render(target, bgCol);
-
-	// draw all the objects in the group
-	sf::RenderStates rs;
-	applyShader(rs, sf::Vector2f(internalRT.getSize().x, internalRT.getSize().y));
-
-	if (!group.expired()) {
-		auto groupLck = group.lock();
-
-		groupLck->drawUiObjects(internalRT, sf::RenderStates());
-
-		internalRT.display();
-
-		sf::Sprite irtSpr(internalRT.getTexture());
-
-		target.draw(irtSpr, rs);
-	}
-}
-
 // SE Bind
 DeclareScriptingType(view);
 DeclareScriptingBaseClass(sf::View, view);
-DeclareScriptingBaseClass(shadable, worldView);
+DeclareScriptingBaseClass(shadable, view);
 DeclareScriptingFunction(&view::bounds, "bounds");
 DeclareScriptingFunction(&view::getHalfSize, "getHalfSize");
 DeclareScriptingFunction(&view::getViewportBoundsIn, "getViewportBoundsIn");
@@ -270,20 +200,3 @@ DeclareScriptingFunction(&view::setPosition, "setPosition");
 DeclareScriptingFunction(&view::shader, "shader");
 DeclareScriptingFunction(&view::group, "group");
 DeclareScriptingFunction(&view::zoomZero, "zoomZero");
-
-DeclareScriptingType(worldView);
-DeclareScriptingBaseClass(sf::View, worldView);
-DeclareScriptingBaseClass(shadable, worldView);
-DeclareScriptingBaseClass(view, worldView);
-DeclareScriptingConstructor(worldView(), "worldView");
-DeclareScriptingConstructor(worldView(sf::Vector2f, std::shared_ptr<groupBase>), "worldView");
-DeclareScriptingFunction(&worldView::useStateBounds, "useStateBounds");
-
-DeclareScriptingType(uiView);
-DeclareScriptingBaseClass(sf::View, uiView);
-DeclareScriptingBaseClass(shadable, uiView);
-DeclareScriptingBaseClass(view, uiView);
-DeclareScriptingConstructor(uiView(), "uiView");
-DeclareScriptingConstructor(uiView(sf::Vector2f, std::shared_ptr<groupBase>), "uiView");
-
-DeclareScriptingHook("viewRenderHook", view*);

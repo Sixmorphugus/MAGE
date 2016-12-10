@@ -1,6 +1,9 @@
 #pragma once
 #include "build.h"
 
+// DO NOT INCLUDE THIS IN HEADER FILES.
+// PROJECTS THAT INCLUDE MAGE WILL HAVE THESE VARIABLES IF YOU DO.
+
 // modifiable
 #define TICKRATE 60 // how many times the game will (try to) update a second
 #define SHOWCOLLISIONBOXES false // whether to show collision boxes or not.

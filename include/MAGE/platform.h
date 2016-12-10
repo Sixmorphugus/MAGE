@@ -3,6 +3,8 @@
 #include "SfmlAfx.h"
 #include "constants.h"
 
+namespace mage {
+
 namespace platform {
 	enum LOGTYPE { INF = 0, WARNING = 1, FATAL = 2, CHAISCRIPT = 3 };
 
@@ -51,3 +53,5 @@ namespace platform {
 }
 
 namespace p = platform;
+
+}

@@ -3,7 +3,8 @@
 // SUBSYSTEMS
 #include "view.h"
 #include "gameState.h" // includes group, which includes basic
-#include "io.h" // IO stuff
+#include "inputKeyboard.h" // IO stuff
+#include "inputMouse.h" // IO stuff
 #include "resources.h" // resource stuff
 #include "prefabs.h" // prefab stuff
 #include "jukebox.h"
@@ -12,16 +13,26 @@
 #include "schedules.h"
 
 // OBJECTS
-#include "tilemap.h"
-#include "uiPrimitives.h"
-#include "light.h"
-#include "physicsObject.h"
+#include "objTilemap.h"
+#include "objLight.h"
+#include "objPhysics.h"
 
 // MISC
 #include "helpers.h"
 #include "constants.h"
-#include "sfResources.h"
-#include "mageResources.h"
+#include "resourceFont.h"
+#include "resourceScriptRoot.h"
+#include "loadingScreen.h"
+#include "textHelpers.h"
+#include "resourceSoundBuffer.h"
+#include "resourceTexture.h"
+#include "resourceFont.h"
+#include "resourceShader.h"
+#include "viewObj.h"
+#include "viewUi.h"
+#include "stringHelpers.h"
+
+using namespace mage;
 
 // LE GAME ENGINE
 // SIMPLES
@@ -57,8 +68,8 @@ Game::Game(int argc, char* argv[], sf::RenderWindow* wind):
 	p::info("STARTING SUBSYSTEMS");
 
 	p::log("\tInput...");
-	keyboard = std::make_shared<keyboardMngr>();
-	mouse = std::make_shared<mouseMngr>();
+	keyboard = std::make_shared<inputKeyboard>();
+	mouse = std::make_shared<inputMouse>();
 
 	p::log("\tAudio...");
 	sound = std::make_shared<mixer>();
@@ -69,8 +80,8 @@ Game::Game(int argc, char* argv[], sf::RenderWindow* wind):
 	prefabs = std::make_shared<prefabMngr>();
 
 	p::log("\tGroup Renderers...");
-	uiCamera = std::make_shared<uiView>();
-	worldCamera = std::make_shared<worldView>();
+	uiCamera = std::make_shared<viewUi>();
+	worldCamera = std::make_shared<viewObj>();
 
 	p::log("\tScripting...");
 	scripting = std::make_shared<scriptingEngine>();
@@ -186,41 +197,41 @@ void Game::loadResources() {
 	p::info("Creating variable registry...");
 
 	// sound effects used by engine objects
-	resources->add("sfx_begin", std::make_shared<sfSoundBufferResource>("base/sfx/enterBattle.wav"), true);
-	resources->add("sfx_explosion", std::make_shared<sfSoundBufferResource>("base/sfx/Explosion2.wav"), true);
-	resources->add("sfx_dlgDefault", std::make_shared<sfSoundBufferResource>("base/sfx/talk_info.wav"), true);
-	resources->add("sfx_damage", std::make_shared<sfSoundBufferResource>("base/sfx/damage.wav"), true);
-	resources->add("sfx_menuopen", std::make_shared<sfSoundBufferResource>("base/sfx/menuopen.wav"), true);
-	resources->add("sfx_menuclose", std::make_shared<sfSoundBufferResource>("base/sfx/menuclose.wav"), true);
-	resources->add("sfx_menuselect", std::make_shared<sfSoundBufferResource>("base/sfx/menuselect.wav"), true);
-	resources->add("sfx_menuchoose", std::make_shared<sfSoundBufferResource>("base/sfx/menuchoose.wav"), true);
-	resources->add("sfx_menuback", std::make_shared<sfSoundBufferResource>("base/sfx/menuback.wav"), true);
+	resources->add("sfx_begin", std::make_shared<resourceSoundBuffer>("base/sfx/enterBattle.wav"), true);
+	resources->add("sfx_explosion", std::make_shared<resourceSoundBuffer>("base/sfx/Explosion2.wav"), true);
+	resources->add("sfx_dlgDefault", std::make_shared<resourceSoundBuffer>("base/sfx/talk_info.wav"), true);
+	resources->add("sfx_damage", std::make_shared<resourceSoundBuffer>("base/sfx/damage.wav"), true);
+	resources->add("sfx_menuopen", std::make_shared<resourceSoundBuffer>("base/sfx/menuopen.wav"), true);
+	resources->add("sfx_menuclose", std::make_shared<resourceSoundBuffer>("base/sfx/menuclose.wav"), true);
+	resources->add("sfx_menuselect", std::make_shared<resourceSoundBuffer>("base/sfx/menuselect.wav"), true);
+	resources->add("sfx_menuchoose", std::make_shared<resourceSoundBuffer>("base/sfx/menuchoose.wav"), true);
+	resources->add("sfx_menuback", std::make_shared<resourceSoundBuffer>("base/sfx/menuback.wav"), true);
 
 	// undeferred
-	resources->add("__fontDef", std::make_shared<sfFontResource>("base/ui/text/PIXEARG_.TTF"), true);
-	resources->add("__splash", std::make_shared<sfTextureResource>("base/ui/splash.png"), true);
+	resources->add("__fontDef", std::make_shared<resourceFont>("base/ui/text/PIXEARG_.TTF"), true);
+	resources->add("__splash", std::make_shared<resourceTexture>("base/ui/splash.png"), true);
 
 	// generic engine stuff
-	resources->add("mouse", std::make_shared<sfTextureResource>("base/ui/mouse.png"));
+	resources->add("mouse", std::make_shared<resourceTexture>("base/ui/mouse.png"));
 
 	// ui required by legacy classes
-	resources->add("ui_title", std::make_shared<sfTextureResource>("base/ui/title2.png"));
-	resources->add("ui_title_small", std::make_shared<sfTextureResource>("base/ui/title.png"));
-	resources->add("ui_info_image", std::make_shared<sfTextureResource>("base/ui/infoimage.png"));
+	resources->add("ui_title", std::make_shared<resourceTexture>("base/ui/title2.png"));
+	resources->add("ui_title_small", std::make_shared<resourceTexture>("base/ui/title.png"));
+	resources->add("ui_info_image", std::make_shared<resourceTexture>("base/ui/infoimage.png"));
 
-	resources->add("ui_block_base", std::make_shared<sfTextureResource>("base/ui/block/base.png"));
+	resources->add("ui_block_base", std::make_shared<resourceTexture>("base/ui/block/base.png"));
 
-	resources->add("ui_notfound", std::make_shared<sfTextureResource>("base/ui/nosprite.png"));
+	resources->add("ui_notfound", std::make_shared<resourceTexture>("base/ui/nosprite.png"));
 
 	// lazyload ui
-	resources->addFolder<sfTextureResource>("ui_input_", "base/ui/bindimages");
+	resources->addFolder<resourceTexture>("ui_input_", "base/ui/bindimages");
 
 	// shaders
-	resources->add("interactiveObject", std::make_shared<sfShaderResource>("base/shaders/outline.glsl", sf::Shader::Fragment));
-	resources->add("desaturation", std::make_shared<sfShaderResource>("base/shaders/grayscale.glsl", sf::Shader::Fragment));
+	resources->add("interactiveObject", std::make_shared<resourceShader>("base/shaders/outline.glsl", sf::Shader::Fragment));
+	resources->add("desaturation", std::make_shared<resourceShader>("base/shaders/grayscale.glsl", sf::Shader::Fragment));
 
 	// MAIN SCRIPT
-	resources->add("main", std::make_shared<mageScriptResource>("resources/main.chai"), true);
+	resources->add("main", std::make_shared<resourceScriptRoot>("resources/main.chai"), true);
 
 	resources->update();
 }
@@ -231,17 +242,17 @@ void Game::loadResources() {
 void Game::draw() {
 	// GAME VIEW
 	worldCamera->render(getRenderWindow(), state->bgCol);
-	onGameWorldDraw.notify(getRenderWindow());
+	onGameWorldDraw.notify();
 
 	// UI VIEW
 	uiCamera->render(getRenderWindow());
-	onGameUiDraw.notify(getRenderWindow());
+	onGameUiDraw.notify();
 
 	getRenderWindow().setView(*uiCamera.get());
 
 	// draw in the fps
 	if (showFps) {
-		pDrawInfo(getRenderWindow(), sf::RenderStates(), sf::Vector2f(4.f, 4.f),
+		renderInfo(getRenderWindow(), sf::RenderStates(), sf::Vector2f(4.f, 4.f),
 			"Multipurpose Arcade Game Engine r" + BUILDSTRING + "\n" +
 			"FPS: " + std::to_string(fps) + "\n" +
 			"TPS: " + std::to_string(tps) + "\n" +
@@ -269,7 +280,7 @@ void Game::draw() {
 		}
 	}
 
-	onGameDraw.notify(getRenderWindow());
+	onGameDraw.notify();
 
 	getRenderWindow().display();
 }
@@ -344,7 +355,7 @@ void Game::update(sf::Time elapsed) {
 	// finish
 	debug = true;
 
-	mouseTexture = resources->getAs<sfTextureResource>("mouse");
+	mouseTexture = resources->getAs<resourceTexture>("mouse");
 }
 
 void Game::drawLoadingScreenFrame(std::string text, int prog, int maxProg) {
@@ -796,14 +807,14 @@ std::vector<std::shared_ptr<uiBasic>> Game::findUiAt(sf::Vector2f pos)
 	return cols;
 }
 
-std::vector<std::shared_ptr<sfTextureResource>> Game::getKeybindTextures(std::string bName)
+std::vector<std::shared_ptr<resourceTexture>> Game::getKeybindTextures(std::string bName)
 {
 	auto textures = keyboard->getBindTextures(bName);
 
-	std::vector<std::shared_ptr<sfTextureResource>> list;
+	std::vector<std::shared_ptr<resourceTexture>> list;
 
 	for (unsigned int i = 0; i < textures.size(); i++) {
-		list.push_back(resources->getAs<sfTextureResource>(textures[i]));
+		list.push_back(resources->getAs<resourceTexture>(textures[i]));
 	}
 
 	return list;
@@ -813,7 +824,7 @@ void Game::physicsImpulse(sf::Vector2f position, float force, float radius, std:
 {
 	for (unsigned int i = 0; i < state->getNumWorldObjects(); i++) {
 		objBasic* obj = state->getWorldObject(i).get();
-		physicsObject* p = dynamic_cast<physicsObject*>(obj);
+		objPhysics* p = dynamic_cast<objPhysics*>(obj);
 
 		bool isExempt = false;
 
@@ -832,7 +843,7 @@ void Game::physicsImpulse(sf::Vector2f position, float force, float radius, std:
 sf::Vector2f Game::findTextSize(std::string text, unsigned int fontScale)
 {
 	// just create text and measure it up
-	sf::Font &dFont = *resources->getAs<sfFontResource>("__fontDef")->get();
+	sf::Font &dFont = *resources->getAs<resourceFont>("__fontDef")->get();
 	sf::Text t(text, dFont, fontScale);
 	t.setScale(.5f, .5f);
 
@@ -919,7 +930,7 @@ sf::RenderWindow& Game::getRenderWindow()
 	return *window;
 }
 
-Game * theGame()
+Game * mage::theGame()
 {
 	return globalGame;
 }

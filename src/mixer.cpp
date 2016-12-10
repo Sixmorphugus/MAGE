@@ -3,7 +3,9 @@
 #include "helpers.h"
 #include "Game.h"
 
-#include "sfResources.h"
+#include "resourceSoundBuffer.h"
+
+using namespace mage;
 
 mixer::mixer()
 {
@@ -16,7 +18,7 @@ mixer::~mixer()
 	silence();
 }
 
-void mixer::play(std::shared_ptr<sfSoundBufferResource> sound, sf::Vector2f pan, bool replaceSame, bool generatePitch)
+void mixer::play(std::shared_ptr<resourceSoundBuffer> sound, sf::Vector2f pan, bool replaceSame, bool generatePitch)
 {
 	if (!sound)
 		return;
@@ -52,7 +54,7 @@ void mixer::play(std::shared_ptr<sfSoundBufferResource> sound, sf::Vector2f pan,
 	ch->player.play();
 }
 
-void mixer::stop(std::shared_ptr<sfSoundBufferResource> sound)
+void mixer::stop(std::shared_ptr<resourceSoundBuffer> sound)
 {
 	// erase channels that match the soundName
 	for (unsigned int i = 0; i < channels.size(); i++) {
@@ -84,6 +86,8 @@ void mixer::update()
 }
 
 // SE
+using namespace chaiscript;
+
 DeclareScriptingCustom(user_type<mixer>(), "mixer");
 DeclareScriptingCustom(constructor<mixer()>(), "mixer");
 DeclareScriptingCustom(constructor<mixer(const mixer&)>(), "mixer");

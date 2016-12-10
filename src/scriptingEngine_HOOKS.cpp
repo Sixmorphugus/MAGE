@@ -1,12 +1,8 @@
 #include "scriptingEngine.h"
-
 #include "Game.h"
-#include "physicsObject.h"
-#include "uiPrimitives.h"
-
-#include "io.h"
 
 using namespace chaiscript;
+using namespace mage;
 
 #define HOOK(name, ...) \
 chai->add(user_type< hook<__VA_ARGS__> >(), name); \
@@ -29,22 +25,6 @@ void scriptingEngine::bindHooks()
 	chai->add_global(var(std::ref(theGame()->onGameUiDraw)), "onGameUiDraw");
 	chai->add_global(var(std::ref(theGame()->onGameDraw)), "onGameDraw");
 
-	// mouse hooks
-	HOOK("mouseHook", mouseMngr*);
-
-	chai->add(fun(&mouseMngr::onLeftPressed), "onLeftPressed");
-	chai->add(fun(&mouseMngr::onLeftReleased), "onLeftReleased");
-	chai->add(fun(&mouseMngr::onMiddlePressed), "onMiddlePressed");
-	chai->add(fun(&mouseMngr::onMiddleReleased), "onMiddleReleased");
-	chai->add(fun(&mouseMngr::onRightPressed), "onRightPressed");
-	chai->add(fun(&mouseMngr::onRightReleased), "onRightReleased");
-
-	// keybind hooks
-	HOOK("keyboardHook", keyboardMngr*);
-
-	chai->add(fun(&keyboardMngr::keybind::onPressed), "onPressed");
-	chai->add(fun(&keyboardMngr::keybind::onReleased), "onReleased");
-
 	// basic object hooks
 	HOOK("objectHook", basic*);
 	HOOK("objectDrawHook", const basic*, sf::RenderTarget*);
@@ -59,12 +39,4 @@ void scriptingEngine::bindHooks()
 	chai->add(fun(&basic::onFirstUpdate), "onFirstUpdate");
 
 	chai->add(fun(&uiBasic::onWorldDraw), "onWorldDraw");
-
-	chai->add(fun(&physicsObject::onImpact), "onImpact");
-	chai->add(fun(&physicsObject::onImpulse), "onImpulse");
-
-	chai->add(fun(&menu::onDismissed), "onDismissed");
-	chai->add(fun(&menu::onSelectionChanged), "onSelectionChanged");
-
-	chai->add(fun(&textEntry::onReady), "onReady");
 }

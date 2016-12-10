@@ -1,8 +1,12 @@
 #include "jukebox.h"
 #include "Game.h"
 #include "helpers.h"
+#include "platform.h"
+#include "maths.h"
 
-#include "sfResources.h"
+#include "resourceMusic.h"
+
+using namespace mage;
 
 jukebox::jukebox()
 {
@@ -14,7 +18,7 @@ jukebox::jukebox()
 	playing = false;
 }
 
-void jukebox::playSong(std::shared_ptr<sfMusicResource> song)
+void jukebox::playSong(std::shared_ptr<resourceMusic> song)
 {
 	if (!song) {
 		stopPlaying();
@@ -78,7 +82,7 @@ void jukebox::resume()
 	playing = true;
 }
 
-void jukebox::fadeToSong(std::shared_ptr<sfMusicResource> song)
+void jukebox::fadeToSong(std::shared_ptr<resourceMusic> song)
 {
 	if (!song) {
 		stopPlaying(true);
@@ -186,6 +190,8 @@ void jukebox::update()
 }
 
 // SE
+using namespace chaiscript;
+
 DeclareScriptingCustom(user_type<jukebox>(), "jukebox");
 DeclareScriptingCustom(constructor<jukebox()>(), "jukebox");
 DeclareScriptingCustom(fun(&jukebox::fadeToSong), "fadeToSong");

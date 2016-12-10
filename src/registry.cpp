@@ -1,6 +1,7 @@
 #include "registry.h"
+#include "stringHelpers.h"
 
-#include "helpers.h"
+using namespace mage;
 
 // REGISTRY PROPERTY CLASS
 // ----------------------------------------------------------------------------
@@ -393,6 +394,7 @@ unsigned int registry::getIndex(std::string name)
 
 // SE Bindings
 #include "scriptingEngine.h"
+using namespace chaiscript;
 
 DeclareScriptingCustom(user_type<registry::prop>(), "registryProp");
 DeclareScriptingCustom(fun(&registry::prop::name), "name");

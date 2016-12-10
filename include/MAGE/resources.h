@@ -6,6 +6,8 @@
 
 #include "platform.h"
 
+namespace mage {
+
 class resourceMngr;
 
 class loadingScreen;
@@ -31,18 +33,6 @@ public:
 private:
 	bool loaded = false;
 	std::weak_ptr<resource> selfRef;
-};
-
-// basic class for a resource using ONE file.
-class MAGEDLL filepathResource : public resource
-{
-public:
-	filepathResource();
-	filepathResource(std::string filepath);
-
-	virtual bool load();
-public:
-	std::string filepath;
 };
 
 class MAGEDLL resourceMngr {
@@ -134,6 +124,8 @@ inline std::vector<std::shared_ptr<T>> resourceMngr::listType(std::string tag)
 	return rcList;
 }
 
+} // namespace mage
+
 #define DeclareScriptingResource(name) \
 DeclareScriptingType(name); \
 DeclareScriptingBaseClass(resource, name);\
@@ -143,10 +135,3 @@ DeclareScriptingFunction(&resourceMngr::getAs<name>, "get_" STRING(name));\
 DeclareScriptingFunction(&resourceMngr::listType<name>, "list_" STRING(name));\
 DeclareScriptingListableNamed(std::shared_ptr<name>, STRING(name) "SharedPtrList");\
 DeclareScriptingCastingFunction("to_" STRING(name), resource, name);
-
-#define DeclareScriptingFilepathResource(name) \
-DeclareScriptingResource(name) \
-DeclareScriptingBaseClass(filepathResource, name);\
-DeclareScriptingConstructor(name(std::string), STRING(name));\
-DeclareScriptingFunction(&resourceMngr::addFolder<name>, "addFolderOf_" STRING(name));\
-DeclareScriptingCopyOperator(name);

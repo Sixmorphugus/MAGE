@@ -1,10 +1,14 @@
 // REGISTRY.
 // A file with a set of ordered values, interpretable only by the Game.
 // These ALWAYS depend on their order!
+// funnily enough, not a resource.
+
 #pragma once
 #include "StdAfx.h"
 #include "SfmlAfx.h"
 #include "platform.h"
+
+namespace mage {
 
 class MAGEDLL registry
 {
@@ -79,3 +83,5 @@ private:
 private:
 	std::vector<prop> values;
 };
+
+} // namespace mage

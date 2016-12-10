@@ -1,6 +1,7 @@
 #include "scriptingEngine.h"
 
 using namespace chaiscript;
+using namespace mage;
 
 #define UINT_TYPE(type, name) \
 chai->add(user_type<type>(), name); \

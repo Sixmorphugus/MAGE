@@ -1,6 +1,8 @@
 #pragma once
 #include "StdAfx.h"
 
+namespace mage {
+
 // a serializable is an object that can save its state and reload it later.
 // a serializable is NOT an object that can save its state and be entirely reconstructed from
 // the saved state later.
@@ -16,3 +18,5 @@ public:
 	virtual void saveToFile(std::string file);
 	virtual bool loadFromFile(std::string file);
 };
+
+} // namespace mage
