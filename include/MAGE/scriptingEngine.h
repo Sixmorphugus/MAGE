@@ -79,7 +79,7 @@ MAGEDLL void handleEvalError(const chaiscript::exception::eval_error &e);
 #define StartScriptingDeclaration namespace {
 #define EndScriptingDeclaration }
 #define DeclareScriptingCustom(...) StartScriptingDeclaration mage::seScriptingEngineRegistration UNIQUE_NAME(se)(__VA_ARGS__); EndScriptingDeclaration
-#define DeclareScriptingCopyOperator(obj) DeclareScriptingCustom(fun([](obj &o1, obj o2) { o1 = o2; }), "=");
+#define DeclareScriptingCopyOperator(obj) DeclareScriptingCustom(chaiscript::fun([](obj &o1, obj o2) { o1 = o2; }), "=");
 #define DeclareScriptingNamed(arg, name) DeclareScriptingCustom(arg, name);
 #define DeclareScriptingBaseClass(base, derived) DeclareScriptingCustom(chaiscript::base_class<base, derived>());
 #define DeclareScriptingListable(arg) DeclareScriptingCustom(chaiscript::bootstrap::standard_library::vector_type< std::vector<arg> >(STRING(arg) STRING(List)));

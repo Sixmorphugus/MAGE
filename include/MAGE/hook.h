@@ -1,7 +1,6 @@
 #pragma once
 #include "StdAfx.h"
 #include "platform.h"
-#include "scriptingEngine.h"
 
 namespace mage {
 // very simple implementation of the observer design pattern.

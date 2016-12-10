@@ -71,7 +71,7 @@ inline std::shared_ptr<T> scheduleMngr::getAs(unsigned int index)
 } // namespace mage
 
 #define DeclareScriptingSchedule(type) \
-DeclareScriptingType(type, STRING(type)); \
+DeclareScriptingType(type); \
 DeclareScriptingBaseClass(mage::schedule, type); \
 DeclareScriptingFunction(&mage::scheduleMngr::getAs<type>, "get_" STRING(type)); \
 DeclareScriptingCastingFunction("to_" STRING(type), mage::schedule, type);

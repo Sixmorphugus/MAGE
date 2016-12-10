@@ -1,8 +1,12 @@
 #pragma once
 #include "resourceFilepath.h"
-#include "group.h"
 
 namespace mage {
+
+class basic;
+
+template<class T> class group;
+typedef group<basic> Group;
 
 // group resource is simply a saved group object.
 // a group is a load of objects.

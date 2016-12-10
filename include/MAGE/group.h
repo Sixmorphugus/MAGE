@@ -4,10 +4,13 @@
 #include "SfmlAfx.h"
 
 #include "prefabs.h"
+#include "objBasic.h"
+#include "uiBasic.h"
 #include "serializable.h"
 #include "helpers.h"
 #include "resourceGroup.h"
 #include "shaders.h"
+#include "stringHelpers.h"
 
 namespace mage {
 

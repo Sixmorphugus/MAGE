@@ -137,7 +137,7 @@ DeclareScriptingFunction(&scheduleMngr::update, "update");
 
 DeclareScriptingType(schedule);
 DeclareScriptingConstructor(schedule(), "schedule");
-DeclareScriptingConstructor(schedule(std::function<bool>), "schedule");
+DeclareScriptingConstructor(schedule(std::function<bool()>), "schedule");
 DeclareScriptingCopyOperator(schedule);
 DeclareScriptingFunction(&schedule::conditionFunction, "conditionFunction");
 DeclareScriptingFunction(&schedule::end, "end");

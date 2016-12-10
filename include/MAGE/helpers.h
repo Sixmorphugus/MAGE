@@ -12,10 +12,9 @@ MAGEDLL sf::Color interpolateColors(sf::Color a, sf::Color b, int stepNumber, in
 
 // ENGINE
 // ---------------------------------------------------------------------
-class objBasic;
-class uiBasic;
+class basic;
 
-MAGEDLL float distanceBetweenObjects(objBasic* i, objBasic* j);
+MAGEDLL float distanceBetweenObjects(basic* i, basic* j);
 MAGEDLL float randomPitch();
 
 } // for once you can see namespace mage from here

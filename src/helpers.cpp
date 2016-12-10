@@ -18,7 +18,7 @@ sf::Color interpolateColors(sf::Color a, sf::Color b, int stepNumber, int lastSt
 	return finalc;
 }
 
-float distanceBetweenObjects(objBasic * i, objBasic * j)
+float distanceBetweenObjects(basic * i, basic * j)
 {
 	return distanceBetweenVectors(i->getCenter(), j->getCenter());
 }

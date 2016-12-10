@@ -1,4 +1,5 @@
 #include "resourceGroup.h"
+#include "group.h"
 
 using namespace mage;
 

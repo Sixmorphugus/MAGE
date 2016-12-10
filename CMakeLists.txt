@@ -54,6 +54,31 @@ if(UNIX)
 	target_link_libraries(MAGE dl)
 endif()
 
+# on windows, we need the openal32 file in the build directory
+if(WIN32)
+	# x32 or x64?
+	if(CMAKE_GENERATOR MATCHES "Visual Studio")
+		if(CMAKE_GENERATOR MATCHES "x64")
+			set(WINARCH "x64")
+		else()
+			set(WINARCH "x86")
+		endif()
+	else()
+		# other generators will just use the platform's architecture - VS is the picky one for whatever reasons
+		if(CMAKE_SYSTEM_PROCESSOR MATCHES "64")
+			set(WINARCH "x64")
+		else()
+			set(WINARCH "x86")
+		endif()
+	endif()
+	
+	message(STATUS "Windows architecture is ${WINARCH} (I hope) so we'll use that version of openal32.dll")
+	
+	add_custom_command(TARGET MAGE POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/extlibs/SFML/extlibs/bin/${WINARCH}/openal32.dll $<TARGET_FILE_DIR:MAGE>/openal32.dll
+	)
+endif()
+
 ######################
 # POST-COMPILE
 
@@ -66,7 +91,10 @@ add_custom_command(
 
 # copy base to the binary dir
 add_custom_command(TARGET MAGE POST_BUILD
-	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/base $<TARGET_FILE_DIR:MAGE>/base)
+	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/base $<TARGET_FILE_DIR:MAGE>/base
+)
+	
+# copy OpenAL32.dll to the base dir
 
 ######################
 # PRE-COMPILE

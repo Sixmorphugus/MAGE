@@ -930,7 +930,7 @@ sf::RenderWindow& Game::getRenderWindow()
 	return *window;
 }
 
-Game * theGame()
+Game * mage::theGame()
 {
 	return globalGame;
 }
