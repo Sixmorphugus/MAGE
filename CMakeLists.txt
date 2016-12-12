@@ -58,7 +58,7 @@ endif()
 if(WIN32)
 	# x32 or x64?
 	if(CMAKE_GENERATOR MATCHES "Visual Studio")
-		if(CMAKE_GENERATOR MATCHES "x64")
+		if(CMAKE_GENERATOR MATCHES "x64" OR CMAKE_GENERATOR MATCHES "Win64")
 			set(WINARCH "x64")
 		else()
 			set(WINARCH "x86")
