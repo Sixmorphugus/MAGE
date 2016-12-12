@@ -2,8 +2,8 @@
 #include "StdAfx.h"
 #include "SfmlAfx.h"
 
-#include <chaiscript.hpp>
-#include <chaiscript_stdlib.hpp>
+#include <chaiscript/chaiscript.hpp>
+#include <chaiscript/chaiscript_stdlib.hpp>
 
 #include "hook.h"
 #include "helperMacros.h"

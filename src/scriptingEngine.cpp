@@ -9,7 +9,7 @@ using namespace mage;
 #include "platform.h"
 #include "Game.h"
 
-#include <chaiscript_stdlib.hpp>
+#include <chaiscript/chaiscript_stdlib.hpp>
 
 // -------------------------------------------------------------
 // BINDING
@@ -73,7 +73,7 @@ void scriptingEngine::bind()
 		bindLists();
 
 		p::log("\tReplace some default functions...");
-		chai->eval("global print = fun(x){ logInfo(to_string(x), \"unknown file\", \"unknown\", 0); }");
+		chai->eval("global print = fun(x){ logInfo(to_string(x), __FILE__, __FUNC__, __LINE__); }");
 		chai->eval("global use = fun(x){ return evalFile(x); }");
 
 		p::log("\tFinito!");
