@@ -43,13 +43,13 @@ void uiBasic::drawSelf(sf::RenderTarget & target, sf::RenderStates states, sf::V
 	if (sprites.size() <= sprite)
 		return;
 
-	if (sprites[sprite].animations.frameRects.size() <= frame)
+	if (sprites[sprite]->animations.frameRects.size() <= frame)
 		return;
 
 	// drawing can be unsafe because of the sanity checks
 	const sf::Texture* tex = getTexPointer();
 
-	sf::Sprite fakeSprite(*tex, sprites[sprite].animations.frameRects[frame]);
+	sf::Sprite fakeSprite(*tex, sprites[sprite]->animations.frameRects[frame]);
 	fakeSprite.setPosition(screenPos);
 	fakeSprite.setColor(col);
 

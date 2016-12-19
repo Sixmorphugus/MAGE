@@ -29,7 +29,7 @@ public:
 
 	virtual void drawShadows(sf::RenderTarget &target) const;
 	virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
-	void drawCollisionBoxes(sf::RenderTarget &target, sf::RenderStates states) const;
+	virtual void drawCollisionBoxes(sf::RenderTarget &target, sf::RenderStates states) const;
 
 	void setPositionC(sf::Vector2f newPosition);
 	void setPositionC(float x, float y);
@@ -51,13 +51,13 @@ public:
 
 	void pullCamera(std::shared_ptr<view> toPull, float multiplier = 0.1f);
 	void stopPullingCamera();
+
+	virtual sf::FloatRect getBounds() const;
 public:
 	std::string displayText;
 
 	float drawBottomOffset;
-
 	std::vector<sf::FloatRect> collisionBoxes;
-
 private:
 	std::weak_ptr<view> pulledCamera;
 	float pulledCameraMultiplier;

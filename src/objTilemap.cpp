@@ -369,7 +369,7 @@ void objTilemap::registerProperties()
 
 std::string objTilemap::serialize()
 {
-	std::string propData = basic::serialize();
+	std::string propData = objBasic::serialize();
 
 	std::stringstream data;
 	data << propData;
@@ -384,14 +384,13 @@ std::string objTilemap::serialize()
 	data << " ";
 
 	// there used to be something of interest here
-	// unfortunately you can no longer find the sprite name of an object because
-	// the engine doesn't store a full resource for textureData.
-	// This means we have to have prefabs for every kind of tilemap, as with everything else.
 
 	// add a space
 	data << " ";
 
 	for (unsigned int x = 0; x < size().x; x++) {
+		data << "\n"; // organize things a little
+
 		for (unsigned int y = 0; y < size().y; y++) {
 			auto t = tiles[x][y];
 			data << t.sheetId << "." << t.colNorth << "." << t.colWest << ",";

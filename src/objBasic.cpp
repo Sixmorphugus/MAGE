@@ -156,6 +156,20 @@ void objBasic::stopPullingCamera()
 	pulledCamera.reset();
 }
 
+sf::FloatRect objBasic::getBounds() const {
+	// get the object's bounds based off of its position and size...
+	sf::FloatRect initialBounds = basic::getBounds();
+	
+	// ...and put it in a list with the object's collision boxes.
+	auto boxList = collisionBoxes;
+	boxList.push_back(initialBounds);
+
+	// make a box that encompasses all of them.
+	return boxIn<float>(boxList);
+
+	// unfortunately, this means that an object's bounds and its position/size are no longer neccisarily the same thing if they have collision boxes.
+}
+
 bool compareObjects(std::shared_ptr<objBasic> i, std::shared_ptr<objBasic> j) {
 	return i->operator<(*j);
 }
@@ -178,3 +192,13 @@ DeclareScriptingCustom(fun(&objBasic::stopPullingCamera), "pullCamera");
 DeclareScriptingCustom(fun<void, objBasic, float, float>(&objBasic::setPositionC), "setPositionC");
 DeclareScriptingCustom(fun<void, objBasic, sf::Vector2f>(&objBasic::setPositionC), "setPositionC");
 DeclareScriptingCustom(fun(&objBasic::uiName), "uiName");
+
+DeclareScriptingCustom(user_type<objBasic::collision>(), "collision");
+DeclareScriptingCustom(constructor<objBasic::collision()>(), "collision");
+DeclareScriptingCustom(constructor<objBasic::collision(const objBasic::collision&)>(), "collision");
+DeclareScriptingCustom(fun(&objBasic::collision::hitX), "hitX");
+DeclareScriptingCustom(fun(&objBasic::collision::hitY), "hitY");
+DeclareScriptingCustom(fun(&objBasic::collision::involved), "involved");
+DeclareScriptingCustom(fun(&objBasic::collision::main), "main");
+DeclareScriptingCopyOperator(objBasic::collision);
+DeclareScriptingListable(objBasic::collision);

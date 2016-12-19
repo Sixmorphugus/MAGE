@@ -1,7 +1,13 @@
 #include "serializable.h"
 #include "platform.h"
+#include "stringHelpers.h"
 
 using namespace mage;
+
+mage::serializable::serializable()
+{
+	// ...
+}
 
 std::string serializable::serialize()
 {
@@ -50,6 +56,8 @@ bool serializable::loadFromFile(std::string file)
 	str.assign((std::istreambuf_iterator<char>(saveFile)),
 		std::istreambuf_iterator<char>());
 
+	str = removeWhitespace(str);
+
 	bool result = deserialize(str);
 
 	if(result)
@@ -57,3 +65,24 @@ bool serializable::loadFromFile(std::string file)
 
 	return result;
 }
+
+std::string serializable::saveToString(std::string file)
+{
+	return serialize();
+}
+
+bool mage::serializable::loadFromString(std::string file)
+{
+	file = removeWhitespace(file);
+	return deserialize(file);
+}
+
+#include "scriptingEngine.h"
+
+DeclareScriptingType(serializable)
+DeclareScriptingFunction(&serializable::deserialize, "deserialize");
+DeclareScriptingFunction(&serializable::serialize, "serialize");
+DeclareScriptingFunction(&serializable::saveToFile, "saveToFile");
+DeclareScriptingFunction(&serializable::loadFromFile, "loadFromFile");
+DeclareScriptingFunction(&serializable::saveToFile, "saveToString");
+DeclareScriptingFunction(&serializable::loadFromFile, "loadFromString");

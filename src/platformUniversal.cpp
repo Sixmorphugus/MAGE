@@ -27,7 +27,7 @@ void platform::diagnosticLog(LOGTYPE type, std::string file, std::string func, i
 	std::string typewords[] = { "INFO", "WARNING", "FATAL", "CHAISCRIPT" };
 
 	// Level and source code information
-	#if PLATFORM_LOGINFOALLOWED
+	#if MAGE_PLATFORM_LOGINFOALLOWED
 	writeToLogfile(typewords[type] + "[" + file + ":" + std::to_string(line) + " (" + func + ")]: " + info + (nl ? "\n" : ""));
 	#else
 	writeToLogfile(type + "[unavailable]: " + info + (nl ? "\n" : ""));

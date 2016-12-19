@@ -103,6 +103,9 @@ inline void gameStateMngr::combineCurrent(std::string name) {
 template<class Filter>
 inline void gameState::set(gameState * gs)
 {
+	if (ignoreIncorporation)
+		return;
+
 	if (gs == nullptr)
 		return;
 

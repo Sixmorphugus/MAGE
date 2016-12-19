@@ -31,7 +31,7 @@ namespace mage {
 	}
 }
 
-void groupBase::drawWorldObjects(sf::RenderTarget & target, sf::RenderStates states)
+void groupBase::drawWorldObjects(sf::RenderTarget & target, sf::RenderStates states) const
 {
 	for (unsigned int i = 0; i < getNumWorldObjects(); i++) {
 		applyShader(states, getWorldObject(i)->getTexSizeF());
@@ -45,7 +45,7 @@ void groupBase::drawWorldObjects(sf::RenderTarget & target, sf::RenderStates sta
 	}
 }
 
-void groupBase::drawUiObjects(sf::RenderTarget & target, sf::RenderStates states)
+void groupBase::drawUiObjects(sf::RenderTarget & target, sf::RenderStates states) const
 {
 	for (unsigned int i = 0; i < getNumUiObjects(); i++) {
 		applyShader(states, getUiObject(i)->getTexSizeF());

@@ -226,6 +226,3 @@ DeclareScriptingFunction(&resourceMngr::list, "list");
 DeclareScriptingFunction([](resourceMngr &m) { return m.list(); }, "list");
 DeclareScriptingFunction(&resourceMngr::nameOf, "nameOf");
 DeclareScriptingFunction(&resourceMngr::flush, "flush");
-
-// list of resources
-DeclareScriptingListableNamed(std::shared_ptr<resource>, "resourceSharedPtrList");

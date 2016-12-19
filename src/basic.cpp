@@ -16,6 +16,7 @@
 #include "resourceFont.h"
 #include "viewObj.h"
 #include "maths.h"
+#include "scheduleWait.h"
 
 using namespace mage;
 
@@ -409,7 +410,7 @@ bool basic::deserialize(std::string data)
 			continue;
 
 		if (isProperty(pair[0]))
-			getProperty(pair[0]).update(strFilter(pair[1], '"'));
+			getProperty(pair[0]).update(strFilter(pair[1], "\""));
 	}
 
 	return true;
@@ -419,10 +420,8 @@ unsigned int basic::addSprite(textureData texture) {
 	if (texture.resource.expired())
 		return -1;
 
-	spriteData newSprite(this, texture);
-
 	// add to list
-	sprites.push_back(newSprite);
+	sprites.push_back(std::make_shared<spriteData>(this, texture));
 
 	return sprites.size() - 1;
 }
@@ -432,22 +431,22 @@ int basic::getCurrentSpriteIndex() const
 	return curSprite;
 }
 
-basic::spriteData* basic::getCurrentSprite()
+std::shared_ptr<basic::spriteData> basic::getCurrentSprite()
 {
 	if (curSprite < 0) {
 		return nullptr;
 	}
 
-	return &sprites[curSprite];
+	return sprites[curSprite];
 }
 
-const basic::spriteData* basic::getCurrentSprite() const
+const std::shared_ptr<basic::spriteData> basic::getCurrentSprite() const
 {
 	if (curSprite < 0) {
 		return nullptr;
 	}
 
-	return &sprites[curSprite];
+	return sprites[curSprite];
 }
 
 void basic::setCurrentSprite(int spr)
@@ -460,7 +459,7 @@ void basic::setCurrentSprite(int spr)
 
 	curSprite = spr;
 
-	auto texturePointer = sprites[curSprite].texture.resource.lock();
+	auto texturePointer = sprites[curSprite]->texture.resource.lock();
 
 	if (!texturePointer->isLoaded()) {
 		p::warn("Object's texture was set to that of a resource that ISN'T LOADED!");
@@ -471,7 +470,7 @@ void basic::setCurrentSprite(int spr)
 		spriteLoadFailed = false;
 	}
 	
-	sprites[curSprite].animations.setFrame(sfSprite, 0);
+	sprites[curSprite]->animations.setFrame(sfSprite, 0);
 }
 
 void basic::replaceCurrentSprite(textureData texture)
@@ -487,13 +486,13 @@ void basic::replaceCurrentSprite(textureData texture)
 		setCurrentSprite(0);
 
 		if (sprites.size() == 0) {
-			sprites.push_back(spriteData(this, texture));
+			sprites.push_back(std::make_shared<spriteData>(this, texture));
 			ad = true;
 		}
 	}
 
 	if(!ad)
-		sprites[curSprite] = spriteData(this, texture);
+		sprites[curSprite] = std::make_shared<spriteData>(this, texture);
 
 	auto ocs = curSprite;
 	curSprite = -1;
@@ -528,7 +527,7 @@ void basic::destroy()
 
 void basic::scheduleDestroy()
 {
-	theGame()->scripting->schedule(sf::seconds(0.f), std::bind(&basic::destroy, this)); // destroy this object as soon as we're not in the middle of other things
+	theGame()->scheduler->add(std::make_shared<scheduleWait>(sf::seconds(0.f), std::bind(&basic::destroy, this))); // destroy this object as soon as we're not in the middle of other things
 }
 
 sf::Vector2f basic::getCenter() const {
@@ -577,6 +576,11 @@ sf::Vector2f basic::getSize() const
 sf::FloatRect basic::getMainBounds() const
 {
 	return sf::FloatRect(getRealPosition(), getSize());
+}
+
+sf::FloatRect basic::getBounds() const
+{
+	return getMainBounds();
 }
 
 void basic::setRealPosition(sf::Vector2f p)
@@ -660,6 +664,17 @@ basic::prop& basic::operator[](std::string name)
 	return getProperty(name);
 }
 
+std::shared_ptr<resourceTexture> basic::getTexResource() const {
+	auto cs = getCurrentSprite();
+
+	if (cs) {
+		return cs->texture.resource.lock();
+	}
+	else {
+		return nullptr;
+	}
+}
+
 // SE
 using namespace chaiscript;
 
@@ -673,7 +688,7 @@ DeclareScriptingCustom(fun(&basic::getCenter), "getCenter");
 DeclareScriptingCustom(fun(&basic::isProperty), "isProperty");
 DeclareScriptingCustom(fun(&basic::getProperty), "getProperty");
 DeclareScriptingCustom(fun(&basic::getPropertyList), "getPropertyList");
-DeclareScriptingCustom(fun<basic::spriteData*, basic>(&basic::getCurrentSprite), "getCurrentSprite");
+DeclareScriptingCustom(fun<std::shared_ptr<basic::spriteData>, basic>(&basic::getCurrentSprite), "getCurrentSprite");
 DeclareScriptingCustom(fun(&basic::replaceCurrentSprite), "replaceCurrentSprite");
 DeclareScriptingCustom(fun(&basic::setCurrentSprite), "setCurrentSprite");
 DeclareScriptingCustom(fun(&basic::sprites), "sprites");
@@ -687,6 +702,7 @@ DeclareScriptingCustom(fun(&basic::getRealPosition), "getRealPosition");
 DeclareScriptingCustom(fun(&basic::setRealPosition), "setRealPosition");
 DeclareScriptingCustom(fun(&basic::getTexSize), "getTexSize");
 DeclareScriptingCustom(fun(&basic::getSize), "getSize");
+DeclareScriptingCustom(fun(&basic::getBounds), "getMainBounds");
 DeclareScriptingCustom(fun(&basic::getMainBounds), "getMainBounds");
 DeclareScriptingCustom(fun(&basic::getPrefabSource), "getPrefabSource");
 DeclareScriptingCustom(fun(&basic::hasMoved), "hasMoved");
@@ -705,12 +721,4 @@ DeclareScriptingCustom(user_type<basic::spriteData>(), "spriteData");
 DeclareScriptingCustom(fun(&basic::spriteData::animations), "animations");
 DeclareScriptingCustom(fun(&basic::spriteData::texture), "texture");
 DeclareScriptingCopyOperator(basic::spriteData);
-
-DeclareScriptingCustom(user_type<objBasic::collision>(), "collision");
-DeclareScriptingCustom(constructor<objBasic::collision()>(), "collision");
-DeclareScriptingCustom(constructor<objBasic::collision(const objBasic::collision&)>(), "collision");
-DeclareScriptingCustom(fun(&objBasic::collision::hitX), "hitX");
-DeclareScriptingCustom(fun(&objBasic::collision::hitY), "hitY");
-DeclareScriptingCustom(fun(&objBasic::collision::involved), "involved");
-DeclareScriptingCustom(fun(&objBasic::collision::main), "main");
-DeclareScriptingCopyOperator(objBasic::collision);
+DeclareScriptingListableShared(basic::spriteData, "spriteVector");

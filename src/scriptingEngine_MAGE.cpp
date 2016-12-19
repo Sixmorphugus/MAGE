@@ -8,6 +8,8 @@
 
 #include "Game.h"
 
+#include <chaiscript/dispatchkit/type_info.hpp>
+
 using namespace mage;
 using namespace chaiscript;
 
@@ -17,6 +19,12 @@ void sePreBoundCreatedCheck() {
 	if (sePreBoundObjects.get() == nullptr) {
 		sePreBoundObjects = ModulePtr(new Module());
 	}
+}
+
+Module& mage::seGetStartupModule()
+{
+	sePreBoundCreatedCheck();
+	return *sePreBoundObjects;
 }
 
 #define BIND_CONVERSIONS(obj) chai->add(base_class<basic, obj>());\
@@ -52,10 +60,10 @@ seScriptingEngineRegistration::seScriptingEngineRegistration(const Boxed_Value t
 	sePreBoundObjects->add_global_const(t_bv, t_name);
 }
 
-seScriptingEngineRegistration::seScriptingEngineRegistration(ModulePtr vt)
+mage::seScriptingEngineRegistration::seScriptingEngineRegistration(chaiscript::ModulePtr mp)
 {
 	sePreBoundCreatedCheck();
-	sePreBoundObjects->add(vt);
+	mp->apply(*sePreBoundObjects, *sePreBoundObjects);
 }
 
 // Chaiscript MAGE Binding

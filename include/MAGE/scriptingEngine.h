@@ -5,8 +5,13 @@
 #include <chaiscript/chaiscript.hpp>
 #include <chaiscript/chaiscript_stdlib.hpp>
 
-#include "hook.h"
 #include "helperMacros.h"
+#include "hook.h"
+
+// temporary - chaiscript wrongfully triggers 4503
+#ifdef MAGE_COMPILER_VS
+#pragma warning(disable : 4503)
+#endif
 
 namespace mage {
 
@@ -17,12 +22,6 @@ class Game;
 // -------------------------------------------------------------
 
 class MAGEDLL scriptingEngine {
-	struct Schedule {
-		sf::Time time; // how long to wait
-		sf::Time startTime; // how long since we started
-
-		std::function<void()> fun; // call to make
-	};
 public:
 	scriptingEngine();
 	~scriptingEngine();
@@ -39,17 +38,14 @@ public:
 	chaiscript::Boxed_Value eval(std::string in);
 	void dump(chaiscript::Boxed_Value* in = nullptr);
 	void whatIs(chaiscript::Boxed_Value* in);
-	void schedule(sf::Time time, std::function<void()> fun);
 public:
 	chaiscript::ChaiScript* chai;
 	hook<scriptingEngine*> onBind;
-	std::vector<Schedule> activeSchedules;
 
 private:
 	void bindSFML();
 	void bindMAGE();
 	void bindHooks();
-	void bindLists();
 
 	bool init;
 };
@@ -62,7 +58,7 @@ public:
 	seScriptingEngineRegistration(chaiscript::Type_Conversion d); // registers a type_conversion to the scripting engine when created
 	seScriptingEngineRegistration(chaiscript::Proxy_Function f, std::string name); // registers a function to the scripting engine when created
 	seScriptingEngineRegistration(const chaiscript::Boxed_Value t_bv, std::string t_name); // registeres a const to the scripting engine when created
-	seScriptingEngineRegistration(chaiscript::ModulePtr vt); // registers a module
+	seScriptingEngineRegistration(chaiscript::ModulePtr mp); // registeres a const to the scripting engine when created
 };
 
 // -------------------------------------------------------------
@@ -74,16 +70,17 @@ MAGEDLL void chaiCrash(const std::string &data);
 
 MAGEDLL void handleEvalError(const chaiscript::exception::eval_error &e);
 
+MAGEDLL chaiscript::Module& seGetStartupModule();
+
 } // namespace mage
 
-#define StartScriptingDeclaration namespace {
-#define EndScriptingDeclaration }
-#define DeclareScriptingCustom(...) StartScriptingDeclaration mage::seScriptingEngineRegistration UNIQUE_NAME(se)(__VA_ARGS__); EndScriptingDeclaration
+#define DeclareScriptingCustom(...) namespace {\
+	mage::seScriptingEngineRegistration UNIQUE_IDENTIFIER(se)(__VA_ARGS__);\
+}
+
 #define DeclareScriptingCopyOperator(obj) DeclareScriptingCustom(chaiscript::fun([](obj &o1, obj o2) { o1 = o2; }), "=");
 #define DeclareScriptingNamed(arg, name) DeclareScriptingCustom(arg, name);
 #define DeclareScriptingBaseClass(base, derived) DeclareScriptingCustom(chaiscript::base_class<base, derived>());
-#define DeclareScriptingListable(arg) DeclareScriptingCustom(chaiscript::bootstrap::standard_library::vector_type< std::vector<arg> >(STRING(arg) STRING(List)));
-#define DeclareScriptingListableNamed(arg, name) DeclareScriptingCustom(chaiscript::bootstrap::standard_library::vector_type< std::vector<arg> >(name));
 #define DeclareScriptingType(arg) DeclareScriptingCustom(chaiscript::user_type<arg>(), STRING(arg));
 #define DeclareScriptingTypeNamed(arg, name) DeclareScriptingCustom(chaiscript::user_type<arg>(), name);
 #define DeclareScriptingFunction(arg, name) DeclareScriptingCustom(chaiscript::fun(arg), name);
@@ -91,5 +88,25 @@ MAGEDLL void handleEvalError(const chaiscript::exception::eval_error &e);
 #define DeclareScriptingGlobalConst(arg, name) DeclareScriptingCustom(chaiscript::const_var(arg), name);
 #define DeclareScriptingEnum(container, enumValue) DeclareScriptingGlobalConst(container::enumValue, STRING(enumValue));
 #define DeclareScriptingCastingFunction(name, inp, out) DeclareScriptingCustom(chaiscript::fun([](inp* o1) { return dynamic_cast<out*>(o1); }), name)
+
+#define DeclareScriptingListableNamed(type, name) DeclareScriptingCustom(chaiscript::bootstrap::standard_library::vector_type<std::vector<type>>(name)); \
+DeclareScriptingFunction([](const std::vector<chaiscript::Boxed_Value> &v) {\
+	std::vector<type> lst;\
+	for(unsigned int i = 0; i < v.size(); i++) {\
+		lst.push_back(chaiscript::boxed_cast<type>(v[i]));\
+	}\
+	return lst;\
+}, name)\
+DeclareScriptingFunction([](const std::vector<type> &v) {\
+	std::vector<chaiscript::Boxed_Value> lst;\
+	for(unsigned int i = 0; i < v.size(); i++) {\
+		lst.push_back(chaiscript::Boxed_Value(v[i]));\
+	}\
+	return lst;\
+}, "Vector")
+// ^ new constructor from chai "Vector" type
+
+#define DeclareScriptingListableShared(type, name) DeclareScriptingListableNamed(std::shared_ptr<type>, name);
+#define DeclareScriptingListable(type) DeclareScriptingListableNamed(type, STRING(type) "Vector")
 
 #define BIND_COPY_OPERATOR(obj) chai->add(fun([&](obj &o1, obj o2) { o1 = o2; }), "="); // internal legacy system use only

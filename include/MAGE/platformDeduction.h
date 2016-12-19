@@ -1,7 +1,7 @@
 #if defined(_MSC_VER)
-#define PLATFORM_WINDOWS // MSC only runs on windows
-#define PLATFORM_STRING std::string("Windows")
-
+#define MAGE_PLATFORM_WINDOWS // MSC only runs on windows
+#define MAGE_PLATFORM_STRING std::string("Windows")
+#define MAGE_COMPILER_VS
 #if defined(MAGEDLL_EXPORT)
 #define MAGEDLL __declspec(dllexport)
 #else
@@ -9,12 +9,14 @@
 #endif
 #elif defined(__GNUC__)
 #if defined(WIN32)
-#define PLATFORM_WINDOWS
-#define PLATFORM_STRING std::string("Windows")
+#define MAGE_PLATFORM_WINDOWS
+#define MAGE_COMPILER_GNUC
+#define MAGE_PLATFORM_STRING std::string("Windows")
 #endif
 #if defined(__linux__)
-#define PLATFORM_LINUX
-#define PLATFORM_STRING std::string("Linux")
+#define MAGE_PLATFORM_LINUX
+#define MAGE_COMPILER_GNUC
+#define MAGE_PLATFORM_STRING std::string("Linux")
 #endif
 
 #if defined(MAGEDLL_EXPORT)

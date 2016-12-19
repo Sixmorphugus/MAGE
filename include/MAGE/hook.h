@@ -2,16 +2,21 @@
 #include "StdAfx.h"
 #include "platform.h"
 
+#include <chaiscript/chaiscript.hpp>
+
 namespace mage {
 // very simple implementation of the observer design pattern.
 class basic;
 
-class hookBase {
+class MAGEDLL hookBase {
 public:
 	virtual void forgetObserver(unsigned int ob) = 0;
 	virtual void clearObservers() = 0;
 	virtual unsigned int numObservers() const = 0;
-	
+
+protected:
+	void hEE(const chaiscript::exception::eval_error &e) const;
+
 public:
 	bool enabled;
 };
@@ -51,7 +56,7 @@ public:
 	void forgetObserver(unsigned int ob) {
 		observers.erase(observers.begin() + ob);
 	}
-	
+
 	void clearObservers()
 	{
 		observers.clear();
@@ -70,7 +75,7 @@ public:
 				observers[i].notify(a...);
 			}
 			catch (chaiscript::exception::eval_error &e) {
-				handleEvalError(e);
+				hEE(e); // idk if this WOULD cause confusion but bsts
 			}
 			catch (std::bad_function_call &e) {
 				p::warn("bad_function_call: " + std::string(e.what()));

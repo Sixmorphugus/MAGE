@@ -9,8 +9,6 @@ using namespace mage;
 #include "platform.h"
 #include "Game.h"
 
-#include <chaiscript/chaiscript_stdlib.hpp>
-
 // -------------------------------------------------------------
 // BINDING
 // -------------------------------------------------------------
@@ -32,7 +30,7 @@ void scriptingEngine::initChai()
 	p::info("Initializing scripting engine.");
 
 	p::log("\tLoad precompiled chai libraries...");
-	chai = new ChaiScript(Std_Lib::library()); // compiles in stdlib
+	chai = new ChaiScript();
 
 	bind();
 }
@@ -40,16 +38,6 @@ void scriptingEngine::initChai()
 void scriptingEngine::update()
 {
 	initCheck();
-
-	for (int i = 0; i < activeSchedules.size(); i++) {
-		auto fTime = (activeSchedules[i].startTime + activeSchedules[i].time) - theGame()->getSimTime();
-
-		if (fTime.asSeconds() < 0.f) {
-			activeSchedules[i].fun();
-			activeSchedules.erase(activeSchedules.begin() + i);
-			i -= 1;
-		}
-	}
 }
 
 void scriptingEngine::bind()
@@ -68,9 +56,6 @@ void scriptingEngine::bind()
 
 		p::log("\tBind Hooks...");
 		bindHooks();
-
-		p::log("\tBind custom datatypes...");
-		bindLists();
 
 		p::log("\tReplace some default functions...");
 		chai->eval("global print = fun(x){ logInfo(to_string(x), __FILE__, __FUNC__, __LINE__); }");
@@ -228,20 +213,6 @@ void scriptingEngine::whatIs(chaiscript::Boxed_Value * in)
 	}
 }
 
-void scriptingEngine::schedule(sf::Time time, std::function<void()> fun)
-{
-	initCheck();
-
-	Schedule ns;
-
-	ns.time = time;
-	ns.startTime = theGame()->getSimTime();
-
-	ns.fun = fun;
-
-	activeSchedules.push_back(ns);
-}
-
 // -------------------------------------------------------------
 // FUNCTIONS
 // -------------------------------------------------------------
@@ -271,8 +242,16 @@ namespace mage {
 			p::log("\t" + lines[i]);
 		}
 
-		if (CRASHWHENEVALFAILS) {
+		if (MAGE_CRASHWHENEVALFAILS) {
 			p::fatal(errorToLog);
 		}
 	}
 }
+
+DeclareScriptingListable(int);
+DeclareScriptingListableNamed(unsigned int, "uIntVector");
+DeclareScriptingListable(float);
+DeclareScriptingListable(bool);
+
+DeclareScriptingListableNamed(sf::IntRect, "intRectVector");
+DeclareScriptingListableNamed(sf::FloatRect, "floatRectVector");

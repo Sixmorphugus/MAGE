@@ -110,7 +110,7 @@ void registry::prop::update(std::string sUpdate) {
 		
 		// failsafe: registries can't store the "=" sign.
 		// remove this for now.
-		s = strReplace(s, '=', ' ');
+		s = strReplace(s, "=", " ");
 	}
 	else if (typ == BOOLPROP) {
 		b = (sUpdate == "1");
@@ -312,7 +312,7 @@ bool registry::load()
 	while (!saveFile.eof()) {
 		int iCount = count - 1;
 		getline(saveFile, sLine);
-		removeNewline(sLine);
+		sLine = removeWhitespace(sLine);
 
 		if (count != 0) { // ignore the header
 			// filter out any labels

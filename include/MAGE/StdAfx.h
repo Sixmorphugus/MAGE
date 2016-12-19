@@ -19,3 +19,4 @@
 #include <functional>
 #include <type_traits>
 #include <memory>
+#include <regex>

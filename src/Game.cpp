@@ -56,7 +56,7 @@ Game::Game(int argc, char* argv[], sf::RenderWindow* wind):
 
 	debug = false;
 
-	p::log("\nMAGE GAME ENGINE r" + BUILDSTRING + " for " + PLATFORM_STRING + "\nCopyright Deadhand 2016.\n", true);
+	p::log("\nMAGE GAME ENGINE r" + MAGE_BUILDSTRING + " for " + MAGE_PLATFORM_STRING + "\nCopyright Deadhand 2016.\n", true);
 
 	p::log("SFML v" + std::to_string(SFML_VERSION_MAJOR) + "." + std::to_string(SFML_VERSION_MINOR) + "." + std::to_string(SFML_VERSION_PATCH), true);
 	p::log("CHAISCRIPT v" + std::to_string(chaiscript::version_major) + "." + std::to_string(chaiscript::version_minor) + "." + std::to_string(chaiscript::version_patch) + "\n", true);
@@ -104,8 +104,8 @@ Game::Game(int argc, char* argv[], sf::RenderWindow* wind):
 	conservativeMouse = true;
 	inMainUpdateLoop = false;
 	lightingAmb = sf::Color::Transparent;
-	colBoxes = SHOWCOLLISIONBOXES;
-	showFps = SHOWFPS;
+	colBoxes = MAGE_SHOWCOLLISIONBOXES;
+	showFps = MAGE_SHOWFPS;
 	didRunInit = false;
 	tickScale = 1.f;
 	state = states->current; // this never changes at the moment so only needs to be set once
@@ -118,7 +118,7 @@ Game::Game(int argc, char* argv[], sf::RenderWindow* wind):
 
 	if (window) {
 		windowInit(window);
-		loadWindowSettings(sf::VideoMode::getDesktopMode(), "MAGE Game Engine (r" + BUILDSTRING + ")");
+		loadWindowSettings(sf::VideoMode::getDesktopMode(), "MAGE Game Engine (r" + MAGE_BUILDSTRING + ")");
 	}
 
 	// game stoof
@@ -253,7 +253,7 @@ void Game::draw() {
 	// draw in the fps
 	if (showFps) {
 		renderInfo(getRenderWindow(), sf::RenderStates(), sf::Vector2f(4.f, 4.f),
-			"Multipurpose Arcade Game Engine r" + BUILDSTRING + "\n" +
+			"Multipurpose Arcade Game Engine r" + MAGE_BUILDSTRING + "\n" +
 			"FPS: " + std::to_string(fps) + "\n" +
 			"TPS: " + std::to_string(tps) + "\n" +
 			"Missed: " + std::to_string(missedTime.asMilliseconds()) + "ms\n" +
@@ -423,7 +423,7 @@ int Game::run(bool tickByTick) {
 				tickScale = 1.f;
 			}
 
-			sf::Time magicMs = sf::milliseconds(TICKMS * tickScale);
+			sf::Time magicMs = sf::milliseconds(MAGE_TICKMS * tickScale);
 
 			while (missedTime >= magicMs) {
 				if (missedTime >= magicMs * 10.f) {
@@ -590,7 +590,7 @@ void Game::fixViews()
 
 float Game::getDelta()
 {
-	return tickClock.getElapsedTime().asMilliseconds() / TICKMS;
+	return tickClock.getElapsedTime().asMilliseconds() / MAGE_TICKMS;
 }
 
 objBasic::collision Game::resolveMovement(objBasic* obj, int byX, int byY) {
@@ -852,7 +852,7 @@ sf::Vector2f Game::findTextSize(std::string text, unsigned int fontScale)
 
 int Game::version()
 {
-	return BUILD;
+	return MAGE_BUILD;
 }
 
 // HELPER FUNCTIONS

@@ -60,7 +60,7 @@ static_assert(_MSC_FULL_VER >= 190024210, "Visual C++ 2015 Update 3 or later req
 #ifdef  CHAISCRIPT_HAS_DECLSPEC
 #define CHAISCRIPT_MODULE_EXPORT extern "C" __declspec(dllexport)
 #else
-#define CHAISCRIPT_MODULE_EXPORT extern "C" 
+#define CHAISCRIPT_MODULE_EXPORT extern "C"
 #endif
 
 #if defined(CHAISCRIPT_MSVC) || (defined(__GNUC__) && __GNUC__ >= 5) || defined(CHAISCRIPT_CLANG)
@@ -114,7 +114,7 @@ namespace chaiscript {
 
     static std::string version()
     {
-      return std::to_string(version_major()) + '.' + std::to_string(version_minor()) + '.' + std::to_string(version_patch());
+        return std::to_string(version_major()) + '.' + std::to_string(version_minor()) + '.' + std::to_string(version_patch());
     }
 
     static std::string compiler_id()

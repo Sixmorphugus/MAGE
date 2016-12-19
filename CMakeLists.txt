@@ -39,7 +39,7 @@ target_compile_definitions(MAGE PRIVATE MAGEDLL_EXPORT) # tell MAGE's header fil
 # set flags for the engine to compile properly
 if(MSVC)
 	SET(CMAKE_CXX_FLAGS "/EHsc /bigobj")
-elseif(CMAKE_COMPILER_IS_GNUCC)
+elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUXX)
 	SET(CMAKE_CXX_FLAGS "-std=c++0x")
 endif()
 

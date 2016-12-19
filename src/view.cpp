@@ -169,7 +169,7 @@ void view::setDefaults()
 	shader = nullptr;
 	respectPixelGrid = true;
 
-	setZoomLevel(ZOOMDEFAULT);
+	setZoomLevel(MAGE_ZOOMDEFAULT);
 }
 
 void view::moveTowards(basic & target, float multiplier)

@@ -39,10 +39,10 @@ You can therefore go ahead and put a basic in the background of the game to mana
 */
 
 class MAGEDLL basic:
-	public sf::Drawable, // sfml will draw this
-	public sf::Transformable, // this object has position, rotation etc
-	public serializable, // this object can save its state to text and reload it
-	public shadable // this object holds a shader
+	public virtual sf::Drawable, // sfml will draw this
+	public virtual sf::Transformable, // this object has position, rotation etc
+	public virtual serializable, // this object can save its state to text and reload it
+	public virtual shadable // this object holds a shader
 {
 public:
 	// Basic Properties.
@@ -117,7 +117,7 @@ public:
 	~basic();
 	basic(const basic& cp);
 	basic& operator=(basic assignedCopy);
-	
+
 	void copyFrom(const basic& cp);
 
 	virtual basic* clone() const { basic* a = new basic(*this); a->registerProperties(); return a; }
@@ -142,8 +142,8 @@ public:
 	// all the basic functionality of a visible object.
 	unsigned int addSprite(textureData texture);
 	int getCurrentSpriteIndex() const;
-	const spriteData* getCurrentSprite() const;
-	spriteData* getCurrentSprite();
+	const std::shared_ptr<spriteData> getCurrentSprite() const;
+	std::shared_ptr<spriteData> getCurrentSprite();
 	void setCurrentSprite(int spr);
 	void replaceCurrentSprite(textureData texture);
 	void sfSync();
@@ -155,12 +155,13 @@ public:
 	// helpers
 	sf::Vector2f getCenter() const;
 	const sf::Texture* getTexPointer() const { return sfSprite.getTexture(); }
-	std::shared_ptr<resourceTexture> getTexResource() const { return getCurrentSprite()->texture.resource.lock(); }
+	std::shared_ptr<resourceTexture> getTexResource() const;
 	sf::Vector2u getFrameSize() const;
-	sf::Vector2f getRealPosition() const;
+	sf::Vector2f getRealPosition() const; // an object's "real position" is always its top left regardless of origin.
 	virtual sf::Vector2f getTexSizeF() const;
 	virtual sf::Vector2u getTexSize() const;
-	virtual sf::Vector2f getSize() const;
+	virtual sf::Vector2f getSize() const; // an object's "size" is usually determined by its sprite, not collision boxes. It is generally used for draw ordering.
+	virtual sf::FloatRect getBounds() const; // an object's "bounds" are determined by all components it has and what space they take up. It is generally used for collision and selection in editors.
 	virtual sf::FloatRect getMainBounds() const;
 
 	void setRealPosition(sf::Vector2f p);
@@ -181,7 +182,7 @@ public:
 public:
 	groupBase* gr;
 
-	std::vector<spriteData> sprites;
+	std::vector<std::shared_ptr<spriteData>> sprites;
 
 	sf::Sprite sfSprite;
 
@@ -228,4 +229,4 @@ DeclareScriptingBaseClass(mage::basic, type); \
 DeclareScriptingBaseClass(mage::serializable, type); \
 DeclareScriptingBaseClass(sf::Transformable, type); \
 DeclareScriptingBaseClass(mage::shadable, type); \
-DeclareScriptingCastingFunction("to_" STRING(type), basic, type);
+DeclareScriptingCastingFunction("to_" STRING(type), mage::basic, type);

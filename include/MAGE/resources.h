@@ -133,5 +133,5 @@ DeclareScriptingBaseClass(taggable, name);\
 DeclareScriptingConstructor(name(), STRING(name));\
 DeclareScriptingFunction(&resourceMngr::getAs<name>, "get_" STRING(name));\
 DeclareScriptingFunction(&resourceMngr::listType<name>, "list_" STRING(name));\
-DeclareScriptingListableNamed(std::shared_ptr<name>, STRING(name) "SharedPtrList");\
+DeclareScriptingListableShared(name, STRING(name) "vector");\
 DeclareScriptingCastingFunction("to_" STRING(name), resource, name);

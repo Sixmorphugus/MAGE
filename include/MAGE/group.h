@@ -38,26 +38,26 @@ namespace groupPrivate {
 
 // base type for holding references to group; can't put anything in it, but can do almost everything else
 // most notably can't clear a certain type of object :/
-class MAGEDLL groupBase : public serializable, public shadable
+class MAGEDLL groupBase : public virtual serializable, public virtual shadable
 {
 public:
-	virtual void drawWorldObjects(sf::RenderTarget &target, sf::RenderStates states);
-	virtual void drawUiObjects(sf::RenderTarget &target, sf::RenderStates states);
+	virtual void drawWorldObjects(sf::RenderTarget &target, sf::RenderStates states) const;
+	virtual void drawUiObjects(sf::RenderTarget &target, sf::RenderStates states) const;
 
 	virtual void sortWorldObjects() = 0;
 
-	virtual std::string serialize() = 0;
+	virtual std::string serialize() const = 0;
 	virtual bool deserialize(std::string map) = 0;
 
 	virtual void preUpdateObjects(sf::Time elapsed) = 0;
 	virtual void updateObjects(sf::Time elapsed) = 0;
 
-	virtual std::shared_ptr<basic> getObject(unsigned int index) = 0;
-	virtual std::shared_ptr<objBasic> getWorldObject(unsigned int index) = 0;
-	virtual std::shared_ptr<uiBasic> getUiObject(unsigned int index) = 0;
-	virtual unsigned int getNumObjects() = 0;
-	virtual unsigned int getNumWorldObjects() = 0;
-	virtual unsigned int getNumUiObjects() = 0;
+	virtual std::shared_ptr<basic> getObject(unsigned int index) const = 0;
+	virtual std::shared_ptr<objBasic> getWorldObject(unsigned int index) const = 0;
+	virtual std::shared_ptr<uiBasic> getUiObject(unsigned int index) const = 0;
+	virtual unsigned int getNumObjects() const = 0;
+	virtual unsigned int getNumWorldObjects() const = 0;
+	virtual unsigned int getNumUiObjects() const = 0;
 
 	virtual void bringToFront(unsigned int index) = 0;
 	virtual void sendToBack(unsigned int index) = 0;
@@ -67,8 +67,8 @@ public:
 
 	virtual void clearObjects() = 0;
 
-	virtual int indexOf(basic* object) = 0;
-	virtual int localIndexOf(basic* object) = 0;
+	virtual int indexOf(basic* object) const = 0;
+	virtual int localIndexOf(basic* object) const = 0;
 
 public:
 	bool ignoreIncorporation; // for the editor, I guess
@@ -106,6 +106,8 @@ public:
 	group(std::shared_ptr<resourceGroup> gr); // creates group with saved objects (grabbing them from the resource when asked to and then forgetting the resource that was attached)
 													  // you can of course create a group from another group
 
+	group(std::vector<std::shared_ptr<T>> initialObjects);
+
 	// replace the copy constructor and assignment operator with set
 	// does same thing but doesn't swap in old memory which slows things down a bit
 	// fortunately this isn't an operation where speed is an issue; we can afford not reusing memory
@@ -114,21 +116,21 @@ public:
 
 	void sortWorldObjects();
 
-	virtual std::string serialize();
+	virtual std::string serialize() const;
 	virtual bool deserialize(std::string map);
 
 	virtual void preUpdateObjects(sf::Time elapsed);
 	virtual void updateObjects(sf::Time elapsed);
 
-	std::shared_ptr<T> get(unsigned int index);
-	std::shared_ptr<basic> getObject(unsigned int index);
-	std::shared_ptr<objBasic> getWorldObject(unsigned int index);
-	std::shared_ptr<uiBasic> getUiObject(unsigned int index);
-	unsigned int getNumObjects();
-	unsigned int getNumWorldObjects();
-	unsigned int getNumUiObjects();
+	std::shared_ptr<T> get(unsigned int index) const;
+	std::shared_ptr<basic> getObject(unsigned int index) const;
+	std::shared_ptr<objBasic> getWorldObject(unsigned int index) const;
+	std::shared_ptr<uiBasic> getUiObject(unsigned int index) const;
+	unsigned int getNumObjects() const;
+	unsigned int getNumWorldObjects() const;
+	unsigned int getNumUiObjects() const;
 
-	std::shared_ptr<T> findByUiName(std::string uiName);
+	std::shared_ptr<T> findByUiName(std::string uiName) const;
 
 	void bringToFront(unsigned int index);
 	void sendToBack(unsigned int index);
@@ -138,8 +140,8 @@ public:
 	virtual void detach(basic* toRemove);
 	virtual void detach(unsigned int index);
 
-	int indexOf(basic* obj);
-	int localIndexOf(basic* obj);
+	int indexOf(basic* obj) const;
+	int localIndexOf(basic* obj) const;
 
 	virtual void clearObjects();
 	template<class T2 = T> void clearObjects();
@@ -163,8 +165,8 @@ private:
 };
 
 typedef group<> Group;
-typedef group<objBasic> objGroup;
-typedef group<uiBasic> uiGroup;
+typedef group<objBasic> groupObj;
+typedef group<uiBasic> groupUi;
 
 // implementation
 template<class T>
@@ -188,6 +190,20 @@ inline group<T>::group(std::shared_ptr<resourceGroup> gr)
 	}
 	else {
 		set<>(gr->get().get());
+	}
+}
+
+template<class T>
+inline group<T>::group(std::vector<std::shared_ptr<T>> initialObjects)
+{
+	worldObjectStart = 0;
+	uiObjectStart = 0;
+
+	objectListDirty = true;
+	ignoreIncorporation = false;
+
+	for (unsigned int i = 0; i < initialObjects.size(); i++) {
+		attach(initialObjects[i]);
 	}
 }
 
@@ -221,7 +237,7 @@ inline void group<T>::sortWorldObjects()
 }
 
 template<class T>
-inline std::string group<T>::serialize()
+inline std::string group<T>::serialize() const
 {
 	std::stringstream saveFile;
 
@@ -232,7 +248,7 @@ inline std::string group<T>::serialize()
 		if (obj->prefabSource != nullptr) {
 			saveFile << "OBJECT " << groupPrivate::prefabs()->nameOf(obj->prefabSource) << ";";
 			saveFile << obj->serialize();
-			saveFile << "\n";
+			saveFile << "@\n";
 		}
 		else {
 			p::warn("No prefab with which to save basic object " + std::to_string(i) + ". Map file may be incorrect.");
@@ -245,33 +261,15 @@ inline std::string group<T>::serialize()
 template<class T>
 inline bool group<T>::deserialize(std::string saveString)
 {
-	std::stringstream saveFile;
-	saveFile << saveString;
+	auto things = splitString(saveString, '@', '#');
 
-	int lines = std::count(std::istreambuf_iterator<char>(saveFile),
-		std::istreambuf_iterator<char>(), '\n');
+	unsigned int lines = things.size();
 
-	saveFile.clear();
-	saveFile.seekg(0);
-
-	std::string sLine;
-
-	int obCount = 0;
-
-	int line = 0;
-
-	int ht = 0;
-
-	bool foundMusic = false;
-
-	while (!saveFile.eof())
+	for (unsigned int line = 0; line < lines; line++)
 	{
-		line++;
+		std::string sLine = things[line];
 
-		getline(saveFile, sLine);
-		removeNewline(sLine);
-
-		// there is only one space in a save file line.
+		// there is an initial word in save file line.
 		// this defines why the line is there.
 		auto spaceSplit = splitStringAtFirst(sLine);
 
@@ -297,8 +295,6 @@ inline bool group<T>::deserialize(std::string saveString)
 
 			std::string pre = data2[0];
 			std::string values = data2[1];
-
-			obCount++;
 
 			std::shared_ptr<T> n = std::dynamic_pointer_cast<T>(groupPrivate::prefabs()->newInstance(pre));
 			if (!n) {
@@ -336,7 +332,7 @@ inline void group<T>::updateObjects(sf::Time elapsed)
 }
 
 template<class T>
-inline std::shared_ptr<T> group<T>::get(unsigned int index)
+inline std::shared_ptr<T> group<T>::get(unsigned int index) const
 {
 	if (index > objectList.size())
 		return nullptr;
@@ -345,7 +341,7 @@ inline std::shared_ptr<T> group<T>::get(unsigned int index)
 }
 
 template<class T>
-inline std::shared_ptr<basic> group<T>::getObject(unsigned int index)
+inline std::shared_ptr<basic> group<T>::getObject(unsigned int index) const
 {
 	if (index > objectList.size())
 		return nullptr;
@@ -354,7 +350,7 @@ inline std::shared_ptr<basic> group<T>::getObject(unsigned int index)
 }
 
 template<class T>
-inline std::shared_ptr<objBasic> group<T>::getWorldObject(unsigned int index)
+inline std::shared_ptr<objBasic> group<T>::getWorldObject(unsigned int index) const
 {
 	if (index >= uiObjectStart)
 		return nullptr;
@@ -363,31 +359,31 @@ inline std::shared_ptr<objBasic> group<T>::getWorldObject(unsigned int index)
 }
 
 template<class T>
-inline std::shared_ptr<uiBasic> group<T>::getUiObject(unsigned int index)
+inline std::shared_ptr<uiBasic> group<T>::getUiObject(unsigned int index) const
 {
 	return std::dynamic_pointer_cast<uiBasic>(getObject(uiObjectStart + index));
 }
 
 template<class T>
-inline unsigned int group<T>::getNumObjects()
+inline unsigned int group<T>::getNumObjects() const
 {
 	return objectList.size();
 }
 
 template<class T>
-inline unsigned int group<T>::getNumWorldObjects()
+inline unsigned int group<T>::getNumWorldObjects() const
 {
 	return uiObjectStart - worldObjectStart;
 }
 
 template<class T>
-inline unsigned int group<T>::getNumUiObjects()
+inline unsigned int group<T>::getNumUiObjects() const
 {
 	return objectList.size() - uiObjectStart;
 }
 
 template<class T>
-inline std::shared_ptr<T> group<T>::findByUiName(std::string uiName)
+inline std::shared_ptr<T> group<T>::findByUiName(std::string uiName) const
 {
 	for (unsigned int i = 0; i < objectList.size(); i++) {
 		if (objectList[i]->uiName == uiName) {
@@ -446,7 +442,7 @@ inline void group<T>::sendToBack(unsigned int index)
 template<class T>
 inline unsigned int group<T>::attach(std::shared_ptr<T> toAdd)
 {
-	// sanity 
+	// sanity
 	if (!toAdd) {
 		p::fatal("Attempting to attach an object that does not exist to a group.");
 		return 0;
@@ -518,7 +514,7 @@ inline void group<T>::detach(unsigned int index)
 }
 
 template<class T>
-inline int group<T>::indexOf(basic * obj)
+inline int group<T>::indexOf(basic * obj) const
 {
 	for (unsigned int i = 0; i < objectList.size(); i++) {
 		if (objectList[i].get() == obj) {
@@ -530,7 +526,7 @@ inline int group<T>::indexOf(basic * obj)
 }
 
 template<class T>
-inline int group<T>::localIndexOf(basic * obj)
+inline int group<T>::localIndexOf(basic * obj) const
 {
 	int ind = indexOf(obj);
 
@@ -645,6 +641,7 @@ inline void group<T>::clearObjects()
 DeclareScriptingCustom(user_type<mage::group<heldType>>(), name) \
 DeclareScriptingCustom(constructor<mage::group<heldType>()>(), name); \
 DeclareScriptingCustom(constructor<mage::group<heldType>(std::shared_ptr<mage::resourceGroup>)>(), name); \
+DeclareScriptingCustom(constructor<mage::group<heldType>(std::vector<std::shared_ptr<heldType>>)>(), name); \
 DeclareScriptingCustom(base_class<mage::groupBase, mage::group<heldType>>()); \
 DeclareScriptingCustom(base_class<mage::serializable, mage::group<heldType>>()); \
 DeclareScriptingCustom(base_class<mage::shadable, mage::group<heldType>>()); \
@@ -658,4 +655,5 @@ DeclareScriptingCustom(fun(&mage::group<heldType>::combine<>), "combine"); \
 DeclareScriptingCustom(fun(&mage::group<heldType>::set<>), "set"); \
 DeclareScriptingCustom(fun(&mage::group<heldType>::attach), "attach"); \
 DeclareScriptingCopyOperator(mage::group<heldType>); \
+DeclareScriptingListableShared(heldType, STRING(heldType)"ShVector");\
 DeclareScriptingCastingFunction("to_" name, mage::groupBase, mage::group<heldType>); // broke my rule here but it seems to be fine -c

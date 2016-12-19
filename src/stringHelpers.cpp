@@ -79,21 +79,14 @@ std::string strLower(std::string in) {
 	return in;
 }
 
-std::string strReplace(std::string in, char replace, char with) {
-	std::replace(in.begin(), in.end(), replace, with);
+std::string strReplace(std::string in, std::string replace, std::string with) {
+	std::regex_replace(in, std::regex(replace), with);
 	return in;
 }
 
-std::string strFilter(std::string in, char replace)
+std::string strFilter(std::string in, std::string replace)
 {
-	for (int i = 0; i < (int)in.size(); i++) {
-		if (in[i] == replace) {
-			in.erase(in.begin() + i);
-			i--;
-		}
-	}
-
-	return in;
+	return strReplace(in, replace, "");
 }
 
 std::string strSub(std::string in, unsigned int start, unsigned int finish)
@@ -107,14 +100,6 @@ std::string strSub(std::string in, unsigned int start, unsigned int finish)
 	// output.push_back('\0'); is unneded in std::string apparently
 
 	return output;
-}
-
-void removeNewline(std::string &str) {
-#ifndef PLATFORM_WINDOWS
-	if (str[str.size() - 1] == '\n' || str[str.size() - 1] == '\r') {
-		str.erase(str.size() - 1);
-	}
-#endif
 }
 
 std::string fileExtension(std::string path)
@@ -146,6 +131,29 @@ std::string fileName(std::string path)
 	auto split = splitString(path, '/');
 
 	return split[split.size() - 1];
+}
+
+void removeUnixNewline(std::string &str) {
+#ifndef PLATFORM_WINDOWS
+	if (str[str.size() - 1] == '\n' || str[str.size() - 1] == '\r') {
+		str.erase(str.size() - 1);
+	}
+#endif
+}
+
+std::string removeWhitespace(std::string in)
+{
+	in = strFilter(in, "\t");
+	in = strFilter(in, "\n");
+	// don't remove spaces, they're still important
+
+#ifndef PLATFORM_WINDOWS
+	// on UNIX (and other) operating systems, the windows newline "\n\r" is not recognised properly.
+	// this is annoying.
+	in = strFilter(in, "\r");
+#endif
+
+	return in;
 }
 
 }

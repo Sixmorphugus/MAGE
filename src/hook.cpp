@@ -2,6 +2,13 @@
 
 #include "scriptingEngine.h"
 
+using namespace mage;
+
+void hookBase::hEE(const chaiscript::exception::eval_error & e) const
+{
+	handleEvalError(e);
+}
+
 // lol this is just an se bind
 using namespace mage;
 using namespace chaiscript;

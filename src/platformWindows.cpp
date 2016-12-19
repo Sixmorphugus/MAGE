@@ -1,7 +1,7 @@
 #include "platform.h"
 #include "Game.h"
 
-#ifdef PLATFORM_WINDOWS
+#ifdef MAGE_PLATFORM_WINDOWS
 
 using namespace mage;
 

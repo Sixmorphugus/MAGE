@@ -142,10 +142,10 @@ std::string gameState::serialize()
 	// generate attributes
 	std::stringstream attribStream;
 
-	attribStream << "BGCOL " << (int)bgCol.r << "," << (int)bgCol.g << "," << (int)bgCol.b << "\n";
-	attribStream << "FOG " << (int)lightingAmb.r << "," << (int)lightingAmb.g << "," << (int)lightingAmb.b << "," << (int)lightingAmb.a << "\n";
+	attribStream << "BGCOL " << (int)bgCol.r << "," << (int)bgCol.g << "," << (int)bgCol.b << "@\n";
+	attribStream << "FOG " << (int)lightingAmb.r << "," << (int)lightingAmb.g << "," << (int)lightingAmb.b << "," << (int)lightingAmb.a << "@\n";
 
-	attribStream << "BOUNDS " << mapBounds.left << "," << mapBounds.top << "," << mapBounds.width << "," << mapBounds.height << "\n";
+	attribStream << "BOUNDS " << mapBounds.left << "," << mapBounds.top << "," << mapBounds.width << "," << mapBounds.height << "@\n";
 
 	std::string attribString = attribStream.str();
 
@@ -157,25 +157,11 @@ std::string gameState::serialize()
 
 bool gameState::deserialize(std::string saveString)
 {
-	std::stringstream saveFile;
-	saveFile << saveString;
+	auto things = splitString(saveString, '@', '#');
 
-	int obCount = 0;
-
-	int line = 0;
-
-	int ht = 0;
-
-	bool foundMusic = false;
-
-	std::string sLine;
-
-	while (!saveFile.eof())
+	for (unsigned int line = 0; line < things.size(); line++)
 	{
-		line++;
-
-		getline(saveFile, sLine);
-		removeNewline(sLine);
+		std::string sLine = things[line];
 
 		// there is only one space in a save file line.
 		// this defines why the line is there.
@@ -194,7 +180,7 @@ bool gameState::deserialize(std::string saveString)
 			// format:
 			// BGCOL r,g,b
 
-			auto commaSp = splitString(sData, ',', ' ', 3);
+			auto commaSp = splitString(sData, ',', '\0', 3);
 
 			bgCol.r = atoi(commaSp[0].c_str());
 			bgCol.g = atoi(commaSp[1].c_str());
@@ -204,7 +190,7 @@ bool gameState::deserialize(std::string saveString)
 			// format:
 			// FOG r,g,b
 
-			auto commaSp = splitString(sData, ',', 4);
+			auto commaSp = splitString(sData, ',', '\0', 4);
 
 			lightingAmb.r = atoi(commaSp[0].c_str());
 			lightingAmb.g = atoi(commaSp[1].c_str());
@@ -214,7 +200,7 @@ bool gameState::deserialize(std::string saveString)
 		else if (type == "BOUNDS") {
 			// format:
 			// BOUNDS left,top,width,height
-			auto commaSp = splitString(sData, ',', 4);
+			auto commaSp = splitString(sData, ',', '\0', 4);
 
 			mapBounds.left = atoi(commaSp[0].c_str());
 			mapBounds.top = atoi(commaSp[1].c_str());

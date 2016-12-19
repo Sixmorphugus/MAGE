@@ -12,11 +12,15 @@ namespace mage {
 
 class MAGEDLL serializable {
 public:
+	serializable();
+
 	virtual std::string serialize();
 	virtual bool deserialize(std::string data);
 
 	virtual void saveToFile(std::string file);
 	virtual bool loadFromFile(std::string file);
+	virtual std::string saveToString(std::string file);
+	virtual bool loadFromString(std::string file);
 };
 
 } // namespace mage

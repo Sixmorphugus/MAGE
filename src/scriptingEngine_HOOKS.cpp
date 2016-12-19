@@ -1,6 +1,8 @@
 #include "scriptingEngine.h"
 #include "Game.h"
 
+#include "hook.h"
+
 using namespace chaiscript;
 using namespace mage;
 
