@@ -3,6 +3,23 @@
 
 using namespace mage;
 
+struct prefabDefault {
+	prefabDefault() {
+		name = "";
+		pre = nullptr;
+	}
+
+	prefabDefault(std::string n, std::shared_ptr<prefab> p) {
+		name = n;
+		pre = p;
+	}
+
+	std::string name;
+	std::shared_ptr<prefab> pre;
+};
+
+std::map<size_t, prefabDefault> prefabDefaultsHC;
+
 prefab::prefab()
 {
 	templateObject = nullptr;
@@ -53,7 +70,19 @@ std::string prefab::name()
 // prefab manager
 prefabMngr::prefabMngr()
 {
-	// ...
+	// use hardcoded defaults as defaults
+	for (auto i = prefabDefaultsHC.begin(); i != prefabDefaultsHC.end(); i++)
+	{
+		auto pr = std::make_shared<prefab>(*i->second.pre);
+
+		std::string name = i->second.name;
+
+		pr->tags.push_back("default");
+		pr->tags.push_back("hc");
+
+		add(name, pr); // CLONE the hardcoded default entry.
+		prefabDefaults[i->first] = name;
+	}
 }
 
 void prefabMngr::add(std::string name, std::shared_ptr<prefab> input)
@@ -138,30 +167,69 @@ std::shared_ptr<basic> prefabMngr::newInstance(std::string name, Group* attachTo
 	return nullptr;
 }
 
+std::shared_ptr<prefab> prefabMngr::getDefaultPrefab(const std::type_info& typeId)
+{
+	return get(getDefaultPrefabName(typeId));
+}
+
+std::string prefabMngr::getDefaultPrefabName(const std::type_info& typeId)
+{
+	if (prefabDefaults.count(typeId.hash_code())) {
+		return prefabDefaults[typeId.hash_code()];
+	}
+
+	return "";
+}
+
+void prefabMngr::setDefaultPrefab(const std::type_info& typeId, std::string name)
+{
+	if (exists(name)) {
+		if (prefabDefaults[typeId.hash_code()] != "") {
+			auto t = get(prefabDefaults[typeId.hash_code()])->tags;
+			t.erase(std::remove(t.begin(), t.end(), "default"), t.end());
+		}
+
+		get(name)->tags.push_back("default");
+		prefabDefaults[typeId.hash_code()] = name;
+	}
+}
+
 // SE Binding
 #include "scriptingEngine.h"
 
 using namespace chaiscript;
 
 // for prefab
-DeclareScriptingType(prefab);
-DeclareScriptingBaseClass(taggable, prefab);
-DeclareScriptingBaseClass(serializable, prefab);
-DeclareScriptingConstructor(prefab(std::shared_ptr<basic> refersTo, std::vector<std::string> strList), "prefab");
-DeclareScriptingCustom(fun([](std::shared_ptr<basic> refersTo) { return prefab(refersTo); }), "prefab"); // simplified constructor
-DeclareScriptingConstructor(prefab(), "prefab"); // very simplified constructor
-DeclareScriptingFunction(&prefab::copyTemplate, "copyTemplate");
-DeclareScriptingFunction(&prefab::setTemplate, "setTemplate");
-DeclareScriptingFunction(&prefab::name, "name");
+MAGE_DeclareScriptingType(prefab);
+MAGE_DeclareScriptingBaseClass(taggable, prefab);
+MAGE_DeclareScriptingBaseClass(serializable, prefab);
+MAGE_DeclareScriptingConstructor(prefab(std::shared_ptr<basic> refersTo, std::vector<std::string> strList), "prefab");
+MAGE_DeclareScriptingCustom(fun([](std::shared_ptr<basic> refersTo) { return prefab(refersTo); }), "prefab"); // simplified constructor
+MAGE_DeclareScriptingConstructor(prefab(), "prefab"); // very simplified constructor
+MAGE_DeclareScriptingFunction(&prefab::copyTemplate, "copyTemplate");
+MAGE_DeclareScriptingFunction(&prefab::setTemplate, "setTemplate");
+MAGE_DeclareScriptingFunction(&prefab::name, "name");
 
 // for prefabMngr
-DeclareScriptingType(prefabMngr);
-DeclareScriptingFunction(&prefabMngr::add, "add");
-DeclareScriptingFunction(&prefabMngr::exists, "exists");
-DeclareScriptingFunction(&prefabMngr::get, "get");
-DeclareScriptingFunction(&prefabMngr::getByIndex, "getByIndex");
-DeclareScriptingFunction(&prefabMngr::getCount, "getCount");
-DeclareScriptingFunction(&prefabMngr::list, "list");
-DeclareScriptingFunction(&prefabMngr::nameOf, "nameOf");
-DeclareScriptingFunction(&prefabMngr::newInstance, "newInstance");
-DeclareScriptingFunction([](prefabMngr &pm, std::string instName) { return pm.newInstance(instName); }, "newInstance");
+MAGE_DeclareScriptingType(prefabMngr);
+MAGE_DeclareScriptingFunction(&prefabMngr::add, "add");
+MAGE_DeclareScriptingFunction(&prefabMngr::exists, "exists");
+MAGE_DeclareScriptingFunction(&prefabMngr::get, "get");
+MAGE_DeclareScriptingFunction(&prefabMngr::getByIndex, "getByIndex");
+MAGE_DeclareScriptingFunction(&prefabMngr::getCount, "getCount");
+MAGE_DeclareScriptingFunction(&prefabMngr::list, "list");
+MAGE_DeclareScriptingFunction(&prefabMngr::nameOf, "nameOf");
+MAGE_DeclareScriptingFunction(&prefabMngr::newInstance, "newInstance");
+MAGE_DeclareScriptingFunction([](prefabMngr &pm, std::string instName) { return pm.newInstance(instName); }, "newInstance");
+
+// declaration of prefabs (internal)
+mage::specialPrefabRegistration::specialPrefabRegistration(const std::type_info& typeinfo, std::shared_ptr<prefab> input, std::string name)
+{
+	prefabDefaultsHC[typeinfo.hash_code()] = prefabDefault(name, input);
+}
+
+mage::specialPrefabRegistration::specialPrefabRegistration(const std::type_info& typeinfo, const std::type_info& typeinfo2, std::string name)
+{
+	prefabDefaultsHC[typeinfo.hash_code()] = prefabDefaultsHC[typeinfo2.hash_code()];
+	prefabDefaultsHC[typeinfo.hash_code()].name = name;
+}

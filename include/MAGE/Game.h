@@ -163,7 +163,7 @@ public:
 	float tickScale;
 
 protected:
-	void loadWindowSettings(sf::VideoMode resolution = sf::VideoMode::getDesktopMode(), std::string title = "MAGE Game Engine", bool fullscreen = false, bool vsync = false, int maxFps = 0);
+	void loadWindowSettings(sf::VideoMode resolution = sf::VideoMode(1280, 720), std::string title = "MAGE Game Engine", bool fullscreen = false, bool vsync = false, int maxFps = 60);
 	void loadAudioSettings(float masterVolume = 100.f, float sfxVolume = 100.f, float musicVolume = 100.f);
 
 	virtual void setKeybinds();

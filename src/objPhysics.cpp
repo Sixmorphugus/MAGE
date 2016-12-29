@@ -129,14 +129,14 @@ void objPhysics::registerProperties()
 // SE
 using namespace chaiscript;
 
-DeclareScriptingCustom(user_type<objPhysics>(), "objPhysics");
-DeclareScriptingCustom(base_class<objBasic, objPhysics>());
-DeclareScriptingBaseClass(basic, objPhysics);
-DeclareScriptingBaseClass(sf::Transformable, objPhysics);
-DeclareScriptingCopyOperator(objPhysics);
-DeclareScriptingCustom(constructor<objPhysics(float, float, basic::textureData)>(), "physicsObject");
-DeclareScriptingCustom(fun(&objPhysics::density), "density");
-DeclareScriptingCustom(fun(&objPhysics::impact), "impact");
-DeclareScriptingCustom(fun(&objPhysics::impulse), "impulse");
-DeclareScriptingCustom(fun(&objPhysics::velocity), "velocity");
-DeclareScriptingCustom(fun(&objPhysics::weight), "weight");
+MAGE_DeclareScriptingCustom(user_type<objPhysics>(), "objPhysics");
+MAGE_DeclareScriptingCustom(base_class<objBasic, objPhysics>());
+MAGE_DeclareScriptingBaseClass(basic, objPhysics);
+MAGE_DeclareScriptingBaseClass(sf::Transformable, objPhysics);
+MAGE_DeclareScriptingCopyOperator(objPhysics);
+MAGE_DeclareScriptingCustom(constructor<objPhysics(float, float, basic::textureData)>(), "physicsObject");
+MAGE_DeclareScriptingCustom(fun(&objPhysics::density), "density");
+MAGE_DeclareScriptingCustom(fun(&objPhysics::impact), "impact");
+MAGE_DeclareScriptingCustom(fun(&objPhysics::impulse), "impulse");
+MAGE_DeclareScriptingCustom(fun(&objPhysics::velocity), "velocity");
+MAGE_DeclareScriptingCustom(fun(&objPhysics::weight), "weight");

@@ -192,15 +192,16 @@ void jukebox::update()
 // SE
 using namespace chaiscript;
 
-DeclareScriptingCustom(user_type<jukebox>(), "jukebox");
-DeclareScriptingCustom(constructor<jukebox()>(), "jukebox");
-DeclareScriptingCustom(fun(&jukebox::fadeToSong), "fadeToSong");
-DeclareScriptingCustom(fun(&jukebox::getLastPlayed), "getLastPlayed");
-DeclareScriptingCustom(fun(&jukebox::pause), "pause");
-DeclareScriptingCustom(fun(&jukebox::pitchShift), "pitchShift");
-DeclareScriptingCustom(fun(&jukebox::pitchShiftMultiplier), "pitchShiftMultiplier");
-DeclareScriptingCustom(fun(&jukebox::playSong), "playSong");
-DeclareScriptingCustom(fun(&jukebox::resume), "resume");
-DeclareScriptingCustom(fun(&jukebox::stopPlaying), "stopPlaying");
-DeclareScriptingCustom(fun(&jukebox::update), "update");
-DeclareScriptingCustom(fun(&jukebox::volume), "volume");
+MAGE_DeclareScriptingCustom(user_type<jukebox>(), "jukebox");
+MAGE_DeclareScriptingCustom(constructor<jukebox()>(), "jukebox");
+MAGE_DeclareScriptingCustom(fun(&jukebox::fadeToSong), "fadeToSong");
+MAGE_DeclareScriptingCustom(fun(&jukebox::getLastPlayed), "getLastPlayed");
+MAGE_DeclareScriptingCustom(fun(&jukebox::pause), "pause");
+MAGE_DeclareScriptingCustom(fun(&jukebox::pitchShift), "pitchShift");
+MAGE_DeclareScriptingCustom(fun(&jukebox::pitchShiftMultiplier), "pitchShiftMultiplier");
+MAGE_DeclareScriptingCustom(fun(&jukebox::playSong), "playSong");
+MAGE_DeclareScriptingCustom(fun(&jukebox::resume), "resume");
+MAGE_DeclareScriptingCustom(fun(&jukebox::stopPlaying), "stopPlaying");
+MAGE_DeclareScriptingCustom(fun([](jukebox& j) { j.stopPlaying(); }), "stopPlaying");
+MAGE_DeclareScriptingCustom(fun(&jukebox::update), "update");
+MAGE_DeclareScriptingCustom(fun(&jukebox::volume), "volume");

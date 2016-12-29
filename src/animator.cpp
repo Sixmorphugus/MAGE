@@ -197,26 +197,26 @@ std::vector<unsigned int> animator::getFrameList()
 #include "scriptingEngine.h"
 using namespace chaiscript;
 
-DeclareScriptingCustom(user_type<animator::animation>(), "animation");
-DeclareScriptingCustom(constructor<animator::animation()>(), "animation");
-DeclareScriptingCustom(constructor<animator::animation(const animator::animation&)>(), "animation");
-DeclareScriptingCustom(fun(&animator::animation::frames), "frames");
-DeclareScriptingCustom(fun(&animator::animation::time), "time");
-DeclareScriptingCopyOperator(animator::animation);
+MAGE_DeclareScriptingCustom(user_type<animator::animation>(), "animation");
+MAGE_DeclareScriptingCustom(constructor<animator::animation()>(), "animation");
+MAGE_DeclareScriptingCustom(constructor<animator::animation(const animator::animation&)>(), "animation");
+MAGE_DeclareScriptingCustom(fun(&animator::animation::frames), "frames");
+MAGE_DeclareScriptingCustom(fun(&animator::animation::time), "time");
+MAGE_DeclareScriptingCopyOperator(animator::animation);
 
-DeclareScriptingCustom(user_type<animator>(), "animator");
-DeclareScriptingCustom(constructor<animator(std::shared_ptr<resourceTexture> in)>(), "animator");
-DeclareScriptingCustom(constructor<animator(const animator&)>(), "animator");
-DeclareScriptingCustom(fun(&animator::add), "add");
-DeclareScriptingCustom(fun(&animator::textureUsed), "textureUsed");
-DeclareScriptingCustom(fun(&animator::frameRects), "frameRects");
-DeclareScriptingCustom(fun(&animator::generateFrameRects), "generateFrameRects");
-DeclareScriptingCustom(fun(&animator::getFrameList), "getFrameList");
-DeclareScriptingCustom(fun(&animator::getPlaying), "getPlaying");
-DeclareScriptingCustom(fun(&animator::isAnimation), "isAnimation");
-DeclareScriptingCustom(fun(&animator::isPlaying), "isPlaying");
-DeclareScriptingCustom(fun(&animator::play), "play");
-DeclareScriptingCustom(fun(&animator::setFrame), "setFrame");
-DeclareScriptingCustom(fun(&animator::stop), "stop");
-DeclareScriptingCustom(fun(&animator::update), "update");
-DeclareScriptingCopyOperator(animator);
+MAGE_DeclareScriptingCustom(user_type<animator>(), "animator");
+MAGE_DeclareScriptingCustom(constructor<animator(std::shared_ptr<resourceTexture> in)>(), "animator");
+MAGE_DeclareScriptingCustom(constructor<animator(const animator&)>(), "animator");
+MAGE_DeclareScriptingCustom(fun(&animator::add), "add");
+MAGE_DeclareScriptingCustom(fun(&animator::textureUsed), "textureUsed");
+MAGE_DeclareScriptingCustom(fun(&animator::frameRects), "frameRects");
+MAGE_DeclareScriptingCustom(fun(&animator::generateFrameRects), "generateFrameRects");
+MAGE_DeclareScriptingCustom(fun(&animator::getFrameList), "getFrameList");
+MAGE_DeclareScriptingCustom(fun(&animator::getPlaying), "getPlaying");
+MAGE_DeclareScriptingCustom(fun(&animator::isAnimation), "isAnimation");
+MAGE_DeclareScriptingCustom(fun(&animator::isPlaying), "isPlaying");
+MAGE_DeclareScriptingCustom(fun(&animator::play), "play");
+MAGE_DeclareScriptingCustom(fun(&animator::setFrame), "setFrame");
+MAGE_DeclareScriptingCustom(fun(&animator::stop), "stop");
+MAGE_DeclareScriptingCustom(fun(&animator::update), "update");
+MAGE_DeclareScriptingCopyOperator(animator);

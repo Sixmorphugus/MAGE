@@ -408,13 +408,13 @@ float uiFormattableText::findSizeX() const
 
 using namespace chaiscript;
 
-DeclareScriptingCustom(user_type<uiFormattableText>(), "uiFormattableText");
-DeclareScriptingCustom(base_class<uiBasic, uiFormattableText>());
-DeclareScriptingBaseClass(basic, uiFormattableText);
-DeclareScriptingBaseClass(sf::Transformable, uiFormattableText);
-DeclareScriptingCustom(constructor<uiFormattableText(float, float, std::string)>(), "uiFormattableText");
-DeclareScriptingCustom(fun<float, uiFormattableText>(&uiFormattableText::findSizeX), "findSizeX");
-DeclareScriptingCustom(fun(&uiFormattableText::highestScrollPoint), "highestScrollPoint");
-DeclareScriptingCustom(fun(&uiFormattableText::lineLimit), "lineLimit");
-DeclareScriptingCustom(fun(&uiFormattableText::stopAtScrollPoint), "stopAtScrollPoint");
-DeclareScriptingCustom(fun(&uiFormattableText::text), "text");
+MAGE_DeclareScriptingCustom(user_type<uiFormattableText>(), "uiFormattableText");
+MAGE_DeclareScriptingCustom(base_class<uiBasic, uiFormattableText>());
+MAGE_DeclareScriptingBaseClass(basic, uiFormattableText);
+MAGE_DeclareScriptingBaseClass(sf::Transformable, uiFormattableText);
+MAGE_DeclareScriptingCustom(constructor<uiFormattableText(float, float, std::string)>(), "uiFormattableText");
+MAGE_DeclareScriptingCustom(fun<float, uiFormattableText>(&uiFormattableText::findSizeX), "findSizeX");
+MAGE_DeclareScriptingCustom(fun(&uiFormattableText::highestScrollPoint), "highestScrollPoint");
+MAGE_DeclareScriptingCustom(fun(&uiFormattableText::lineLimit), "lineLimit");
+MAGE_DeclareScriptingCustom(fun(&uiFormattableText::stopAtScrollPoint), "stopAtScrollPoint");
+MAGE_DeclareScriptingCustom(fun(&uiFormattableText::text), "text");

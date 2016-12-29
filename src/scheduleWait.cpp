@@ -29,8 +29,8 @@ void scheduleWait::run()
 	schedule::run();
 }
 
-DeclareScriptingSchedule(scheduleWait);
-DeclareScriptingConstructor(scheduleWait(sf::Time, std::function<void()>), "scheduleTick");
-DeclareScriptingConstructor(scheduleWait(sf::Time, std::function<void()>, std::function<bool()>), "scheduleTick");
-DeclareScriptingCopyOperator(scheduleWait);
-DeclareScriptingFunction(&scheduleWait::onWaited, "onWaited");
+MAGE_DeclareScriptingSchedule(scheduleWait);
+MAGE_DeclareScriptingConstructor(scheduleWait(sf::Time, std::function<void()>), "scheduleTick");
+MAGE_DeclareScriptingConstructor(scheduleWait(sf::Time, std::function<void()>, std::function<bool()>), "scheduleTick");
+MAGE_DeclareScriptingCopyOperator(scheduleWait);
+MAGE_DeclareScriptingFunction(&scheduleWait::onWaited, "onWaited");

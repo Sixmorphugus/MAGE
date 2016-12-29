@@ -13,7 +13,7 @@ sf::Vector2f uiSpriteless::getSize()
 	return sf::Vector2f(0.f, 0.f);
 }
 
-DeclareScriptingBasic(uiSpriteless);
-DeclareScriptingBaseClass(uiBasic, uiSpriteless);
-DeclareScriptingConstructor(uiSpriteless(float, float), "uiSpriteless");
-DeclareScriptingCopyOperator(uiSpriteless);
+MAGE_DeclareScriptingBasic(uiSpriteless);
+MAGE_DeclareScriptingBaseClass(uiBasic, uiSpriteless);
+MAGE_DeclareScriptingConstructor(uiSpriteless(float, float), "uiSpriteless");
+MAGE_DeclareScriptingCopyOperator(uiSpriteless);

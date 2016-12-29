@@ -118,7 +118,6 @@ Game::Game(int argc, char* argv[], sf::RenderWindow* wind):
 
 	if (window) {
 		windowInit(window);
-		loadWindowSettings(sf::VideoMode::getDesktopMode(), "MAGE Game Engine (r" + MAGE_BUILDSTRING + ")");
 	}
 
 	// game stoof
@@ -164,8 +163,9 @@ bool Game::renderWindowExists()
 void Game::windowInit(sf::RenderWindow * wind)
 {
 	window = wind;
-
 	shadowTex.create(getRenderWindow().getSize().x, getRenderWindow().getSize().y);
+
+	loadWindowSettings();
 }
 
 // STARTUP FUNCTIONS (modular design and all that)

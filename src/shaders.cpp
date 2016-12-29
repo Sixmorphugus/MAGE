@@ -63,10 +63,10 @@ void shadable::applyShader(sf::RenderStates& st, sf::Vector2f texSize) const {
 
 // SE Binding
 #include "scriptingEngine.h"
-DeclareScriptingType(shadable);
-DeclareScriptingFunction(&shadable::setShader, "setShader");
-DeclareScriptingFunction(&shadable::getShader, "getShader");
-DeclareScriptingFunction(&shadable::shaderUpdate, "shaderUpdate");
-DeclareScriptingFunction(&shadable::clearShader, "clearShader");
-DeclareScriptingFunction(&shadable::shaderRestartEffect, "shaderRestartEffect");
-DeclareScriptingFunction(&shadable::shaderUpdate, "shaderUpdate");
+MAGE_DeclareScriptingType(shadable);
+MAGE_DeclareScriptingFunction(&shadable::setShader, "setShader");
+MAGE_DeclareScriptingFunction(&shadable::getShader, "getShader");
+MAGE_DeclareScriptingFunction(&shadable::shaderUpdate, "shaderUpdate");
+MAGE_DeclareScriptingFunction(&shadable::clearShader, "clearShader");
+MAGE_DeclareScriptingFunction(&shadable::shaderRestartEffect, "shaderRestartEffect");
+MAGE_DeclareScriptingFunction(&shadable::shaderUpdate, "shaderUpdate");

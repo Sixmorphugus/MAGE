@@ -54,12 +54,12 @@ unsigned int scheduleTick::getLoopCount()
 	return timesLooped;
 }
 
-DeclareScriptingSchedule(scheduleTick);
-DeclareScriptingConstructor(scheduleTick(sf::Time, std::function<void(int)>), "scheduleTick");
-DeclareScriptingConstructor(scheduleTick(sf::Time, std::function<void(int)>, std::function<bool()>), "scheduleTick");
-DeclareScriptingCopyOperator(scheduleTick);
-DeclareScriptingFunction(&scheduleTick::getLastTickTime, "getLastTickTime");
-DeclareScriptingFunction(&scheduleTick::getTimeSinceLastTick, "getTimeSinceLastTick");
-DeclareScriptingFunction(&scheduleTick::getLoopCount, "getLoopCount");
-DeclareScriptingFunction(&scheduleTick::length, "length");
-DeclareScriptingFunction(&scheduleTick::onWaited, "onWaited");
+MAGE_DeclareScriptingSchedule(scheduleTick);
+MAGE_DeclareScriptingConstructor(scheduleTick(sf::Time, std::function<void(int)>), "scheduleTick");
+MAGE_DeclareScriptingConstructor(scheduleTick(sf::Time, std::function<void(int)>, std::function<bool()>), "scheduleTick");
+MAGE_DeclareScriptingCopyOperator(scheduleTick);
+MAGE_DeclareScriptingFunction(&scheduleTick::getLastTickTime, "getLastTickTime");
+MAGE_DeclareScriptingFunction(&scheduleTick::getTimeSinceLastTick, "getTimeSinceLastTick");
+MAGE_DeclareScriptingFunction(&scheduleTick::getLoopCount, "getLoopCount");
+MAGE_DeclareScriptingFunction(&scheduleTick::length, "length");
+MAGE_DeclareScriptingFunction(&scheduleTick::onWaited, "onWaited");

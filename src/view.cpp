@@ -183,20 +183,20 @@ void view::moveTowards(basic & target, float multiplier)
 }
 
 // SE Bind
-DeclareScriptingType(view);
-DeclareScriptingBaseClass(sf::View, view);
-DeclareScriptingBaseClass(shadable, view);
-DeclareScriptingFunction(&view::bounds, "bounds");
-DeclareScriptingFunction(&view::getHalfSize, "getHalfSize");
-DeclareScriptingFunction(&view::getViewportBoundsIn, "getViewportBoundsIn");
-DeclareScriptingFunction(&view::getZoomLevel, "getZoomLevel");
-DeclareScriptingFunction(&view::getPosition, "getPosition");
-DeclareScriptingFunction(&view::pythagorasWidth, "pythagorasWidth");
-DeclareScriptingFunction(&view::render, "render");
-DeclareScriptingFunction(&view::respectPixelGrid, "respectPixelGrid");
-DeclareScriptingFunction(&view::setViewportBoundsIn, "setViewportBoundsIn");
-DeclareScriptingFunction(&view::setZoomLevel, "setZoomLevel");
-DeclareScriptingFunction(&view::setPosition, "setPosition");
-DeclareScriptingFunction(&view::shader, "shader");
-DeclareScriptingFunction(&view::group, "group");
-DeclareScriptingFunction(&view::zoomZero, "zoomZero");
+MAGE_DeclareScriptingType(view);
+MAGE_DeclareScriptingBaseClass(sf::View, view);
+MAGE_DeclareScriptingBaseClass(shadable, view);
+MAGE_DeclareScriptingFunction(&view::bounds, "bounds");
+MAGE_DeclareScriptingFunction(&view::getHalfSize, "getHalfSize");
+MAGE_DeclareScriptingFunction(&view::getViewportBoundsIn, "getViewportBoundsIn");
+MAGE_DeclareScriptingFunction(&view::getZoomLevel, "getZoomLevel");
+MAGE_DeclareScriptingFunction(&view::getPosition, "getPosition");
+MAGE_DeclareScriptingFunction(&view::pythagorasWidth, "pythagorasWidth");
+MAGE_DeclareScriptingFunction(&view::render, "render");
+MAGE_DeclareScriptingFunction(&view::respectPixelGrid, "respectPixelGrid");
+MAGE_DeclareScriptingFunction(&view::setViewportBoundsIn, "setViewportBoundsIn");
+MAGE_DeclareScriptingFunction(&view::setZoomLevel, "setZoomLevel");
+MAGE_DeclareScriptingFunction(&view::setPosition, "setPosition");
+MAGE_DeclareScriptingFunction(&view::shader, "shader");
+MAGE_DeclareScriptingFunction(&view::group, "group");
+MAGE_DeclareScriptingFunction(&view::zoomZero, "zoomZero");

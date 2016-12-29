@@ -19,7 +19,7 @@ bool taggable::hasTag(std::string tag)
 // scripting
 #include "scriptingEngine.h"
 
-DeclareScriptingType(taggable);
-DeclareScriptingConstructor(taggable(), "taggable");
-DeclareScriptingFunction(&taggable::hasTag, "hasTag");
-DeclareScriptingFunction(&taggable::tags, "tags");
+MAGE_DeclareScriptingType(taggable);
+MAGE_DeclareScriptingConstructor(taggable(), "taggable");
+MAGE_DeclareScriptingFunction(&taggable::hasTag, "hasTag");
+MAGE_DeclareScriptingFunction(&taggable::tags, "tags");

@@ -17,9 +17,9 @@ public:
 
 }
 
-#define DeclareScriptingFilepathResource(name) \
-DeclareScriptingResource(name) \
-DeclareScriptingBaseClass(resourceFilepath, name);\
-DeclareScriptingConstructor(name(std::string), STRING(name));\
-DeclareScriptingFunction(&resourceMngr::addFolder<name>, "addFolderOf_" STRING(name));\
-DeclareScriptingCopyOperator(name);
+#define MAGE_DeclareScriptingFilepathResource(name) \
+MAGE_DeclareScriptingResource(name) \
+MAGE_DeclareScriptingBaseClass(resourceFilepath, name);\
+MAGE_DeclareScriptingConstructor(name(std::string), STRING(name));\
+MAGE_DeclareScriptingFunction(&resourceMngr::addFolder<name>, "addFolderOf_" STRING(name));\
+MAGE_DeclareScriptingCopyOperator(name);

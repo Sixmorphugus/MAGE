@@ -39,5 +39,5 @@ std::shared_ptr<sf::SoundBuffer> resourceSoundBuffer::get()
 // SE
 #include "scriptingEngine.h"
 
-DeclareScriptingFilepathResource(resourceSoundBuffer);
-DeclareScriptingFunction(&resourceSoundBuffer::get, "get");
+MAGE_DeclareScriptingFilepathResource(resourceSoundBuffer);
+MAGE_DeclareScriptingFunction(&resourceSoundBuffer::get, "get");

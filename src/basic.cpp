@@ -664,6 +664,15 @@ basic::prop& basic::operator[](std::string name)
 	return getProperty(name);
 }
 
+std::shared_ptr<prefab> mage::basic::getPrefab()
+{
+	if (prefabSource)
+		return prefabSource;
+
+	const std::type_info& t = typeid(*this);
+	return theGame()->prefabs->getDefaultPrefab(t);
+}
+
 std::shared_ptr<resourceTexture> basic::getTexResource() const {
 	auto cs = getCurrentSprite();
 
@@ -678,47 +687,47 @@ std::shared_ptr<resourceTexture> basic::getTexResource() const {
 // SE
 using namespace chaiscript;
 
-DeclareScriptingCustom(user_type<basic>(), "basic");
-DeclareScriptingCustom(base_class<sf::Transformable, basic>());
-DeclareScriptingCustom(base_class<sf::Drawable, basic>());
-DeclareScriptingCustom(base_class<serializable, basic>());
-DeclareScriptingCustom(base_class<shadable, basic>());
-DeclareScriptingCustom(fun(&basic::clone), "clone");
-DeclareScriptingCustom(fun(&basic::getCenter), "getCenter");
-DeclareScriptingCustom(fun(&basic::isProperty), "isProperty");
-DeclareScriptingCustom(fun(&basic::getProperty), "getProperty");
-DeclareScriptingCustom(fun(&basic::getPropertyList), "getPropertyList");
-DeclareScriptingCustom(fun<std::shared_ptr<basic::spriteData>, basic>(&basic::getCurrentSprite), "getCurrentSprite");
-DeclareScriptingCustom(fun(&basic::replaceCurrentSprite), "replaceCurrentSprite");
-DeclareScriptingCustom(fun(&basic::setCurrentSprite), "setCurrentSprite");
-DeclareScriptingCustom(fun(&basic::sprites), "sprites");
-DeclareScriptingCustom(fun(&basic::sfSprite), "sfSprite");
-DeclareScriptingCustom(fun(&basic::getGroup), "getGroup");
-DeclareScriptingCustom(fun(&basic::scheduleDestroy), "destroy");
-DeclareScriptingCustom(fun(&basic::vars), "vars");
-DeclareScriptingCustom(fun(&basic::getTexResource), "getTexResource");
-DeclareScriptingCustom(fun(&basic::getFrameSize), "getFrameSize");
-DeclareScriptingCustom(fun(&basic::getRealPosition), "getRealPosition");
-DeclareScriptingCustom(fun(&basic::setRealPosition), "setRealPosition");
-DeclareScriptingCustom(fun(&basic::getTexSize), "getTexSize");
-DeclareScriptingCustom(fun(&basic::getSize), "getSize");
-DeclareScriptingCustom(fun(&basic::getBounds), "getMainBounds");
-DeclareScriptingCustom(fun(&basic::getMainBounds), "getMainBounds");
-DeclareScriptingCustom(fun(&basic::getPrefabSource), "getPrefabSource");
-DeclareScriptingCustom(fun(&basic::hasMoved), "hasMoved");
-DeclareScriptingCopyOperator(basic);
+MAGE_DeclareScriptingCustom(user_type<basic>(), "basic");
+MAGE_DeclareScriptingCustom(base_class<sf::Transformable, basic>());
+MAGE_DeclareScriptingCustom(base_class<sf::Drawable, basic>());
+MAGE_DeclareScriptingCustom(base_class<serializable, basic>());
+MAGE_DeclareScriptingCustom(base_class<shadable, basic>());
+MAGE_DeclareScriptingCustom(fun(&basic::clone), "clone");
+MAGE_DeclareScriptingCustom(fun(&basic::getCenter), "getCenter");
+MAGE_DeclareScriptingCustom(fun(&basic::isProperty), "isProperty");
+MAGE_DeclareScriptingCustom(fun(&basic::getProperty), "getProperty");
+MAGE_DeclareScriptingCustom(fun(&basic::getPropertyList), "getPropertyList");
+MAGE_DeclareScriptingCustom(fun<std::shared_ptr<basic::spriteData>, basic>(&basic::getCurrentSprite), "getCurrentSprite");
+MAGE_DeclareScriptingCustom(fun(&basic::replaceCurrentSprite), "replaceCurrentSprite");
+MAGE_DeclareScriptingCustom(fun(&basic::setCurrentSprite), "setCurrentSprite");
+MAGE_DeclareScriptingCustom(fun(&basic::sprites), "sprites");
+MAGE_DeclareScriptingCustom(fun(&basic::sfSprite), "sfSprite");
+MAGE_DeclareScriptingCustom(fun(&basic::getGroup), "getGroup");
+MAGE_DeclareScriptingCustom(fun(&basic::scheduleDestroy), "destroy");
+MAGE_DeclareScriptingCustom(fun(&basic::vars), "vars");
+MAGE_DeclareScriptingCustom(fun(&basic::getTexResource), "getTexResource");
+MAGE_DeclareScriptingCustom(fun(&basic::getFrameSize), "getFrameSize");
+MAGE_DeclareScriptingCustom(fun(&basic::getRealPosition), "getRealPosition");
+MAGE_DeclareScriptingCustom(fun(&basic::setRealPosition), "setRealPosition");
+MAGE_DeclareScriptingCustom(fun(&basic::getTexSize), "getTexSize");
+MAGE_DeclareScriptingCustom(fun(&basic::getSize), "getSize");
+MAGE_DeclareScriptingCustom(fun(&basic::getBounds), "getMainBounds");
+MAGE_DeclareScriptingCustom(fun(&basic::getMainBounds), "getMainBounds");
+MAGE_DeclareScriptingCustom(fun(&basic::getPrefabSource), "getPrefabSource");
+MAGE_DeclareScriptingCustom(fun(&basic::hasMoved), "hasMoved");
+MAGE_DeclareScriptingCopyOperator(basic);
 
-DeclareScriptingCustom(user_type<basic::textureData>(), "textureData");
-DeclareScriptingCustom(constructor<basic::textureData()>(), "textureData");
-DeclareScriptingCustom(constructor<basic::textureData(std::shared_ptr<resourceTexture>)>(), "textureData");
-DeclareScriptingCustom(constructor<basic::textureData(std::shared_ptr<resourceTexture>, unsigned int, unsigned int)>(), "textureData");
-DeclareScriptingCustom(fun(&basic::textureData::defaultFrameSize), "defaultFrameSize");
-DeclareScriptingCustom(fun(&basic::textureData::resource), "resource");
-DeclareScriptingCustom(fun(&basic::textureData::frameSize), "frameSize");
-DeclareScriptingCopyOperator(basic::textureData);
+MAGE_DeclareScriptingCustom(user_type<basic::textureData>(), "textureData");
+MAGE_DeclareScriptingCustom(constructor<basic::textureData()>(), "textureData");
+MAGE_DeclareScriptingCustom(constructor<basic::textureData(std::shared_ptr<resourceTexture>)>(), "textureData");
+MAGE_DeclareScriptingCustom(constructor<basic::textureData(std::shared_ptr<resourceTexture>, unsigned int, unsigned int)>(), "textureData");
+MAGE_DeclareScriptingCustom(fun(&basic::textureData::defaultFrameSize), "defaultFrameSize");
+MAGE_DeclareScriptingCustom(fun(&basic::textureData::resource), "resource");
+MAGE_DeclareScriptingCustom(fun(&basic::textureData::frameSize), "frameSize");
+MAGE_DeclareScriptingCopyOperator(basic::textureData);
 
-DeclareScriptingCustom(user_type<basic::spriteData>(), "spriteData");
-DeclareScriptingCustom(fun(&basic::spriteData::animations), "animations");
-DeclareScriptingCustom(fun(&basic::spriteData::texture), "texture");
-DeclareScriptingCopyOperator(basic::spriteData);
-DeclareScriptingListableShared(basic::spriteData, "spriteVector");
+MAGE_DeclareScriptingCustom(user_type<basic::spriteData>(), "spriteData");
+MAGE_DeclareScriptingCustom(fun(&basic::spriteData::animations), "animations");
+MAGE_DeclareScriptingCustom(fun(&basic::spriteData::texture), "texture");
+MAGE_DeclareScriptingCopyOperator(basic::spriteData);
+MAGE_DeclareScriptingListableShared(basic::spriteData, "spriteVector");

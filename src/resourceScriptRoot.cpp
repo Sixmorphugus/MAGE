@@ -24,5 +24,5 @@ chaiscript::Boxed_Value resourceScriptRoot::run()
 }
 
 // msr
-DeclareScriptingFilepathResource(resourceScriptRoot);
-DeclareScriptingFunction(&resourceScriptRoot::run, "run");
+MAGE_DeclareScriptingFilepathResource(resourceScriptRoot);
+MAGE_DeclareScriptingFunction(&resourceScriptRoot::run, "run");

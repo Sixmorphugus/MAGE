@@ -2,25 +2,14 @@
 
 using namespace mage;
 
+std::map<std::string, inputKeyboard::keybind> bindingsDefault;
+
 // KEYBOARD
 // ---------------------------------------------------
 inputKeyboard::inputKeyboard() {
 	// set some defeaults
 	keyJustPressed = false;
 	inputStream = "";
-
-	// get your keybind collection started today!
-	setBind("CTRL", sf::Keyboard::LControl);
-	setBind("SHIFT", sf::Keyboard::LShift);
-
-	setBind("CUT", { sf::Keyboard::LControl, sf::Keyboard::X });
-	setBind("COPY", { sf::Keyboard::LControl, sf::Keyboard::C });
-	setBind("PASTE", { sf::Keyboard::LControl, sf::Keyboard::V });
-
-	setBind("DELETE", sf::Keyboard::Delete);
-	setBind("ESCAPE", sf::Keyboard::Escape);
-	setBind("ENTER", sf::Keyboard::Return);
-	setBind("TILDE", sf::Keyboard::Tilde);
 }
 
 void inputKeyboard::processEvent(sf::Event evt)
@@ -258,7 +247,7 @@ inputKeyboard::keybind::keybind(sf::Keyboard::Key singleKey, bool r) {
 	rebindable = r;
 }
 
-inputKeyboard::keybind::keybind(std::initializer_list<sf::Keyboard::Key> keysInA, bool r) {
+inputKeyboard::keybind::keybind(std::vector<sf::Keyboard::Key> keysInA, bool r) {
 	keys = keysInA;
 
 	for (unsigned int i = 0; i < keys.size(); i++) {
@@ -282,32 +271,55 @@ void inputKeyboard::keybind::consumeEvent() {
 using namespace mage;
 using namespace chaiscript;
 
-DeclareScriptingEnum(inputKeyboard::keybind::state, DOWN);
-DeclareScriptingEnum(inputKeyboard::keybind::state, IDLE);
-DeclareScriptingEnum(inputKeyboard::keybind::state, PRESSED);
-DeclareScriptingEnum(inputKeyboard::keybind::state, RELEASED);
+MAGE_DeclareScriptingEnum(inputKeyboard::keybind::state, DOWN);
+MAGE_DeclareScriptingEnum(inputKeyboard::keybind::state, IDLE);
+MAGE_DeclareScriptingEnum(inputKeyboard::keybind::state, PRESSED);
+MAGE_DeclareScriptingEnum(inputKeyboard::keybind::state, RELEASED);
 
-DeclareScriptingTypeNamed(inputKeyboard::keybind, "keybind");
-DeclareScriptingConstructor(inputKeyboard::keybind(), "keybind");
-DeclareScriptingConstructor(inputKeyboard::keybind(std::initializer_list<sf::Keyboard::Key>, bool), "keybind");
-DeclareScriptingFunction(&inputKeyboard::keybind::getDown, "getDown");
-DeclareScriptingFunction(&inputKeyboard::keybind::getIdle, "getIdle");
-DeclareScriptingFunction(&inputKeyboard::keybind::getPressed, "getPressed");
-DeclareScriptingFunction(&inputKeyboard::keybind::getReleased, "getReleased");
-DeclareScriptingFunction(&inputKeyboard::keybind::keys, "keys");
-DeclareScriptingFunction(&inputKeyboard::keybind::keysIn, "keysIn");
-DeclareScriptingFunction(&inputKeyboard::keybind::rebindable, "rebindable");
-DeclareScriptingFunction(&inputKeyboard::keybind::s, "state");
+MAGE_DeclareScriptingTypeNamed(inputKeyboard::keybind, "keybind");
+MAGE_DeclareScriptingConstructor(inputKeyboard::keybind(), "keybind");
+MAGE_DeclareScriptingConstructor(inputKeyboard::keybind(std::initializer_list<sf::Keyboard::Key>, bool), "keybind");
+MAGE_DeclareScriptingFunction(&inputKeyboard::keybind::getDown, "getDown");
+MAGE_DeclareScriptingFunction(&inputKeyboard::keybind::getIdle, "getIdle");
+MAGE_DeclareScriptingFunction(&inputKeyboard::keybind::getPressed, "getPressed");
+MAGE_DeclareScriptingFunction(&inputKeyboard::keybind::getReleased, "getReleased");
+MAGE_DeclareScriptingFunction(&inputKeyboard::keybind::keys, "keys");
+MAGE_DeclareScriptingFunction(&inputKeyboard::keybind::keysIn, "keysIn");
+MAGE_DeclareScriptingFunction(&inputKeyboard::keybind::rebindable, "rebindable");
+MAGE_DeclareScriptingFunction(&inputKeyboard::keybind::s, "state");
 
-DeclareScriptingType(inputKeyboard);
-DeclareScriptingConstructor(inputKeyboard(), "inputKeyboard");
-DeclareScriptingBaseClass(input, inputKeyboard);
-DeclareScriptingFunction(&inputKeyboard::getBind, "getBind");
-DeclareScriptingFunction(&inputKeyboard::getBindTextures, "getBindTextures");
-DeclareScriptingFunction(&inputKeyboard::inputStream, "inputStream");
-DeclareScriptingFunction(&inputKeyboard::isBind, "isBind");
-DeclareScriptingFunction(&inputKeyboard::keyJustPressed, "keyJustPressed");
-DeclareScriptingCustom(fun<void, inputKeyboard, std::string, std::initializer_list<sf::Keyboard::Key>, bool>(&inputKeyboard::setBind), "setBind");
-DeclareScriptingCustom(fun<void, inputKeyboard, std::string, sf::Keyboard::Key, bool>(&inputKeyboard::setBind), "setBind");
-DeclareScriptingCustom(fun<void, inputKeyboard, std::string, inputKeyboard::keybind&>(&inputKeyboard::setBind), "setBind");
-DeclareScriptingFunction(&inputKeyboard::setDefaultBindTextures, "setDefaultBindTextures");
+MAGE_DeclareScriptingType(inputKeyboard);
+MAGE_DeclareScriptingConstructor(inputKeyboard(), "inputKeyboard");
+MAGE_DeclareScriptingBaseClass(input, inputKeyboard);
+MAGE_DeclareScriptingFunction(&inputKeyboard::getBind, "getBind");
+MAGE_DeclareScriptingFunction(&inputKeyboard::getBindTextures, "getBindTextures");
+MAGE_DeclareScriptingFunction(&inputKeyboard::inputStream, "inputStream");
+MAGE_DeclareScriptingFunction(&inputKeyboard::isBind, "isBind");
+MAGE_DeclareScriptingFunction(&inputKeyboard::keyJustPressed, "keyJustPressed");
+MAGE_DeclareScriptingCustom(fun<void, inputKeyboard, std::string, std::initializer_list<sf::Keyboard::Key>, bool>(&inputKeyboard::setBind), "setBind");
+MAGE_DeclareScriptingCustom(fun<void, inputKeyboard, std::string, sf::Keyboard::Key, bool>(&inputKeyboard::setBind), "setBind");
+MAGE_DeclareScriptingCustom(fun<void, inputKeyboard, std::string, inputKeyboard::keybind&>(&inputKeyboard::setBind), "setBind");
+MAGE_DeclareScriptingFunction(&inputKeyboard::setDefaultBindTextures, "setDefaultBindTextures");
+
+mage::inputKeyboardBindRegistration::inputKeyboardBindRegistration(std::string name, std::vector<sf::Keyboard::Key> keys, bool rebindable)
+{
+	bindingsDefault[name] = inputKeyboard::keybind(keys, rebindable);
+}
+
+mage::inputKeyboardBindRegistration::inputKeyboardBindRegistration(std::string name, sf::Keyboard::Key key, bool rebindable)
+{
+	bindingsDefault[name] = inputKeyboard::keybind(key, rebindable);
+}
+
+// default keys
+MAGE_DeclareInputKeyboardBind("CTRL", sf::Keyboard::LControl);
+MAGE_DeclareInputKeyboardBind("SHIFT", sf::Keyboard::LShift);
+
+MAGE_DeclareInputKeyboardBind("CUT", { sf::Keyboard::LControl, sf::Keyboard::X });
+MAGE_DeclareInputKeyboardBind("COPY", { sf::Keyboard::LControl, sf::Keyboard::C });
+MAGE_DeclareInputKeyboardBind("PASTE", { sf::Keyboard::LControl, sf::Keyboard::V });
+
+MAGE_DeclareInputKeyboardBind("DELETE", sf::Keyboard::Delete);
+MAGE_DeclareInputKeyboardBind("ESCAPE", sf::Keyboard::Escape);
+MAGE_DeclareInputKeyboardBind("ENTER", sf::Keyboard::Return);
+MAGE_DeclareInputKeyboardBind("TILDE", sf::Keyboard::Tilde);

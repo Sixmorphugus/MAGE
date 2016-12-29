@@ -247,35 +247,35 @@ void gameState::setVarDefaults()
 }
 
 // SEBind for gameState
-DeclareScriptingType(gameState);
-DeclareScriptingBaseClass(Group, gameState);
-DeclareScriptingBaseClass(taggable, gameState);
-DeclareScriptingBaseClass(groupBase, gameState);
-DeclareScriptingBaseClass(serializable, gameState);
-DeclareScriptingBaseClass(shadable, gameState);
-DeclareScriptingConstructor(gameState(), "gameState");
-DeclareScriptingConstructor(gameState(gameState&), "gameState");
-DeclareScriptingConstructor(gameState(Group&), "gameState");
-DeclareScriptingConstructor(gameState(std::shared_ptr<resourceGroup>), "gameState");
-DeclareScriptingConstructor(gameState(std::shared_ptr<resourceGameState>), "gameState");
-DeclareScriptingFunction(&gameState::bgCol, "bgCol");
-DeclareScriptingFunction(&gameState::getStateUseTime, "getStateUseTime");
-DeclareScriptingFunction(&gameState::lightingAmb, "lightingAmb");
-DeclareScriptingFunction(&gameState::mapBounds, "mapBounds");
+MAGE_DeclareScriptingType(gameState);
+MAGE_DeclareScriptingBaseClass(Group, gameState);
+MAGE_DeclareScriptingBaseClass(taggable, gameState);
+MAGE_DeclareScriptingBaseClass(groupBase, gameState);
+MAGE_DeclareScriptingBaseClass(serializable, gameState);
+MAGE_DeclareScriptingBaseClass(shadable, gameState);
+MAGE_DeclareScriptingConstructor(gameState(), "gameState");
+MAGE_DeclareScriptingConstructor(gameState(gameState&), "gameState");
+MAGE_DeclareScriptingConstructor(gameState(Group&), "gameState");
+MAGE_DeclareScriptingConstructor(gameState(std::shared_ptr<resourceGroup>), "gameState");
+MAGE_DeclareScriptingConstructor(gameState(std::shared_ptr<resourceGameState>), "gameState");
+MAGE_DeclareScriptingFunction(&gameState::bgCol, "bgCol");
+MAGE_DeclareScriptingFunction(&gameState::getStateUseTime, "getStateUseTime");
+MAGE_DeclareScriptingFunction(&gameState::lightingAmb, "lightingAmb");
+MAGE_DeclareScriptingFunction(&gameState::mapBounds, "mapBounds");
 
 // for gameStateMngr
-DeclareScriptingType(gameStateMngr);
-DeclareScriptingFunction(&gameStateMngr::add, "add");
-DeclareScriptingFunction(&gameStateMngr::combineCurrent<>, "combineCurrent");
-DeclareScriptingFunction(&gameStateMngr::combineCurrent<uiBasic>, "combineCurrentUi");
-DeclareScriptingFunction(&gameStateMngr::combineCurrent<objBasic>, "combineCurrentWorld");
-DeclareScriptingFunction(&gameStateMngr::current, "current");
-DeclareScriptingFunction(&gameStateMngr::exists, "exists");
-DeclareScriptingFunction(&gameStateMngr::get, "get");
-DeclareScriptingFunction(&gameStateMngr::getByIndex, "getByIndex");
-DeclareScriptingFunction(&gameStateMngr::getCount, "getCount");
-DeclareScriptingFunction(&gameStateMngr::list, "list");
-DeclareScriptingFunction(&gameStateMngr::nameOf, "nameOf");
-DeclareScriptingFunction(&gameStateMngr::setCurrent<>, "setCurrent");
-DeclareScriptingFunction(&gameStateMngr::setCurrent<uiBasic>, "setCurrentUi");
-DeclareScriptingFunction(&gameStateMngr::setCurrent<objBasic>, "setCurrentWorld");
+MAGE_DeclareScriptingType(gameStateMngr);
+MAGE_DeclareScriptingFunction(&gameStateMngr::add, "add");
+MAGE_DeclareScriptingFunction(&gameStateMngr::combineCurrent<>, "combineCurrent");
+MAGE_DeclareScriptingFunction(&gameStateMngr::combineCurrent<uiBasic>, "combineCurrentUi");
+MAGE_DeclareScriptingFunction(&gameStateMngr::combineCurrent<objBasic>, "combineCurrentWorld");
+MAGE_DeclareScriptingFunction(&gameStateMngr::current, "current");
+MAGE_DeclareScriptingFunction(&gameStateMngr::exists, "exists");
+MAGE_DeclareScriptingFunction(&gameStateMngr::get, "get");
+MAGE_DeclareScriptingFunction(&gameStateMngr::getByIndex, "getByIndex");
+MAGE_DeclareScriptingFunction(&gameStateMngr::getCount, "getCount");
+MAGE_DeclareScriptingFunction(&gameStateMngr::list, "list");
+MAGE_DeclareScriptingFunction(&gameStateMngr::nameOf, "nameOf");
+MAGE_DeclareScriptingFunction(&gameStateMngr::setCurrent<>, "setCurrent");
+MAGE_DeclareScriptingFunction(&gameStateMngr::setCurrent<uiBasic>, "setCurrentUi");
+MAGE_DeclareScriptingFunction(&gameStateMngr::setCurrent<objBasic>, "setCurrentWorld");

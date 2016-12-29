@@ -245,8 +245,8 @@ inline std::string group<T>::serialize() const
 	for (unsigned int i = 0; i < getNumObjects(); i++) {
 		auto obj = getObject(i);
 
-		if (obj->prefabSource != nullptr) {
-			saveFile << "OBJECT " << groupPrivate::prefabs()->nameOf(obj->prefabSource) << ";";
+		if (obj->getPrefab() != nullptr) {
+			saveFile << "OBJECT " << groupPrivate::prefabs()->nameOf(obj->getPrefab()) << ";";
 			saveFile << obj->serialize();
 			saveFile << "@\n";
 		}
@@ -637,23 +637,23 @@ inline void group<T>::clearObjects()
 
 // group types
 // these all have to be custom because commas in the template list can really mess stuff up
-#define DeclareScriptingGroup(heldType, name) \
-DeclareScriptingCustom(user_type<mage::group<heldType>>(), name) \
-DeclareScriptingCustom(constructor<mage::group<heldType>()>(), name); \
-DeclareScriptingCustom(constructor<mage::group<heldType>(std::shared_ptr<mage::resourceGroup>)>(), name); \
-DeclareScriptingCustom(constructor<mage::group<heldType>(std::vector<std::shared_ptr<heldType>>)>(), name); \
-DeclareScriptingCustom(base_class<mage::groupBase, mage::group<heldType>>()); \
-DeclareScriptingCustom(base_class<mage::serializable, mage::group<heldType>>()); \
-DeclareScriptingCustom(base_class<mage::shadable, mage::group<heldType>>()); \
-DeclareScriptingCustom(fun(&mage::group<heldType>::clearObjects<mage::objBasic>), "clearWorldObjects"); \
-DeclareScriptingCustom(fun(&mage::group<heldType>::clearObjects<mage::uiBasic>), "clearUiObjects"); \
-DeclareScriptingCustom(fun(&mage::group<heldType>::findByUiName), "findByUiName"); \
-DeclareScriptingCustom(fun(&mage::group<heldType>::get), "get"); \
-DeclareScriptingCustom(fun(&mage::group<heldType>::indexOf), "indexOf"); \
-DeclareScriptingCustom(fun(&mage::group<heldType>::localIndexOf), "localIndexOf"); \
-DeclareScriptingCustom(fun(&mage::group<heldType>::combine<>), "combine"); \
-DeclareScriptingCustom(fun(&mage::group<heldType>::set<>), "set"); \
-DeclareScriptingCustom(fun(&mage::group<heldType>::attach), "attach"); \
-DeclareScriptingCopyOperator(mage::group<heldType>); \
-DeclareScriptingListableShared(heldType, STRING(heldType)"ShVector");\
-DeclareScriptingCastingFunction("to_" name, mage::groupBase, mage::group<heldType>); // broke my rule here but it seems to be fine -c
+#define MAGE_DeclareScriptingGroup(heldType, name) \
+MAGE_DeclareScriptingCustom(user_type<mage::group<heldType>>(), name) \
+MAGE_DeclareScriptingCustom(constructor<mage::group<heldType>()>(), name); \
+MAGE_DeclareScriptingCustom(constructor<mage::group<heldType>(std::shared_ptr<mage::resourceGroup>)>(), name); \
+MAGE_DeclareScriptingCustom(constructor<mage::group<heldType>(std::vector<std::shared_ptr<heldType>>)>(), name); \
+MAGE_DeclareScriptingCustom(base_class<mage::groupBase, mage::group<heldType>>()); \
+MAGE_DeclareScriptingCustom(base_class<mage::serializable, mage::group<heldType>>()); \
+MAGE_DeclareScriptingCustom(base_class<mage::shadable, mage::group<heldType>>()); \
+MAGE_DeclareScriptingCustom(fun(&mage::group<heldType>::clearObjects<mage::objBasic>), "clearWorldObjects"); \
+MAGE_DeclareScriptingCustom(fun(&mage::group<heldType>::clearObjects<mage::uiBasic>), "clearUiObjects"); \
+MAGE_DeclareScriptingCustom(fun(&mage::group<heldType>::findByUiName), "findByUiName"); \
+MAGE_DeclareScriptingCustom(fun(&mage::group<heldType>::get), "get"); \
+MAGE_DeclareScriptingCustom(fun(&mage::group<heldType>::indexOf), "indexOf"); \
+MAGE_DeclareScriptingCustom(fun(&mage::group<heldType>::localIndexOf), "localIndexOf"); \
+MAGE_DeclareScriptingCustom(fun(&mage::group<heldType>::combine<>), "combine"); \
+MAGE_DeclareScriptingCustom(fun(&mage::group<heldType>::set<>), "set"); \
+MAGE_DeclareScriptingCustom(fun(&mage::group<heldType>::attach), "attach"); \
+MAGE_DeclareScriptingCopyOperator(mage::group<heldType>); \
+MAGE_DeclareScriptingListableShared(heldType, STRING(heldType)"ShVector");\
+MAGE_DeclareScriptingCastingFunction("to_" name, mage::groupBase, mage::group<heldType>); // broke my rule here but it seems to be fine -c

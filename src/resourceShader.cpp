@@ -119,12 +119,12 @@ void resourceShader::showShaderErrorOnce(std::string err)
 // sfShaderResource
 #include "scriptingEngine.h"
 
-DeclareScriptingResource(resourceShader);
-DeclareScriptingConstructor(resourceShader(std::string, sf::Shader::Type), "resourceShader");
-DeclareScriptingConstructor(resourceShader(std::string, std::string), "resourceShader");
-DeclareScriptingConstructor(resourceShader(std::string, std::string, std::string), "resourceShader");
-DeclareScriptingFunction(&resourceShader::get, "get");
-DeclareScriptingFunction(&resourceShader::vertexPath, "vertexPath");
-DeclareScriptingFunction(&resourceShader::geometryPath, "geometryPath");
-DeclareScriptingFunction(&resourceShader::fragmentPath, "fragmentPath");
-DeclareScriptingFunction(&resourceShader::setTypePath, "setTypePath");
+MAGE_DeclareScriptingResource(resourceShader);
+MAGE_DeclareScriptingConstructor(resourceShader(std::string, sf::Shader::Type), "resourceShader");
+MAGE_DeclareScriptingConstructor(resourceShader(std::string, std::string), "resourceShader");
+MAGE_DeclareScriptingConstructor(resourceShader(std::string, std::string, std::string), "resourceShader");
+MAGE_DeclareScriptingFunction(&resourceShader::get, "get");
+MAGE_DeclareScriptingFunction(&resourceShader::vertexPath, "vertexPath");
+MAGE_DeclareScriptingFunction(&resourceShader::geometryPath, "geometryPath");
+MAGE_DeclareScriptingFunction(&resourceShader::fragmentPath, "fragmentPath");
+MAGE_DeclareScriptingFunction(&resourceShader::setTypePath, "setTypePath");

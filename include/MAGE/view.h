@@ -68,9 +68,9 @@ public:
 
 } // namespace mage
 
-#define DeclareScriptingView(type) \
-DeclareScriptingBaseClass(sf::View, type);\
-DeclareScriptingBaseClass(shadable, type);\
-DeclareScriptingBaseClass(view, type);\
-DeclareScriptingConstructor(type(), STRING(type));\
-DeclareScriptingConstructor(type(sf::Vector2f, std::shared_ptr<groupBase>), STRING(type));
+#define MAGE_DeclareScriptingView(type) \
+MAGE_DeclareScriptingBaseClass(sf::View, type);\
+MAGE_DeclareScriptingBaseClass(shadable, type);\
+MAGE_DeclareScriptingBaseClass(view, type);\
+MAGE_DeclareScriptingConstructor(type(), STRING(type));\
+MAGE_DeclareScriptingConstructor(type(sf::Vector2f, std::shared_ptr<groupBase>), STRING(type));

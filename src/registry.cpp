@@ -248,16 +248,13 @@ std::string registry::prop::read()
 
 registry::registry()
 {
-	// you must call init() yourself this way
-	ready = false;
-	autoSave = false; // safety
+	init("./newReg.cfg", {}, false, false);
 }
 
 // REGISTRY CLASS
 // ----------------------------------------------------------------------------
 registry::registry(std::string defaultLocation, std::vector<prop> defaultProps, bool lf, bool as)
 {
-	ready = false;
 	init(defaultLocation, defaultProps, lf, as);
 }
 
@@ -273,8 +270,6 @@ void registry::init(std::string defaultLocation, std::vector<prop> defaultProps,
 	labelFile = lf;
 	autoSave = as;
 	header = "This is an MGE registry file. Make of that what you wish.";
-
-	ready = true;
 }
 
 void registry::add(prop newProp)
@@ -296,9 +291,6 @@ registry::prop* registry::get(std::string name)
 
 bool registry::load()
 {
-	if (!ready)
-		p::fatal("registry not ready");
-
 	std::ifstream saveFile(location);
 
 	if (!saveFile.good()) {
@@ -345,11 +337,6 @@ bool registry::load()
 
 bool registry::save()
 {
-	if (!ready)
-		p::fatal("registry not ready");
-
-	//p::info("Saving \"" + location + "\"");
-
 	std::ofstream saveFile(location);
 
 	if (saveFile.bad()) {
@@ -379,9 +366,6 @@ bool registry::save()
 
 unsigned int registry::getIndex(std::string name)
 {
-	if (!ready)
-		p::fatal("registry not ready");
-
 	for (unsigned int i = 0; i < values.size(); i++) {
 		if (values[i].name == name)
 			return i;
@@ -396,22 +380,22 @@ unsigned int registry::getIndex(std::string name)
 #include "scriptingEngine.h"
 using namespace chaiscript;
 
-DeclareScriptingCustom(user_type<registry::prop>(), "registryProp");
-DeclareScriptingCustom(fun(&registry::prop::name), "name");
-DeclareScriptingCustom(fun<void, registry::prop, std::string>(&registry::prop::update), "update");
-DeclareScriptingCustom(fun(&registry::prop::read), "read");
+MAGE_DeclareScriptingCustom(user_type<registry::prop>(), "registryProp");
+MAGE_DeclareScriptingCustom(fun(&registry::prop::name), "name");
+MAGE_DeclareScriptingCustom(fun<void, registry::prop, std::string>(&registry::prop::update), "update");
+MAGE_DeclareScriptingCustom(fun(&registry::prop::read), "read");
 
-DeclareScriptingCustom(user_type<registry>(), "registry");
-DeclareScriptingCustom(constructor<registry()>(), "registry");
-DeclareScriptingConstructor(registry(const registry&), "registry")
-DeclareScriptingCopyOperator(registry);
-DeclareScriptingCustom(fun(&registry::add), "add");
-DeclareScriptingCustom(fun(&registry::autoSave), "autoSave");
-DeclareScriptingCustom(fun(&registry::get), "get");
-DeclareScriptingCustom(fun(&registry::header), "header");
-DeclareScriptingCustom(fun(&registry::init), "init");
-DeclareScriptingCustom(fun(&registry::labelFile), "labelFile");
-DeclareScriptingCustom(fun(&registry::load), "load");
-DeclareScriptingCustom(fun(&registry::location), "location");
-DeclareScriptingCustom(fun(&registry::remove), "remove");
-DeclareScriptingCustom(fun(&registry::save), "save");
+MAGE_DeclareScriptingCustom(user_type<registry>(), "registry");
+MAGE_DeclareScriptingCustom(constructor<registry()>(), "registry");
+MAGE_DeclareScriptingConstructor(registry(const registry&), "registry")
+MAGE_DeclareScriptingCopyOperator(registry);
+MAGE_DeclareScriptingCustom(fun(&registry::add), "add");
+MAGE_DeclareScriptingCustom(fun(&registry::autoSave), "autoSave");
+MAGE_DeclareScriptingCustom(fun(&registry::get), "get");
+MAGE_DeclareScriptingCustom(fun(&registry::header), "header");
+MAGE_DeclareScriptingCustom(fun(&registry::init), "init");
+MAGE_DeclareScriptingCustom(fun(&registry::labelFile), "labelFile");
+MAGE_DeclareScriptingCustom(fun(&registry::load), "load");
+MAGE_DeclareScriptingCustom(fun(&registry::location), "location");
+MAGE_DeclareScriptingCustom(fun(&registry::remove), "remove");
+MAGE_DeclareScriptingCustom(fun(&registry::save), "save");

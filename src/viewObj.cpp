@@ -44,5 +44,5 @@ void viewObj::render(sf::RenderTarget & target, sf::Color bgCol)
 	}
 }
 
-DeclareScriptingView(viewObj);
-DeclareScriptingFunction(&viewObj::useStateBounds, "useStateBounds");
+MAGE_DeclareScriptingView(viewObj);
+MAGE_DeclareScriptingFunction(&viewObj::useStateBounds, "useStateBounds");

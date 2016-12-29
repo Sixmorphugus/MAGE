@@ -13,7 +13,7 @@ sf::Vector2f objSpriteless::getSize()
 	return sf::Vector2f(0.f, 0.f);
 }
 
-DeclareScriptingBasic(objSpriteless);
-DeclareScriptingBaseClass(objBasic, objSpriteless);
-DeclareScriptingConstructor(objSpriteless(float, float), "objSpriteless");
-DeclareScriptingCopyOperator(objSpriteless);
+MAGE_DeclareScriptingBasic(objSpriteless);
+MAGE_DeclareScriptingBaseClass(objBasic, objSpriteless);
+MAGE_DeclareScriptingConstructor(objSpriteless(float, float), "objSpriteless");
+MAGE_DeclareScriptingCopyOperator(objSpriteless);

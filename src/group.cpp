@@ -60,40 +60,40 @@ void groupBase::drawUiObjects(sf::RenderTarget & target, sf::RenderStates states
 // groupBase
 using namespace chaiscript;
 
-DeclareScriptingType(groupBase);
-DeclareScriptingBaseClass(serializable, groupBase);
-DeclareScriptingBaseClass(shadable, groupBase);
-DeclareScriptingFunction(&groupBase::bringToFront, "bringToFront");
-DeclareScriptingFunction(&groupBase::clearObjects, "clearObjects");
-DeclareScriptingFunction(&groupBase::serialize, "serialize");
-DeclareScriptingFunction(&groupBase::deserialize, "deserialize");
-DeclareScriptingCustom(fun<void, groupBase, unsigned int>(&groupBase::detach), "detach");
-DeclareScriptingCustom(fun<void, groupBase, basic*>(&groupBase::detach), "detach");
-DeclareScriptingFunction(&groupBase::getNumObjects, "getNumObjects");
-DeclareScriptingFunction(&groupBase::getNumUiObjects, "getNumUiObjects");
-DeclareScriptingFunction(&groupBase::getNumWorldObjects, "getNumWorldObjects");
-DeclareScriptingFunction(&groupBase::getObject, "getObject");
-DeclareScriptingFunction(&groupBase::getUiObject, "getUiObject");
-DeclareScriptingFunction(&groupBase::getWorldObject, "getWorldObject");
-DeclareScriptingFunction(&groupBase::preUpdateObjects, "preUpdateObjects");
-DeclareScriptingFunction(&groupBase::sortWorldObjects, "sortWorldObjects");
-DeclareScriptingFunction(&groupBase::updateObjects, "updateObjects");
-DeclareScriptingFunction(&groupBase::onPreUpdate, "onPreUpdate");
-DeclareScriptingFunction(&groupBase::onUpdate, "onUpdate");
-DeclareScriptingFunction(&groupBase::onAttach, "onAttach");
-DeclareScriptingFunction(&groupBase::onDetach, "onDetach");
-DeclareScriptingFunction(&groupBase::onSet, "onSet");
-DeclareScriptingFunction(&groupBase::onCombined, "onCombined");
-DeclareScriptingFunction(&groupBase::onIncorporated, "onIncorporated");
+MAGE_DeclareScriptingType(groupBase);
+MAGE_DeclareScriptingBaseClass(serializable, groupBase);
+MAGE_DeclareScriptingBaseClass(shadable, groupBase);
+MAGE_DeclareScriptingFunction(&groupBase::bringToFront, "bringToFront");
+MAGE_DeclareScriptingFunction(&groupBase::clearObjects, "clearObjects");
+MAGE_DeclareScriptingFunction(&groupBase::serialize, "serialize");
+MAGE_DeclareScriptingFunction(&groupBase::deserialize, "deserialize");
+MAGE_DeclareScriptingCustom(fun<void, groupBase, unsigned int>(&groupBase::detach), "detach");
+MAGE_DeclareScriptingCustom(fun<void, groupBase, basic*>(&groupBase::detach), "detach");
+MAGE_DeclareScriptingFunction(&groupBase::getNumObjects, "getNumObjects");
+MAGE_DeclareScriptingFunction(&groupBase::getNumUiObjects, "getNumUiObjects");
+MAGE_DeclareScriptingFunction(&groupBase::getNumWorldObjects, "getNumWorldObjects");
+MAGE_DeclareScriptingFunction(&groupBase::getObject, "getObject");
+MAGE_DeclareScriptingFunction(&groupBase::getUiObject, "getUiObject");
+MAGE_DeclareScriptingFunction(&groupBase::getWorldObject, "getWorldObject");
+MAGE_DeclareScriptingFunction(&groupBase::preUpdateObjects, "preUpdateObjects");
+MAGE_DeclareScriptingFunction(&groupBase::sortWorldObjects, "sortWorldObjects");
+MAGE_DeclareScriptingFunction(&groupBase::updateObjects, "updateObjects");
+MAGE_DeclareScriptingFunction(&groupBase::onPreUpdate, "onPreUpdate");
+MAGE_DeclareScriptingFunction(&groupBase::onUpdate, "onUpdate");
+MAGE_DeclareScriptingFunction(&groupBase::onAttach, "onAttach");
+MAGE_DeclareScriptingFunction(&groupBase::onDetach, "onDetach");
+MAGE_DeclareScriptingFunction(&groupBase::onSet, "onSet");
+MAGE_DeclareScriptingFunction(&groupBase::onCombined, "onCombined");
+MAGE_DeclareScriptingFunction(&groupBase::onIncorporated, "onIncorporated");
 
-DeclareScriptingHook("groupBaseHook", groupBase*);
-DeclareScriptingHook("groupBaseObjectHook", groupBase*, basic*);
-DeclareScriptingHook("groupBaseIntegrateHook", const groupBase*, const groupBase*);
+MAGE_DeclareScriptingHook("groupBaseHook", groupBase*);
+MAGE_DeclareScriptingHook("groupBaseObjectHook", groupBase*, basic*);
+MAGE_DeclareScriptingHook("groupBaseIntegrateHook", const groupBase*, const groupBase*);
 
 // group types
-DeclareScriptingGroup(basic, "Group");
-DeclareScriptingCustom(fun(&group<basic>::combine<basic, uiBasic>), "combineUi"); \
-DeclareScriptingCustom(fun(&group<basic>::combine<basic, objBasic>), "combineWorld"); \
+MAGE_DeclareScriptingGroup(basic, "Group");
+MAGE_DeclareScriptingCustom(fun(&group<basic>::combine<basic, uiBasic>), "combineUi"); \
+MAGE_DeclareScriptingCustom(fun(&group<basic>::combine<basic, objBasic>), "combineWorld"); \
 
-DeclareScriptingGroup(objBasic, "objGroup");
-DeclareScriptingGroup(uiBasic, "uiGroup");
+MAGE_DeclareScriptingGroup(objBasic, "objGroup");
+MAGE_DeclareScriptingGroup(uiBasic, "uiGroup");

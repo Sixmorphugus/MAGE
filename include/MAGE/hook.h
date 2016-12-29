@@ -92,9 +92,9 @@ private:
 
 } // namespace mage
 
-#define DeclareScriptingHook(name, ...) \
-DeclareScriptingCustom(user_type< mage::hook<__VA_ARGS__> >(), name); \
-DeclareScriptingCustom(constructor<mage::hook<__VA_ARGS__>()>(), name); \
-DeclareScriptingBaseClass(hookBase, mage::hook<__VA_ARGS__>); \
-DeclareScriptingCustom(fun(&mage::hook<__VA_ARGS__>::registerObserver), "registerObserver"); \
-DeclareScriptingCustom(fun(&mage::hook<__VA_ARGS__>::notify), "notify");
+#define MAGE_DeclareScriptingHook(name, ...) \
+MAGE_DeclareScriptingCustom(chaiscript::user_type< mage::hook<__VA_ARGS__> >(), name); \
+MAGE_DeclareScriptingCustom(chaiscript::constructor<mage::hook<__VA_ARGS__>()>(), name); \
+MAGE_DeclareScriptingBaseClass(hookBase, mage::hook<__VA_ARGS__>); \
+MAGE_DeclareScriptingCustom(chaiscript::fun(&mage::hook<__VA_ARGS__>::registerObserver), "registerObserver"); \
+MAGE_DeclareScriptingCustom(chaiscript::fun(&mage::hook<__VA_ARGS__>::notify), "notify");

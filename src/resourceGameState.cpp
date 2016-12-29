@@ -37,5 +37,5 @@ bool resourceGameState::isNeeded()
 
 #include "scriptingEngine.h"
 
-DeclareScriptingFilepathResource(resourceGameState);
-DeclareScriptingFunction(&resourceGameState::get, "get");
+MAGE_DeclareScriptingFilepathResource(resourceGameState);
+MAGE_DeclareScriptingFunction(&resourceGameState::get, "get");

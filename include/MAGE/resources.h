@@ -126,12 +126,12 @@ inline std::vector<std::shared_ptr<T>> resourceMngr::listType(std::string tag)
 
 } // namespace mage
 
-#define DeclareScriptingResource(name) \
-DeclareScriptingType(name); \
-DeclareScriptingBaseClass(resource, name);\
-DeclareScriptingBaseClass(taggable, name);\
-DeclareScriptingConstructor(name(), STRING(name));\
-DeclareScriptingFunction(&resourceMngr::getAs<name>, "get_" STRING(name));\
-DeclareScriptingFunction(&resourceMngr::listType<name>, "list_" STRING(name));\
-DeclareScriptingListableShared(name, STRING(name) "vector");\
-DeclareScriptingCastingFunction("to_" STRING(name), resource, name);
+#define MAGE_DeclareScriptingResource(name) \
+MAGE_DeclareScriptingType(name); \
+MAGE_DeclareScriptingBaseClass(resource, name);\
+MAGE_DeclareScriptingBaseClass(taggable, name);\
+MAGE_DeclareScriptingConstructor(name(), STRING(name));\
+MAGE_DeclareScriptingFunction(&resourceMngr::getAs<name>, "get_" STRING(name));\
+MAGE_DeclareScriptingFunction(&resourceMngr::listType<name>, "list_" STRING(name));\
+MAGE_DeclareScriptingListableShared(name, STRING(name) "vector");\
+MAGE_DeclareScriptingCastingFunction("to_" STRING(name), resource, name);

@@ -74,39 +74,25 @@ MAGEDLL chaiscript::Module& seGetStartupModule();
 
 } // namespace mage
 
-#define DeclareScriptingCustom(...) namespace {\
+#define MAGE_DeclareScriptingCustom(...) namespace {\
 	mage::seScriptingEngineRegistration UNIQUE_IDENTIFIER(se)(__VA_ARGS__);\
 }
 
-#define DeclareScriptingCopyOperator(obj) DeclareScriptingCustom(chaiscript::fun([](obj &o1, obj o2) { o1 = o2; }), "=");
-#define DeclareScriptingNamed(arg, name) DeclareScriptingCustom(arg, name);
-#define DeclareScriptingBaseClass(base, derived) DeclareScriptingCustom(chaiscript::base_class<base, derived>());
-#define DeclareScriptingType(arg) DeclareScriptingCustom(chaiscript::user_type<arg>(), STRING(arg));
-#define DeclareScriptingTypeNamed(arg, name) DeclareScriptingCustom(chaiscript::user_type<arg>(), name);
-#define DeclareScriptingFunction(arg, name) DeclareScriptingCustom(chaiscript::fun(arg), name);
-#define DeclareScriptingConstructor(arg, name) DeclareScriptingCustom(chaiscript::constructor<arg>(), name);
-#define DeclareScriptingGlobalConst(arg, name) DeclareScriptingCustom(chaiscript::const_var(arg), name);
-#define DeclareScriptingEnum(container, enumValue) DeclareScriptingGlobalConst(container::enumValue, STRING(enumValue));
-#define DeclareScriptingCastingFunction(name, inp, out) DeclareScriptingCustom(chaiscript::fun([](inp* o1) { return dynamic_cast<out*>(o1); }), name)
+#define MAGE_DeclareScriptingCopyOperator(obj) MAGE_DeclareScriptingCustom(chaiscript::fun([](obj &o1, obj o2) { o1 = o2; }), "=");
+#define MAGE_DeclareScriptingNamed(arg, name) MAGE_DeclareScriptingCustom(arg, name);
+#define MAGE_DeclareScriptingBaseClass(base, derived) MAGE_DeclareScriptingCustom(chaiscript::base_class<base, derived>());
+#define MAGE_DeclareScriptingType(arg) MAGE_DeclareScriptingCustom(chaiscript::user_type<arg>(), STRING(arg));
+#define MAGE_DeclareScriptingTypeNamed(arg, name) MAGE_DeclareScriptingCustom(chaiscript::user_type<arg>(), name);
+#define MAGE_DeclareScriptingFunction(arg, name) MAGE_DeclareScriptingCustom(chaiscript::fun(arg), name);
+#define MAGE_DeclareScriptingConstructor(arg, name) MAGE_DeclareScriptingCustom(chaiscript::constructor<arg>(), name);
+#define MAGE_DeclareScriptingGlobalConst(arg, name) MAGE_DeclareScriptingCustom(chaiscript::const_var(arg), name);
+#define MAGE_DeclareScriptingEnum(container, enumValue) MAGE_DeclareScriptingGlobalConst(container::enumValue, STRING(enumValue));
+#define MAGE_DeclareScriptingCastingFunction(name, inp, out) MAGE_DeclareScriptingCustom(chaiscript::fun([](inp* o1) { return dynamic_cast<out*>(o1); }), name)
 
-#define DeclareScriptingListableNamed(type, name) DeclareScriptingCustom(chaiscript::bootstrap::standard_library::vector_type<std::vector<type>>(name)); \
-DeclareScriptingFunction([](const std::vector<chaiscript::Boxed_Value> &v) {\
-	std::vector<type> lst;\
-	for(unsigned int i = 0; i < v.size(); i++) {\
-		lst.push_back(chaiscript::boxed_cast<type>(v[i]));\
-	}\
-	return lst;\
-}, name)\
-DeclareScriptingFunction([](const std::vector<type> &v) {\
-	std::vector<chaiscript::Boxed_Value> lst;\
-	for(unsigned int i = 0; i < v.size(); i++) {\
-		lst.push_back(chaiscript::Boxed_Value(v[i]));\
-	}\
-	return lst;\
-}, "Vector")
-// ^ new constructor from chai "Vector" type
+#define MAGE_DeclareScriptingListableNamed(type, name) MAGE_DeclareScriptingCustom(chaiscript::bootstrap::standard_library::vector_type<std::vector<type>>(name)); \
+MAGE_DeclareScriptingCustom(chaiscript::vector_conversion<std::vector<type>>());
 
-#define DeclareScriptingListableShared(type, name) DeclareScriptingListableNamed(std::shared_ptr<type>, name);
-#define DeclareScriptingListable(type) DeclareScriptingListableNamed(type, STRING(type) "Vector")
+#define MAGE_DeclareScriptingListableShared(type, name) MAGE_DeclareScriptingListableNamed(std::shared_ptr<type>, name);
+#define MAGE_DeclareScriptingListable(type) MAGE_DeclareScriptingListableNamed(type, STRING(type) "Vector")
 
 #define BIND_COPY_OPERATOR(obj) chai->add(fun([&](obj &o1, obj o2) { o1 = o2; }), "="); // internal legacy system use only

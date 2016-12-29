@@ -452,21 +452,21 @@ void objTilemap::clearTiles() {
 #include "scriptingEngine.h"
 
 // tile
-DeclareScriptingTypeNamed(objTilemap::tile, "tile");
-DeclareScriptingFunction(&objTilemap::tile::colNorth, "colNorth");
-DeclareScriptingFunction(&objTilemap::tile::colWest, "colWest");
-DeclareScriptingFunction(&objTilemap::tile::getParent, "getParent");
-//DeclareScriptingFunction(&objTilemap::tile::mapPos, "mapPos"); omitted on purpose - does fuckall
-DeclareScriptingFunction(&objTilemap::tile::pos, "pos");
-DeclareScriptingFunction(&objTilemap::tile::refreshVerts, "refreshVerts");
-DeclareScriptingFunction(&objTilemap::tile::sheetId, "sheetId");
-DeclareScriptingFunction(&objTilemap::tile::tint, "tint");
+MAGE_DeclareScriptingTypeNamed(objTilemap::tile, "tile");
+MAGE_DeclareScriptingFunction(&objTilemap::tile::colNorth, "colNorth");
+MAGE_DeclareScriptingFunction(&objTilemap::tile::colWest, "colWest");
+MAGE_DeclareScriptingFunction(&objTilemap::tile::getParent, "getParent");
+//MAGE_DeclareScriptingFunction(&objTilemap::tile::mapPos, "mapPos"); omitted on purpose - does fuckall
+MAGE_DeclareScriptingFunction(&objTilemap::tile::pos, "pos");
+MAGE_DeclareScriptingFunction(&objTilemap::tile::refreshVerts, "refreshVerts");
+MAGE_DeclareScriptingFunction(&objTilemap::tile::sheetId, "sheetId");
+MAGE_DeclareScriptingFunction(&objTilemap::tile::tint, "tint");
 
 // tilemap
-DeclareScriptingBasic(objTilemap);
-DeclareScriptingBaseClass(objBasic, objTilemap);
-DeclareScriptingConstructor(objTilemap(float, float, basic::textureData), "tilemap");
-DeclareScriptingFunction(&objTilemap::clearTiles, "clearTiles");
-DeclareScriptingFunction(&objTilemap::generateTileCollisionBoxes, "generateTileCollisionBoxes");
-DeclareScriptingFunction(&objTilemap::isForeground, "isForeground");
-DeclareScriptingFunction(&objTilemap::size, "size");
+MAGE_DeclareScriptingBasic(objTilemap);
+MAGE_DeclareScriptingBaseClass(objBasic, objTilemap);
+MAGE_DeclareScriptingConstructor(objTilemap(float, float, basic::textureData), "tilemap");
+MAGE_DeclareScriptingFunction(&objTilemap::clearTiles, "clearTiles");
+MAGE_DeclareScriptingFunction(&objTilemap::generateTileCollisionBoxes, "generateTileCollisionBoxes");
+MAGE_DeclareScriptingFunction(&objTilemap::isForeground, "isForeground");
+MAGE_DeclareScriptingFunction(&objTilemap::size, "size");

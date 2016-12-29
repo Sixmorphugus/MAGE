@@ -325,16 +325,16 @@ void uiMenu::reset()
 // SE
 using namespace chaiscript;
 
-DeclareScriptingCustom(user_type<uiMenu>(), "uiMenu");
-DeclareScriptingCustom(base_class<uiBasic, uiMenu>());
-DeclareScriptingBaseClass(basic, uiMenu);
-DeclareScriptingBaseClass(sf::Transformable, uiMenu);
-DeclareScriptingCustom(constructor<uiMenu(float, float)>(), "uiMenu");
-DeclareScriptingCustom(constructor<uiMenu(float, float, std::vector<std::string>)>(), "uiMenu");
-DeclareScriptingCustom(fun(&uiMenu::disabled), "disabled");
-DeclareScriptingCustom(fun(&uiMenu::wasDismissed), "wasDismissed");
-DeclareScriptingCustom(fun(&uiMenu::maxOptions), "maxOptions");
-DeclareScriptingCustom(fun(&uiMenu::isMouseOver), "isMouseOverMenu");
-DeclareScriptingCustom(fun(&uiMenu::noKbd), "noKbd");
-DeclareScriptingCustom(fun(&uiMenu::optionList), "optionList");
-DeclareScriptingCustom(fun(&uiMenu::optionStart), "optionStart");
+MAGE_DeclareScriptingCustom(user_type<uiMenu>(), "uiMenu");
+MAGE_DeclareScriptingCustom(base_class<uiBasic, uiMenu>());
+MAGE_DeclareScriptingBaseClass(basic, uiMenu);
+MAGE_DeclareScriptingBaseClass(sf::Transformable, uiMenu);
+MAGE_DeclareScriptingCustom(constructor<uiMenu(float, float)>(), "uiMenu");
+MAGE_DeclareScriptingCustom(constructor<uiMenu(float, float, std::vector<std::string>)>(), "uiMenu");
+MAGE_DeclareScriptingCustom(fun(&uiMenu::disabled), "disabled");
+MAGE_DeclareScriptingCustom(fun(&uiMenu::wasDismissed), "wasDismissed");
+MAGE_DeclareScriptingCustom(fun(&uiMenu::maxOptions), "maxOptions");
+MAGE_DeclareScriptingCustom(fun(&uiMenu::isMouseOver), "isMouseOverMenu");
+MAGE_DeclareScriptingCustom(fun(&uiMenu::noKbd), "noKbd");
+MAGE_DeclareScriptingCustom(fun(&uiMenu::optionList), "optionList");
+MAGE_DeclareScriptingCustom(fun(&uiMenu::optionStart), "optionStart");

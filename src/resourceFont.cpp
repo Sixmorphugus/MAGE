@@ -39,5 +39,5 @@ std::shared_ptr<sf::Font> resourceFont::get()
 // sfFontResource
 #include "scriptingEngine.h"
 
-DeclareScriptingFilepathResource(resourceFont);
-DeclareScriptingFunction(&resourceFont::get, "get");
+MAGE_DeclareScriptingFilepathResource(resourceFont);
+MAGE_DeclareScriptingFunction(&resourceFont::get, "get");

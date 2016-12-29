@@ -84,13 +84,15 @@ sf::FloatRect objComposite::getBounds() const {
 
 using namespace chaiscript;
 
-DeclareScriptingCustom(user_type<objComposite>(), "objComposite");
-DeclareScriptingBaseClass(basic, objComposite);
-DeclareScriptingBaseClass(serializable, objComposite);
-DeclareScriptingBaseClass(sf::Transformable, objComposite);
-DeclareScriptingBaseClass(shadable, objComposite);
-DeclareScriptingBaseClass(objSpriteless, objComposite);
-DeclareScriptingBaseClass(objBasic, objComposite);
-DeclareScriptingBaseClass(groupObj, objComposite);
-DeclareScriptingBaseClass(groupBase, objComposite);
-DeclareScriptingCastingFunction("to_" STRING(type), basic, objComposite);
+MAGE_DeclareScriptingCustom(user_type<objComposite>(), "objComposite");
+MAGE_DeclareScriptingBaseClass(basic, objComposite);
+MAGE_DeclareScriptingBaseClass(serializable, objComposite);
+MAGE_DeclareScriptingBaseClass(sf::Transformable, objComposite);
+MAGE_DeclareScriptingBaseClass(shadable, objComposite);
+MAGE_DeclareScriptingBaseClass(objSpriteless, objComposite);
+MAGE_DeclareScriptingBaseClass(objBasic, objComposite);
+MAGE_DeclareScriptingBaseClass(groupObj, objComposite);
+MAGE_DeclareScriptingBaseClass(groupBase, objComposite);
+MAGE_DeclareScriptingCastingFunction("to_" STRING(type), basic, objComposite);
+
+MAGE_DeclarePrefabDefaultObj(objComposite, 0.f, 0.f); // required for objects made by randomly grouping things to work correctly

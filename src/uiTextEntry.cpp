@@ -85,15 +85,15 @@ void uiTextEntry::draw(sf::RenderTarget & target, sf::RenderStates states) const
 
 using namespace chaiscript;
 
-DeclareScriptingCustom(user_type<uiTextEntry>(), "uiTextEntry");
-DeclareScriptingCustom(base_class<uiBasic, uiTextEntry>());
-DeclareScriptingBaseClass(basic, uiTextEntry);
-DeclareScriptingBaseClass(sf::Transformable, uiTextEntry);
-DeclareScriptingCustom(constructor<uiTextEntry(float, float)>(), "uiTextEntry");
-DeclareScriptingCustom(fun(&uiTextEntry::active), "active");
-DeclareScriptingCustom(fun(&uiTextEntry::contains), "contains");
-DeclareScriptingCustom(fun(&uiTextEntry::displayFrom), "displayFrom");
-DeclareScriptingCustom(fun(&uiTextEntry::ready), "ready");
-DeclareScriptingCustom(fun(&uiTextEntry::mouseSensitive), "mouseSensitive");
-DeclareScriptingCustom(fun(&uiTextEntry::safe), "safe");
-DeclareScriptingCustom(fun(&uiTextEntry::width), "width");
+MAGE_DeclareScriptingCustom(user_type<uiTextEntry>(), "uiTextEntry");
+MAGE_DeclareScriptingCustom(base_class<uiBasic, uiTextEntry>());
+MAGE_DeclareScriptingBaseClass(basic, uiTextEntry);
+MAGE_DeclareScriptingBaseClass(sf::Transformable, uiTextEntry);
+MAGE_DeclareScriptingCustom(constructor<uiTextEntry(float, float)>(), "uiTextEntry");
+MAGE_DeclareScriptingCustom(fun(&uiTextEntry::active), "active");
+MAGE_DeclareScriptingCustom(fun(&uiTextEntry::contains), "contains");
+MAGE_DeclareScriptingCustom(fun(&uiTextEntry::displayFrom), "displayFrom");
+MAGE_DeclareScriptingCustom(fun(&uiTextEntry::ready), "ready");
+MAGE_DeclareScriptingCustom(fun(&uiTextEntry::mouseSensitive), "mouseSensitive");
+MAGE_DeclareScriptingCustom(fun(&uiTextEntry::safe), "safe");
+MAGE_DeclareScriptingCustom(fun(&uiTextEntry::width), "width");

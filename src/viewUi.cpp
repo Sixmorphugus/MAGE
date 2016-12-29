@@ -33,4 +33,4 @@ void viewUi::render(sf::RenderTarget & target, sf::Color bgCol)
 	}
 }
 
-DeclareScriptingView(viewUi);
+MAGE_DeclareScriptingView(viewUi);

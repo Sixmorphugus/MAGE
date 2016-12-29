@@ -1,0 +1,21 @@
+
+                 renderable        -> multiSprite -> |
+serializable  -> propertiesObject  -> v              v
+transformable -> massTransformable -> gmoBase      -> gmoSprited
+                                                   -> gmoZone
+									  scene        -> gmoComposite
+									  
+* Not all objects are renderable any more.
+
+* If things ARE renderable, the views rendering the scene will pass them to the renderer.
+
+* properties can be registered as either a specific variable or a pair of functions (get/set)
+
+* propertiesObject ALREADY inherits serializable, so its output already saves the object's props.
+  The required modification is that a gmoBase being serialized will need to stick its prefab at
+  the front of the list.
+  
+* group is succeded by scene. Scene can still be limited to certain object types, but dynamically
+  now, meaning that we don't have to register ever goddamn type of scene for chai to recognise it.
+  
+* Can't do this with hooks unfortunately - notify() function won't work anymore

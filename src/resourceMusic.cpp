@@ -45,5 +45,5 @@ std::shared_ptr<sf::Music> resourceMusic::get()
 // sfMusicResource
 #include "scriptingEngine.h"
 
-DeclareScriptingFilepathResource(resourceMusic);
-DeclareScriptingFunction(&resourceMusic::get, "get");
+MAGE_DeclareScriptingFilepathResource(resourceMusic);
+MAGE_DeclareScriptingFunction(&resourceMusic::get, "get");

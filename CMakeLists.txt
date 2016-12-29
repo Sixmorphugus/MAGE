@@ -10,6 +10,7 @@ project(MAGE)
 file(GLOB MAGE_SRC
     "${CMAKE_CURRENT_SOURCE_DIR}/include/MAGE/*.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/*.inl"
 )
 
 # make everything output to the same place (we do not have to copy sfml's libs to where MAGE is if MAGE already outputs next to them)

@@ -38,5 +38,5 @@ bool resourceGroup::isNeeded()
 
 #include "scriptingEngine.h"
 
-DeclareScriptingFilepathResource(resourceGroup);
-DeclareScriptingFunction(&resourceGroup::get, "get");
+MAGE_DeclareScriptingFilepathResource(resourceGroup);
+MAGE_DeclareScriptingFunction(&resourceGroup::get, "get");

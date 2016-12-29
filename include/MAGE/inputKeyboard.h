@@ -22,7 +22,7 @@ public:
 	public:
 		keybind();
 		keybind(sf::Keyboard::Key singleKey, bool rebindable = false);
-		keybind(std::initializer_list<sf::Keyboard::Key> keysIn, bool rebindable = false);
+		keybind(std::vector<sf::Keyboard::Key> keysIn, bool rebindable = false);
 
 	public:
 		hook<inputKeyboard*, keybind*> onPressed;
@@ -87,4 +87,12 @@ bool inputKeyboard::keybind::getIdle() {
 	return s == 0;
 }
 
+class MAGEDLL inputKeyboardBindRegistration {
+public:
+	inputKeyboardBindRegistration(std::string name, std::vector<sf::Keyboard::Key> keys, bool rebindable = false);
+	inputKeyboardBindRegistration(std::string name, sf::Keyboard::Key key, bool rebindable = false);
+};
+
 } // namespace mage
+
+#define MAGE_DeclareInputKeyboardBind(...) namespace { inputKeyboardBindRegistration UNIQUE_IDENTIFIER(kb)(__VA_ARGS__); }

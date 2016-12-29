@@ -95,8 +95,8 @@ float renderInfo(sf::RenderTarget &target, sf::RenderStates states, sf::Vector2f
 
 using namespace chaiscript;
 
-DeclareScriptingFunction(&renderBindPrompt, "renderBindPrompt");
-DeclareScriptingCustom(fun<float, sf::RenderTarget&, sf::RenderStates, sf::Vector2f, std::string>(&renderInfo), "renderInfo");
-DeclareScriptingCustom(fun<float, sf::RenderTarget&, sf::RenderStates, sf::Vector2f, std::string, sf::Color, bool, unsigned int, float, std::shared_ptr<resourceFont>>(&renderInfo), "renderInfo");
+MAGE_DeclareScriptingFunction(&renderBindPrompt, "renderBindPrompt");
+MAGE_DeclareScriptingCustom(fun<float, sf::RenderTarget&, sf::RenderStates, sf::Vector2f, std::string>(&renderInfo), "renderInfo");
+MAGE_DeclareScriptingCustom(fun<float, sf::RenderTarget&, sf::RenderStates, sf::Vector2f, std::string, sf::Color, bool, unsigned int, float, std::shared_ptr<resourceFont>>(&renderInfo), "renderInfo");
 
 } // namespace mage

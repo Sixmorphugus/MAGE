@@ -85,8 +85,8 @@ bool compareUi(std::shared_ptr<uiBasic> i, std::shared_ptr<uiBasic> j)
 
 using namespace chaiscript;
 
-DeclareScriptingBasic(uiBasic);
-DeclareScriptingCustom(constructor<uiBasic(float, float, basic::textureData)>(), "uiBasic");
-DeclareScriptingCustom(fun(&uiBasic::drawBindPrompt), "drawBindPrompt");
-DeclareScriptingCustom(fun(&uiBasic::drawInfoSimple), "drawInfoSimple");
-DeclareScriptingCustom(fun(&uiBasic::drawInfo), "drawInfo");
+MAGE_DeclareScriptingBasic(uiBasic);
+MAGE_DeclareScriptingCustom(constructor<uiBasic(float, float, basic::textureData)>(), "uiBasic");
+MAGE_DeclareScriptingCustom(fun(&uiBasic::drawBindPrompt), "drawBindPrompt");
+MAGE_DeclareScriptingCustom(fun(&uiBasic::drawInfoSimple), "drawInfoSimple");
+MAGE_DeclareScriptingCustom(fun(&uiBasic::drawInfo), "drawInfo");

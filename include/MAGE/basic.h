@@ -179,6 +179,8 @@ public:
 
 	bool hasMoved() const { return moved; }
 
+	std::shared_ptr<prefab> getPrefab();
+
 public:
 	groupBase* gr;
 
@@ -223,10 +225,10 @@ private:
 
 } // namespace mage
 
-#define DeclareScriptingBasic(type)\
-DeclareScriptingType(type); \
-DeclareScriptingBaseClass(mage::basic, type); \
-DeclareScriptingBaseClass(mage::serializable, type); \
-DeclareScriptingBaseClass(sf::Transformable, type); \
-DeclareScriptingBaseClass(mage::shadable, type); \
-DeclareScriptingCastingFunction("to_" STRING(type), mage::basic, type);
+#define MAGE_DeclareScriptingBasic(type)\
+MAGE_DeclareScriptingType(type); \
+MAGE_DeclareScriptingBaseClass(mage::basic, type); \
+MAGE_DeclareScriptingBaseClass(mage::serializable, type); \
+MAGE_DeclareScriptingBaseClass(sf::Transformable, type); \
+MAGE_DeclareScriptingBaseClass(mage::shadable, type); \
+MAGE_DeclareScriptingCastingFunction("to_" STRING(type), mage::basic, type);

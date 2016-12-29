@@ -88,12 +88,12 @@ void mixer::update()
 // SE
 using namespace chaiscript;
 
-DeclareScriptingCustom(user_type<mixer>(), "mixer");
-DeclareScriptingCustom(constructor<mixer()>(), "mixer");
-DeclareScriptingCustom(constructor<mixer(const mixer&)>(), "mixer");
-DeclareScriptingCustom(fun(&mixer::play), "play");
-DeclareScriptingCustom(fun(&mixer::silence), "silence");
-DeclareScriptingCustom(fun(&mixer::stop), "stop");
-DeclareScriptingCustom(fun(&mixer::update), "update");
-DeclareScriptingCustom(fun(&mixer::volume), "volume");
-DeclareScriptingCustom(fun(&mixer::pitchShift), "pitchShift");
+MAGE_DeclareScriptingCustom(user_type<mixer>(), "mixer");
+MAGE_DeclareScriptingCustom(constructor<mixer()>(), "mixer");
+MAGE_DeclareScriptingCustom(constructor<mixer(const mixer&)>(), "mixer");
+MAGE_DeclareScriptingCustom(fun(&mixer::play), "play");
+MAGE_DeclareScriptingCustom(fun(&mixer::silence), "silence");
+MAGE_DeclareScriptingCustom(fun(&mixer::stop), "stop");
+MAGE_DeclareScriptingCustom(fun(&mixer::update), "update");
+MAGE_DeclareScriptingCustom(fun(&mixer::volume), "volume");
+MAGE_DeclareScriptingCustom(fun(&mixer::pitchShift), "pitchShift");

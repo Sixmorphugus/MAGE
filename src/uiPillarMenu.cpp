@@ -105,15 +105,15 @@ void uiPillarMenu::draw(sf::RenderTarget & target, sf::RenderStates states) cons
 
 using namespace chaiscript;
 
-DeclareScriptingCustom(user_type<uiPillarMenu>(), "pillarMenu");
-DeclareScriptingCustom(base_class<uiMenu, uiPillarMenu>());
-DeclareScriptingCustom(type_conversion<uiPillarMenu*, uiBasic*>());
-DeclareScriptingBaseClass(basic, uiPillarMenu);
-DeclareScriptingBaseClass(sf::Transformable, uiPillarMenu);
-DeclareScriptingCustom(type_conversion<uiPillarMenu*, uiBasic*>());
-DeclareScriptingCustom(constructor<uiPillarMenu(float, float)>(), "pillarMenu");
-DeclareScriptingCustom(constructor<uiPillarMenu(float, float, std::vector<std::string>)>(), "pillarMenu");
-DeclareScriptingCustom(fun(&uiPillarMenu::floatIn), "floatIn");
-DeclareScriptingCustom(fun(&uiPillarMenu::floatIn), "floatOut");
-DeclareScriptingCustom(fun(&uiPillarMenu::drawLines), "drawLines");
-DeclareScriptingCustom(fun(&uiPillarMenu::targetX), "targetX");
+MAGE_DeclareScriptingCustom(user_type<uiPillarMenu>(), "pillarMenu");
+MAGE_DeclareScriptingCustom(base_class<uiMenu, uiPillarMenu>());
+MAGE_DeclareScriptingCustom(type_conversion<uiPillarMenu*, uiBasic*>());
+MAGE_DeclareScriptingBaseClass(basic, uiPillarMenu);
+MAGE_DeclareScriptingBaseClass(sf::Transformable, uiPillarMenu);
+MAGE_DeclareScriptingCustom(type_conversion<uiPillarMenu*, uiBasic*>());
+MAGE_DeclareScriptingCustom(constructor<uiPillarMenu(float, float)>(), "pillarMenu");
+MAGE_DeclareScriptingCustom(constructor<uiPillarMenu(float, float, std::vector<std::string>)>(), "pillarMenu");
+MAGE_DeclareScriptingCustom(fun(&uiPillarMenu::floatIn), "floatIn");
+MAGE_DeclareScriptingCustom(fun(&uiPillarMenu::floatIn), "floatOut");
+MAGE_DeclareScriptingCustom(fun(&uiPillarMenu::drawLines), "drawLines");
+MAGE_DeclareScriptingCustom(fun(&uiPillarMenu::targetX), "targetX");

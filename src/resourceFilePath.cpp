@@ -20,14 +20,14 @@ bool resourceFilepath::load()
 // filepathResource
 #include "scriptingEngine.h"
 
-DeclareScriptingType(resourceFilepath);
-DeclareScriptingBaseClass(taggable, resourceFilepath);
-DeclareScriptingBaseClass(resource, resourceFilepath);
-DeclareScriptingConstructor(resourceFilepath(), "filepathResource");
-DeclareScriptingConstructor(resourceFilepath(std::string), "filepathResource");
-DeclareScriptingFunction(&resourceFilepath::filepath, "filepath");
-DeclareScriptingCopyOperator(resourceFilepath);
+MAGE_DeclareScriptingType(resourceFilepath);
+MAGE_DeclareScriptingBaseClass(taggable, resourceFilepath);
+MAGE_DeclareScriptingBaseClass(resource, resourceFilepath);
+MAGE_DeclareScriptingConstructor(resourceFilepath(), "filepathResource");
+MAGE_DeclareScriptingConstructor(resourceFilepath(std::string), "filepathResource");
+MAGE_DeclareScriptingFunction(&resourceFilepath::filepath, "filepath");
+MAGE_DeclareScriptingCopyOperator(resourceFilepath);
 
-DeclareScriptingFunction(&resourceMngr::getAs<resourceFilepath>, "getFilepathResource");
-DeclareScriptingFunction(&resourceMngr::listType<resourceFilepath>, "listFilepathResources");
-DeclareScriptingFunction(&resourceMngr::addFolder<resourceFilepath>, "addFolderOfFilepathResources");
+MAGE_DeclareScriptingFunction(&resourceMngr::getAs<resourceFilepath>, "getFilepathResource");
+MAGE_DeclareScriptingFunction(&resourceMngr::listType<resourceFilepath>, "listFilepathResources");
+MAGE_DeclareScriptingFunction(&resourceMngr::addFolder<resourceFilepath>, "addFolderOfFilepathResources");

@@ -38,5 +38,5 @@ std::shared_ptr<sf::Texture> resourceTexture::get()
 }
 
 // sfTextureResource
-DeclareScriptingFilepathResource(resourceTexture);
-DeclareScriptingFunction(&resourceTexture::get, "get");
+MAGE_DeclareScriptingFilepathResource(resourceTexture);
+MAGE_DeclareScriptingFunction(&resourceTexture::get, "get");

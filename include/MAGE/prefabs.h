@@ -48,8 +48,13 @@ public:
 
 	std::shared_ptr<basic> newInstance(std::string name, Group* attachTo = nullptr);
 
+	// default prefab management (not currently exposed)
+	std::shared_ptr<prefab> getDefaultPrefab(const std::type_info& ti);
+	std::string getDefaultPrefabName(const std::type_info& ti);
+	void setDefaultPrefab(const std::type_info& ti, std::string name);
 private:
 	std::map<std::string, std::shared_ptr<prefab>> prefabMap;
+	std::map<size_t, std::string> prefabDefaults;
 };
 
 template<typename T>
@@ -73,4 +78,15 @@ inline std::vector<std::shared_ptr<prefab>> prefabMngr::listType()
 	return results;
 }
 
+class MAGEDLL specialPrefabRegistration {
+public:
+	specialPrefabRegistration(const std::type_info& typeinfo, std::shared_ptr<prefab> input, std::string name = "");
+	specialPrefabRegistration(const std::type_info& typeinfo, const std::type_info& typeinfo2, std::string name = "");
+};
+
 } // namespace mage
+
+// this creates a default prefab for a type that is used when none is available.
+#define MAGE_DeclarePrefabDefault(...) namespace { specialPrefabRegistration UNIQUE_IDENTIFIER(pre)(__VA_ARGS__); }
+#define MAGE_DeclarePrefabDefaultObj(type, ...) MAGE_DeclarePrefabDefault(typeid(type), std::make_shared<prefab>(std::make_shared<type>(__VA_ARGS__)), STRING(type))
+#define MAGE_DeclarePrefabDefaultMirroring(type, type2) MAGE_DeclarePrefabDefault(typeid(type), typeid(type2), STRING(type))

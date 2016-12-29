@@ -6,6 +6,6 @@
 #include "scriptingEngine.h"
 using namespace mage;
 
-DeclareScriptingType(input);
-DeclareScriptingFunction(&input::processEvent, "processEvent");
-DeclareScriptingFunction(&input::update, "update");
+MAGE_DeclareScriptingType(input);
+MAGE_DeclareScriptingFunction(&input::processEvent, "processEvent");
+MAGE_DeclareScriptingFunction(&input::update, "update");

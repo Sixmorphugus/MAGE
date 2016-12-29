@@ -126,30 +126,30 @@ void scheduleMngr::update(sf::Time elapsed)
 // SE
 #include "scriptingEngine.h"
 
-DeclareScriptingType(scheduleMngr);
-DeclareScriptingConstructor(scheduleMngr(), "scheduleMngr");
-DeclareScriptingFunction(&scheduleMngr::add, "add");
-DeclareScriptingFunction(&scheduleMngr::endAll, "endAll");
-DeclareScriptingFunction(&scheduleMngr::get, "get");
-DeclareScriptingFunction(&scheduleMngr::getCount, "getCount");
-DeclareScriptingFunction(&scheduleMngr::indexOf, "indexOf");
-DeclareScriptingFunction(&scheduleMngr::update, "update");
+MAGE_DeclareScriptingType(scheduleMngr);
+MAGE_DeclareScriptingConstructor(scheduleMngr(), "scheduleMngr");
+MAGE_DeclareScriptingFunction(&scheduleMngr::add, "add");
+MAGE_DeclareScriptingFunction(&scheduleMngr::endAll, "endAll");
+MAGE_DeclareScriptingFunction(&scheduleMngr::get, "get");
+MAGE_DeclareScriptingFunction(&scheduleMngr::getCount, "getCount");
+MAGE_DeclareScriptingFunction(&scheduleMngr::indexOf, "indexOf");
+MAGE_DeclareScriptingFunction(&scheduleMngr::update, "update");
 
-DeclareScriptingType(schedule);
-DeclareScriptingConstructor(schedule(), "schedule");
-DeclareScriptingConstructor(schedule(std::function<bool()>), "schedule");
-DeclareScriptingCopyOperator(schedule);
-DeclareScriptingFunction(&schedule::conditionFunction, "conditionFunction");
-DeclareScriptingFunction(&schedule::end, "end");
-DeclareScriptingFunction(&schedule::getStartTime, "getStartTime");
-DeclareScriptingFunction(&schedule::isRunning, "isRunning");
-DeclareScriptingFunction(&schedule::onEnd, "onEnd");
-DeclareScriptingFunction(&schedule::onRun, "onRun");
-DeclareScriptingFunction(&schedule::onStart, "onStart");
-DeclareScriptingFunction(&schedule::run, "run");
-DeclareScriptingFunction(&schedule::isRunning, "isRunning");
-DeclareScriptingFunction(&schedule::start, "start");
-DeclareScriptingFunction(&schedule::update, "update");
-DeclareScriptingFunction(&schedule::onEnd, "onEnd");
-DeclareScriptingFunction(&schedule::onRun, "onRun");
-DeclareScriptingFunction(&schedule::onStart, "onStart");
+MAGE_DeclareScriptingType(schedule);
+MAGE_DeclareScriptingConstructor(schedule(), "schedule");
+MAGE_DeclareScriptingConstructor(schedule(std::function<bool()>), "schedule");
+MAGE_DeclareScriptingCopyOperator(schedule);
+MAGE_DeclareScriptingFunction(&schedule::conditionFunction, "conditionFunction");
+MAGE_DeclareScriptingFunction(&schedule::end, "end");
+MAGE_DeclareScriptingFunction(&schedule::getStartTime, "getStartTime");
+MAGE_DeclareScriptingFunction(&schedule::isRunning, "isRunning");
+MAGE_DeclareScriptingFunction(&schedule::onEnd, "onEnd");
+MAGE_DeclareScriptingFunction(&schedule::onRun, "onRun");
+MAGE_DeclareScriptingFunction(&schedule::onStart, "onStart");
+MAGE_DeclareScriptingFunction(&schedule::run, "run");
+MAGE_DeclareScriptingFunction(&schedule::isRunning, "isRunning");
+MAGE_DeclareScriptingFunction(&schedule::start, "start");
+MAGE_DeclareScriptingFunction(&schedule::update, "update");
+MAGE_DeclareScriptingFunction(&schedule::onEnd, "onEnd");
+MAGE_DeclareScriptingFunction(&schedule::onRun, "onRun");
+MAGE_DeclareScriptingFunction(&schedule::onStart, "onStart");

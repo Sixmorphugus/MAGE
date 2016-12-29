@@ -33,49 +33,6 @@ bool isMultiple(float testNum, float of) {
 	return (testNum / of) == floor(testNum / of);
 }
 
-float vectorToAngle(sf::Vector2f vec)
-{
-	return atan2(vec.y, vec.x);
-}
-
-float vectorLength(sf::Vector2f vec)
-{
-	return sqrt(vec.y*vec.y + vec.x*vec.x); // this is just pythag again isnt it
-}
-
-float distanceBetweenVectors(sf::Vector2f v1, sf::Vector2f v2)
-{
-	// pythagoras method
-	float xDist = fabs(v1.x - v2.x);
-	float yDist = fabs(v1.y - v2.y);
-
-	return sqrt(pow(xDist, 2) + pow(yDist, 2));
-}
-
-float directionToVector(sf::Vector2f v1, sf::Vector2f v2)
-{
-	sf::Vector2f v3(v1 - v2);
-
-	return vectorToAngle(v3);
-}
-
-sf::Vector2f generateVector(float angle, float speed)
-{
-	sf::Vector2f vector;
-
-	vector.x = cos(angle);
-	vector.y = sin(angle);
-
-	vector *= speed;
-
-	return vector;
-}
-
-float dot(sf::Vector2f v1, sf::Vector2f v2)
-{
-	return (v1.x*v2.x + v1.y*v2.y);
-}
-
 float clamp(float in, float min, float max)
 {
 	if (in < min) in = min;
@@ -101,22 +58,22 @@ sf::Vector2f vectorCeil(sf::Vector2f vec)
 using namespace chaiscript;
 using namespace mage;
 
-DeclareScriptingCustom(fun(&lerp), "lerp");
-DeclareScriptingCustom(fun(&interpolate), "interpolate");
-DeclareScriptingCustom(fun(&randomInt), "randomInt");
-DeclareScriptingCustom(fun(&randomFloat), "randomFloat");
-DeclareScriptingCustom(fun(&isMultiple), "isMultiple");
-DeclareScriptingCustom(fun(&vectorToAngle), "vectorToAngle");
-DeclareScriptingCustom(fun(&vectorLength), "vectorLength");
-DeclareScriptingCustom(fun(&distanceBetweenVectors), "distanceBetweenVectors");
-DeclareScriptingCustom(fun(&directionToVector), "directionToVector");
-DeclareScriptingCustom(fun(&generateVector), "generateVector");
-DeclareScriptingCustom(fun(&dot), "dot");
-DeclareScriptingCustom(fun(&clamp), "clamp");
-DeclareScriptingCustom(fun<float, float>(&sin), "sin");
-DeclareScriptingCustom(fun<float, float>(&cos), "cos");
-DeclareScriptingCustom(fun<float, float>(&tan), "tan");
-DeclareScriptingCustom(fun<float, float>(&abs), "abs");
+MAGE_DeclareScriptingCustom(fun(&lerp), "lerp");
+MAGE_DeclareScriptingCustom(fun(&interpolate), "interpolate");
+MAGE_DeclareScriptingCustom(fun(&randomInt), "randomInt");
+MAGE_DeclareScriptingCustom(fun(&randomFloat), "randomFloat");
+MAGE_DeclareScriptingCustom(fun(&isMultiple), "isMultiple");
+MAGE_DeclareScriptingCustom(fun(&vectorToAngle), "vectorToAngle");
+MAGE_DeclareScriptingCustom(fun(&vectorLength), "vectorLength");
+MAGE_DeclareScriptingCustom(fun(&distanceBetweenVectors), "distanceBetweenVectors");
+MAGE_DeclareScriptingCustom(fun(&directionToVector), "directionToVector");
+MAGE_DeclareScriptingCustom(fun(&generateVector), "generateVector");
+MAGE_DeclareScriptingCustom(fun(&dot), "dot");
+MAGE_DeclareScriptingCustom(fun(&clamp), "clamp");
+MAGE_DeclareScriptingCustom(fun<float, float>(&sin), "sin");
+MAGE_DeclareScriptingCustom(fun<float, float>(&cos), "cos");
+MAGE_DeclareScriptingCustom(fun<float, float>(&tan), "tan");
+MAGE_DeclareScriptingCustom(fun<float, float>(&abs), "abs");
 
-DeclareScriptingCustom(fun(&highestOf<float>), "highestOf");
-DeclareScriptingCustom(fun(&lowestOf<float>), "lowestOf");
+MAGE_DeclareScriptingCustom(fun(&highestOf<float>), "highestOf");
+MAGE_DeclareScriptingCustom(fun(&lowestOf<float>), "lowestOf");

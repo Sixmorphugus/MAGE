@@ -79,10 +79,10 @@ bool mage::serializable::loadFromString(std::string file)
 
 #include "scriptingEngine.h"
 
-DeclareScriptingType(serializable)
-DeclareScriptingFunction(&serializable::deserialize, "deserialize");
-DeclareScriptingFunction(&serializable::serialize, "serialize");
-DeclareScriptingFunction(&serializable::saveToFile, "saveToFile");
-DeclareScriptingFunction(&serializable::loadFromFile, "loadFromFile");
-DeclareScriptingFunction(&serializable::saveToFile, "saveToString");
-DeclareScriptingFunction(&serializable::loadFromFile, "loadFromString");
+MAGE_DeclareScriptingType(serializable)
+MAGE_DeclareScriptingFunction(&serializable::deserialize, "deserialize");
+MAGE_DeclareScriptingFunction(&serializable::serialize, "serialize");
+MAGE_DeclareScriptingFunction(&serializable::saveToFile, "saveToFile");
+MAGE_DeclareScriptingFunction(&serializable::loadFromFile, "loadFromFile");
+MAGE_DeclareScriptingFunction(&serializable::saveToFile, "saveToString");
+MAGE_DeclareScriptingFunction(&serializable::loadFromFile, "loadFromString");

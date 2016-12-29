@@ -35,5 +35,5 @@ float randomPitch()
 using namespace mage;
 using namespace chaiscript;
 
-DeclareScriptingCustom(fun(&interpolateColors), "interpolateColors");
-DeclareScriptingCustom(fun(&distanceBetweenObjects), "distanceBetweenObjects");
+MAGE_DeclareScriptingCustom(fun(&interpolateColors), "interpolateColors");
+MAGE_DeclareScriptingCustom(fun(&distanceBetweenObjects), "distanceBetweenObjects");

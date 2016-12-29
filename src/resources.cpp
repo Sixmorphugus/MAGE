@@ -203,26 +203,26 @@ bool resourceMngr::exists(std::string name)
 #include "scriptingEngine.h"
 
 // resource
-DeclareScriptingType(resource);
-DeclareScriptingBaseClass(taggable, resource);
-DeclareScriptingConstructor(resource(), "resource");
-DeclareScriptingFunction(&resource::isLoaded, "isLoaded");
-DeclareScriptingFunction(&resource::isNeeded, "isNeeded");
-DeclareScriptingFunction(&resource::load, "load");
-DeclareScriptingFunction(&resource::unload, "unload");
-DeclareScriptingFunction(&resource::name, "name");
-DeclareScriptingCopyOperator(resource);
+MAGE_DeclareScriptingType(resource);
+MAGE_DeclareScriptingBaseClass(taggable, resource);
+MAGE_DeclareScriptingConstructor(resource(), "resource");
+MAGE_DeclareScriptingFunction(&resource::isLoaded, "isLoaded");
+MAGE_DeclareScriptingFunction(&resource::isNeeded, "isNeeded");
+MAGE_DeclareScriptingFunction(&resource::load, "load");
+MAGE_DeclareScriptingFunction(&resource::unload, "unload");
+MAGE_DeclareScriptingFunction(&resource::name, "name");
+MAGE_DeclareScriptingCopyOperator(resource);
 
 // resourceMngr
-DeclareScriptingType(resourceMngr);
-DeclareScriptingFunction(&resourceMngr::add, "add");
-DeclareScriptingFunction([](resourceMngr &m, std::string n, std::shared_ptr<resource> r) { m.add(n, r); }, "add"); // simplified add
-DeclareScriptingFunction(&resourceMngr::exists, "exists");
-DeclareScriptingFunction(&resourceMngr::get, "get");
-DeclareScriptingFunction([](resourceMngr &m, std::string g) { return m.get(g); }, "get"); // simplified get
-DeclareScriptingFunction(&resourceMngr::getByIndex, "getByIndex");
-DeclareScriptingFunction(&resourceMngr::getCount, "getCount");
-DeclareScriptingFunction(&resourceMngr::list, "list");
-DeclareScriptingFunction([](resourceMngr &m) { return m.list(); }, "list");
-DeclareScriptingFunction(&resourceMngr::nameOf, "nameOf");
-DeclareScriptingFunction(&resourceMngr::flush, "flush");
+MAGE_DeclareScriptingType(resourceMngr);
+MAGE_DeclareScriptingFunction(&resourceMngr::add, "add");
+MAGE_DeclareScriptingFunction([](resourceMngr &m, std::string n, std::shared_ptr<resource> r) { m.add(n, r); }, "add"); // simplified add
+MAGE_DeclareScriptingFunction(&resourceMngr::exists, "exists");
+MAGE_DeclareScriptingFunction(&resourceMngr::get, "get");
+MAGE_DeclareScriptingFunction([](resourceMngr &m, std::string g) { return m.get(g); }, "get"); // simplified get
+MAGE_DeclareScriptingFunction(&resourceMngr::getByIndex, "getByIndex");
+MAGE_DeclareScriptingFunction(&resourceMngr::getCount, "getCount");
+MAGE_DeclareScriptingFunction(&resourceMngr::list, "list");
+MAGE_DeclareScriptingFunction([](resourceMngr &m) { return m.list(); }, "list");
+MAGE_DeclareScriptingFunction(&resourceMngr::nameOf, "nameOf");
+MAGE_DeclareScriptingFunction(&resourceMngr::flush, "flush");

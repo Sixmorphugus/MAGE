@@ -13,8 +13,8 @@ void hookBase::hEE(const chaiscript::exception::eval_error & e) const
 using namespace mage;
 using namespace chaiscript;
 
-DeclareScriptingType(hookBase);
-DeclareScriptingFunction(&hookBase::clearObservers, "clearObservers");
-DeclareScriptingFunction(&hookBase::enabled, "enabled");
-DeclareScriptingFunction(&hookBase::forgetObserver, "forgetObserver");
-DeclareScriptingFunction(&hookBase::numObservers, "getNumObservers");
+MAGE_DeclareScriptingType(hookBase);
+MAGE_DeclareScriptingFunction(&hookBase::clearObservers, "clearObservers");
+MAGE_DeclareScriptingFunction(&hookBase::enabled, "enabled");
+MAGE_DeclareScriptingFunction(&hookBase::forgetObserver, "forgetObserver");
+MAGE_DeclareScriptingFunction(&hookBase::numObservers, "getNumObservers");

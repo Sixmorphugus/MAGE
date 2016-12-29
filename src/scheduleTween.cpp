@@ -86,12 +86,12 @@ void scheduleTween::notifyOnTween(float val)
 	tLast = val;
 }
 
-DeclareScriptingSchedule(scheduleTween);
-DeclareScriptingConstructor(scheduleTween(sf::Time, unsigned int, easingFunction, std::function<void(float)>), "scheduleTween");
-DeclareScriptingConstructor(scheduleTween(sf::Time, unsigned int, easingFunction, std::function<void(float)>, std::function<bool()>), "scheduleTween");
-DeclareScriptingCopyOperator(scheduleTween);
-DeclareScriptingFunction(&scheduleTween::easing, "easing");
-DeclareScriptingFunction(&scheduleTween::getFrame, "getFrame");
-DeclareScriptingFunction(&scheduleTween::getFrameLength, "getFrameLength");
-DeclareScriptingFunction(&scheduleTween::onTween, "onTween");
-DeclareScriptingFunction(&scheduleTween::skipOnEnd, "skipOnEnd");
+MAGE_DeclareScriptingSchedule(scheduleTween);
+MAGE_DeclareScriptingConstructor(scheduleTween(sf::Time, unsigned int, easingFunction, std::function<void(float)>), "scheduleTween");
+MAGE_DeclareScriptingConstructor(scheduleTween(sf::Time, unsigned int, easingFunction, std::function<void(float)>, std::function<bool()>), "scheduleTween");
+MAGE_DeclareScriptingCopyOperator(scheduleTween);
+MAGE_DeclareScriptingFunction(&scheduleTween::easing, "easing");
+MAGE_DeclareScriptingFunction(&scheduleTween::getFrame, "getFrame");
+MAGE_DeclareScriptingFunction(&scheduleTween::getFrameLength, "getFrameLength");
+MAGE_DeclareScriptingFunction(&scheduleTween::onTween, "onTween");
+MAGE_DeclareScriptingFunction(&scheduleTween::skipOnEnd, "skipOnEnd");

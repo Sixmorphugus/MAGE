@@ -248,10 +248,11 @@ namespace mage {
 	}
 }
 
-DeclareScriptingListable(int);
-DeclareScriptingListableNamed(unsigned int, "uIntVector");
-DeclareScriptingListable(float);
-DeclareScriptingListable(bool);
+MAGE_DeclareScriptingListable(int);
+MAGE_DeclareScriptingListableNamed(unsigned int, "uIntVector");
+MAGE_DeclareScriptingListable(float);
+MAGE_DeclareScriptingListable(bool);
 
-DeclareScriptingListableNamed(sf::IntRect, "intRectVector");
-DeclareScriptingListableNamed(sf::FloatRect, "floatRectVector");
+MAGE_DeclareScriptingListableNamed(sf::IntRect, "intRectVector");
+MAGE_DeclareScriptingListableNamed(sf::FloatRect, "floatRectVector");
+MAGE_DeclareScriptingListableNamed(std::string, "stringVector");

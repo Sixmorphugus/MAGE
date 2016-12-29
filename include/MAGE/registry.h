@@ -77,7 +77,6 @@ public:
 	std::string header;
 
 private:
-	bool ready;
 	unsigned int getIndex(std::string name);
 
 private:

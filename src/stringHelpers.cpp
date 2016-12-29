@@ -163,10 +163,10 @@ std::string removeWhitespace(std::string in)
 using namespace mage;
 using namespace chaiscript;
 
-DeclareScriptingCustom(fun(&splitString), "splitString");
-DeclareScriptingCustom(fun(&strUpper), "strUpper");
-DeclareScriptingCustom(fun(&strLower), "strLower");
-DeclareScriptingCustom(fun(&strReplace), "strReplace");
-DeclareScriptingCustom(fun(&strFilter), "strFilter");
-DeclareScriptingCustom(fun(&strSub), "strSub");
-DeclareScriptingCustom(fun(&fileExtension), "fileExtension");
+MAGE_DeclareScriptingCustom(fun(&splitString), "splitString");
+MAGE_DeclareScriptingCustom(fun(&strUpper), "strUpper");
+MAGE_DeclareScriptingCustom(fun(&strLower), "strLower");
+MAGE_DeclareScriptingCustom(fun(&strReplace), "strReplace");
+MAGE_DeclareScriptingCustom(fun(&strFilter), "strFilter");
+MAGE_DeclareScriptingCustom(fun(&strSub), "strSub");
+MAGE_DeclareScriptingCustom(fun(&fileExtension), "fileExtension");
