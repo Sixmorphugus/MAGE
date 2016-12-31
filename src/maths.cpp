@@ -74,6 +74,3 @@ MAGE_DeclareScriptingCustom(fun<float, float>(&sin), "sin");
 MAGE_DeclareScriptingCustom(fun<float, float>(&cos), "cos");
 MAGE_DeclareScriptingCustom(fun<float, float>(&tan), "tan");
 MAGE_DeclareScriptingCustom(fun<float, float>(&abs), "abs");
-
-MAGE_DeclareScriptingCustom(fun(&highestOf<float>), "highestOf");
-MAGE_DeclareScriptingCustom(fun(&lowestOf<float>), "lowestOf");

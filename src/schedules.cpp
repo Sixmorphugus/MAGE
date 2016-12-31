@@ -69,12 +69,14 @@ scheduleMngr::scheduleMngr()
 {
 }
 
-std::shared_ptr<schedule> scheduleMngr::add(std::shared_ptr<schedule> input)
+unsigned int scheduleMngr::add(std::shared_ptr<schedule> input)
 {
+	auto tsk = tasks.size();
+
 	tasks.push_back(input);
 	input->start();
 
-	return input;
+	return tsk;
 }
 
 int scheduleMngr::indexOf(std::shared_ptr<schedule> in)

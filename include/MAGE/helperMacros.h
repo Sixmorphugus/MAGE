@@ -1,4 +1,15 @@
 #pragma once
+
+// Helper Macros
+// -------------
+// Some helpers for working with macros.
+// Makes things seem a little more magic - alternatively, keeps me from having to type preprocessor operators.
+// -------------
+// Category: Core
+// Has Hooks: N/A
+// Script-Accessable: N/A
+// -------------
+
 #define CAT_I(a,b) a##b
 #define CAT(a,b) CAT_I(a, b)
 

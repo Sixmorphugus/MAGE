@@ -1,5 +1,5 @@
 #include "collisionBox.h"
-#include "platform.h"
+#include "transformableObject.h"
 
 using namespace mage;
 
@@ -22,20 +22,32 @@ floatBox collisionBox::getTransformed() const
 	}
 
 	return floatBox(
-		point2f(m_owner->getPosition().x + (m_owner->getScale().x *m_base.position.x),
+		pointF(m_owner->getPosition().x + (m_owner->getScale().x *m_base.position.x),
 		m_owner->getPosition().y + (m_owner->getScale().y * m_base.position.y)),
-		point2f(m_owner->getScale().x * m_base.size.x,
+		pointF(m_owner->getScale().x * m_base.size.x,
 		m_owner->getScale().y * m_base.size.y)
 	);
 }
 
-floatBox mage::collisionBox::getBase() const
+floatBox collisionBox::getBase() const
 {
 	return m_base;
 }
 
-void mage::collisionBox::setBase(floatBox rect)
+void collisionBox::setBase(floatBox rect)
 {
 	m_base = rect;
 	onChanged.notify(this);
 }
+
+#include "scriptingEngine.h"
+
+MAGE_DeclareScriptingType(collisionBox);
+MAGE_DeclareScriptingConstructor(collisionBox(), "collisionBox");
+MAGE_DeclareScriptingConstructor(collisionBox(floatBox), "collisionBox");
+MAGE_DeclareScriptingFunction(&collisionBox::getBase, "getBase");
+MAGE_DeclareScriptingFunction(&collisionBox::getTransformed, "getTransformed");
+MAGE_DeclareScriptingFunction(&collisionBox::onChanged, "onChanged");
+MAGE_DeclareScriptingFunction(&collisionBox::setBase, "setBase");
+
+MAGE_DeclareScriptingHook("collisionBoxHook", collisionBox*);

@@ -1,7 +1,3 @@
-#include "box.h"
-#include "box.h"
-#include "box.h"
-#include "box.h"
 namespace mage {
 	template<typename T>
 	inline box<T>::box()
@@ -18,7 +14,7 @@ namespace mage {
 	}
 
 	template<typename T>
-	inline box<T>::box(point2<T> corner1OrPosition, point2<T> corner2OrSize, boxInit inm)
+	inline box<T>::box(point<T> corner1OrPosition, point<T> corner2OrSize, boxInit inm)
 	{
 		if (inm == POSANDSIZE) {
 			position = corner1OrPosition;
@@ -37,8 +33,8 @@ namespace mage {
 			return;
 
 		// initialize with just the first values
-		point2<T> tlMost = point2<T>(fBoxes[0].left, fBoxes[0].top);
-		point2<T> brMost = point2<T>(fBoxes[0].left + fBoxes[0].width, fBoxes[0].top + fBoxes[0].height);
+		point<T> tlMost = point<T>(fBoxes[0].left, fBoxes[0].top);
+		point<T> brMost = point<T>(fBoxes[0].left + fBoxes[0].width, fBoxes[0].top + fBoxes[0].height);
 
 		for (unsigned int i = 1; i < fBoxes.size(); i++) {
 			sf::Vector2<T> tlCurrent = sf::Vector2<T>(fBoxes[i].left, fBoxes[i].top);
@@ -65,7 +61,7 @@ namespace mage {
 	}
 
 	template<typename T>
-	inline void box<T>::setCorner1(point2<T> p)
+	inline void box<T>::setCorner1(point<T> p)
 	{
 		// how much is the topLeft moving by?
 		auto movedBy = p - position;
@@ -76,38 +72,38 @@ namespace mage {
 	}
 
 	template<typename T>
-	inline void box<T>::setCorner2(point2<T> p)
+	inline void box<T>::setCorner2(point<T> p)
 	{
 		// set corner two minus corner one.
 		size = p - position;
 	}
 
 	template<typename T>
-	inline void box<T>::moveCorner1(point2<T> m)
+	inline void box<T>::moveCorner1(point<T> m)
 	{
 		setCorner1(position + m);
 	}
 
 	template<typename T>
-	inline void box<T>::moveCorner2(point2<T> m)
+	inline void box<T>::moveCorner2(point<T> m)
 	{
 		setCorner2(getSecondCorner() + m);
 	}
 
 	template<typename T>
-	inline point2<T> box<T>::getSecondCorner() const
+	inline point<T> box<T>::getSecondCorner() const
 	{
 		return position + size;
 	}
 
 	template<typename T>
-	inline void box<T>::scale(point2<T> scalar)
+	inline void box<T>::scale(point<T> scalar)
 	{
 		size *= scalar;
 	}
 
 	template<typename T>
-	inline bool box<T>::contains(point2<T>& pointIn) const
+	inline bool box<T>::contains(point<T>& pointIn) const
 	{
 		if (pointIn > position && pointIn < getSecondCorner())
 			return true;
@@ -151,24 +147,24 @@ namespace mage {
 	}
 
 	template<typename T>
-	inline point2<T> box<T>::clampedPoint(point2<T>& pointIn)
+	inline point<T> box<T>::clampedPoint(point<T>& pointIn)
 	{
 		auto sc = getSecondCorner();
 
-		return point2<T>(clamp(pointIn.x, position.x, sc.x),
+		return point<T>(clamp(pointIn.x, position.x, sc.x),
 			clamp(pointIn.y, position.y, sc.y));
 	}
 
 	template<typename T>
-	inline point2<T> box<T>::distanceToOuterEdge(point2<T>& pointIn)
+	inline point<T> box<T>::distanceToOuterEdge(point<T>& pointIn)
 	{
 		return clampedPoint(pointIn) - pointIn;
 	}
 
 	template<typename T>
-	inline point2<T> box<T>::distanceFromNearestEdge(point2<T> pointIn) const
+	inline point<T> box<T>::distanceFromNearestEdge(point<T> pointIn) const
 	{
-		return point2<T>();
+		return point<T>();
 	}
 
 	template<typename T>
@@ -180,28 +176,28 @@ namespace mage {
 	template<typename T>
 	inline box<T>& box<T>::operator*=(T rH)
 	{
-		scale(point2<T>(rH, rH));
+		scale(point<T>(rH, rH));
 		return *this;
 	}
 
 	template<typename T>
 	inline box<T>& box<T>::operator/=(T rH)
 	{
-		scale(point2<T>(1 / rH, 1 / rH));
+		scale(point<T>(1 / rH, 1 / rH));
 		return *this;
 	}
 
 	template<typename T>
-	inline box<T>& box<T>::operator*=(point2<T>& rH)
+	inline box<T>& box<T>::operator*=(point<T>& rH)
 	{
 		scale(rH);
 		return *this;
 	}
 
 	template<typename T>
-	inline box<T>& box<T>::operator/=(point2<T>& rH)
+	inline box<T>& box<T>::operator/=(point<T>& rH)
 	{
-		scale(point2<T>(1, 1) / rH);
+		scale(point<T>(1, 1) / rH);
 		return *this;
 	}
 
@@ -224,7 +220,7 @@ namespace mage {
 	}
 
 	template<typename T>
-	inline box<T> box<T>::operator*(point2<T>& rH)
+	inline box<T> box<T>::operator*(point<T>& rH)
 	{
 		box<T> newBox(*this);
 		newBox *= rH;
@@ -233,7 +229,7 @@ namespace mage {
 	}
 
 	template<typename T>
-	inline box<T> box<T>::operator/(point2<T>& rH)
+	inline box<T> box<T>::operator/(point<T>& rH)
 	{
 		box<T> newBox(*this);
 		newBox /= rH;

@@ -10,10 +10,14 @@
 // Script-Accessable: Yes
 // -------------
 
-#include "transformable.h"
+#include "point.h"
 #include "box.h"
+#include "hook.h"
 
 namespace mage {
+
+class transformableObject;
+
 class MAGEDLL collisionBox {
 public:
 	collisionBox();
@@ -29,8 +33,9 @@ public:
 
 private:
 	floatBox m_base;
-	transformable* m_owner;
-	friend class transformable;
+
+	transformableObject* m_owner;
+	friend class transformableObject;
 };
 
 }

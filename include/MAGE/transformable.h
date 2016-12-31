@@ -12,39 +12,36 @@
 // -------------
 
 #include "point.h"
-#include "hook.h"
+#include "hookableLifetimeObject.h"
 
 namespace mage {
 
-class MAGEDLL transformable : private sf::Transformable {
+class MAGEDLL transformable : public hookableLifetimeObject {
 public:
 	transformable();
-	transformable(const point2f& position);
+	transformable(const pointF& position);
 
 	// SFML replacers
-	point2f getPosition() const;
-	point2f getAnchor() const;
-	point2f getScale() const;
+	pointF getPosition() const;
+	pointF getAnchor() const;
+	pointF getScale() const;
 	float getRotation() const;
 
-	void setPosition(point2f& position);
-	void setAnchor(point2f& origin);
-	void setScale(point2f& origin);
+	void setPosition(pointF& position);
+	void setAnchor(pointF& origin);
+	void setScale(pointF& origin);
 	void setRotation(float rot);
 
-	void move(point2f& offset);
-	void shiftAnchor(point2f& offset);
-	void rotate(float offset);
-	void scale(point2f& scalar);
+	void move(pointF& offset);
+	void shiftAnchor(pointF& offset);
+	void rotate(float rot);
+	void scale(pointF& scalar);
 
 	// additional functions
-	point2f getRealPosition();
+	pointF getRealPosition();
+	void setRealPosition(pointF p);
 
-	void setRealPosition(point2f p);
-
-	// sfml converters
-	sf::Transform getSfTransform();
-	sf::Transform getSfInverseTransform();
+	void pixelLock();
 
 public:
 	// hooks
@@ -54,6 +51,10 @@ public:
 	hook<transformable*> onAnchored;
 
 	hook<transformable*> onTransformed;
+
+private:
+	float m_rotation; // objects in MAGE can only be rotated on one axis because we're still rendering sprites - 3D stuff simply isn't doable here
+	pointF m_position, m_anchor, m_scale;
 };
 
 }

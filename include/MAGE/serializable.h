@@ -1,14 +1,21 @@
 #pragma once
-#include "StdAfx.h"
 
-namespace mage {
-
+// mage::serializable
+// -------------
 // a serializable is an object that can save its state and reload it later.
 // a serializable is NOT an object that can save its state and be entirely reconstructed from
 // the saved state later.
-
 // this is why you cannot save an object to a file and have it be a prefab.
 // you CAN save a prefab to a file, though (as of build 366)
+// -------------
+// Category: Core
+// Has Hooks: No
+// Script-Accessable: Yes, but uninstantiable.
+// -------------
+
+#include "StdAfx.h"
+
+namespace mage {
 
 class MAGEDLL serializable {
 public:

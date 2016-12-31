@@ -1,3 +1,13 @@
+// mage platform include
+// -------------
+// Automatically deduces the compiler's platform and settings.
+// Also defines MAGEDLL, which means "export this function/class to modules".
+// -------------
+// Category: Core
+// Has Hooks: N/A
+// Script-Accessable: N/A
+// -------------
+
 #if defined(_MSC_VER)
 #define MAGE_PLATFORM_WINDOWS // MSC only runs on windows
 #define MAGE_PLATFORM_STRING std::string("Windows")

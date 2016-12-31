@@ -1,9 +1,19 @@
 #pragma once
+
+// mage::scriptingEngine
+// -------------
+// An encapsulation of the chaiscript scripting engine.
+// A modular object that handles the global scripting context.
+// This file also provides black magic macros for registration of scripting classes and functions.
+// -------------
+// Category: Core
+// Has Hooks: No
+// Script-Accessable: No
+// -------------
+
 #include "StdAfx.h"
 #include "SfmlAfx.h"
-
-#include <chaiscript/chaiscript.hpp>
-#include <chaiscript/chaiscript_stdlib.hpp>
+#include "ChaiAfx.h"
 
 #include "helperMacros.h"
 #include "hook.h"
@@ -40,7 +50,6 @@ public:
 	void whatIs(chaiscript::Boxed_Value* in);
 public:
 	chaiscript::ChaiScript* chai;
-	hook<scriptingEngine*> onBind;
 
 private:
 	void bindSFML();

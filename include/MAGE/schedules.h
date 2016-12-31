@@ -1,16 +1,22 @@
 #pragma once
+
+// mage::scheduler
+// -------------
+// A scheduler is used for animation tasks.
+// All tasks CAN take a function that has no arguments and returns a boolean, to verify whether they should keep running, but don't have to
+// Tasks take the form of different things.
+// -------------
+// Category: Maths
+// Has Hooks: Yes
+// Script-Accessable: Yes
+// -------------
+
 #include "StdAfx.h"
 #include "SfmlAfx.h"
 
 #include "hook.h"
 
 namespace mage {
-
-/*
-The SCHEDULER is used for global animation tasks.
-All tasks CAN take a function that has no arguments and returns a boolean, to verify whether they should keep running, but don't have to
-Tasks take the form of different things.
-*/
 
 // you can instantiate the default task but it will go on forever and does nothing.
 // if you want to do something interesting, however, you can use the HOOKS to make a custom task with its own behavior.
@@ -20,7 +26,7 @@ public:
 	schedule(std::function<bool()> stopCond);
 
 	virtual void start(); // Starts the task, called when the task is given to a scheduler.
-	virtual void end(); // Ends the task, called either manually to cancel the task or by update() when the task thinks it is finished.
+	virtual void end(); // Ends the task, called either manually to cancel the task or by run() when the task thinks it is finished.
 	virtual void run(); // continues the task as it runs
 
 	void update();
@@ -45,7 +51,7 @@ class MAGEDLL scheduleMngr {
 public:
 	scheduleMngr();
 
-	std::shared_ptr<schedule> add(std::shared_ptr<schedule> input);
+	unsigned int add(std::shared_ptr<schedule> input);
 
 	int indexOf(std::shared_ptr<schedule> in);
 

@@ -1,7 +1,18 @@
 #pragma once
+
+// mage:: maths functions
+// -------------
+// bunch of templated maths functions for doing things the C++ stdlib doesn't define.
+// -------------
+// Category: Maths
+// Has Hooks: No
+// Script-Accessable: Yes
+// -------------
+
 #include "SfmlAfx.h"
 #include "StdAfx.h"
 #include "platformDeduction.h"
+#include "point.h"
 
 namespace mage {
 

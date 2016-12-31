@@ -1,9 +1,14 @@
 
-                 renderable        -> multiSprite -> |
-serializable  -> propertiesObject  -> v              v
-transformable -> massTransformable -> gmoBase      -> gmoSprited
-                                                   -> gmoZone
-									  scene        -> gmoComposite
+transformable  -> v
+renderable     -> sprite            
+
+                  transformable       -> v
+                  renderable          -> multiSprite  -> |
+									                     |
+serializable#  -> propertiesObject    -> v               v
+transformable# -> transformableObject -> gmoBase      -> gmoSprited
+                                                      -> gmoZone
+									     scene        -> gmoComposite
 									  
 * Not all objects are renderable any more.
 

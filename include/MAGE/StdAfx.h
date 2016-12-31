@@ -1,6 +1,14 @@
 #pragma once
 
-// because lazy
+// mage Std Includes
+// -------------
+// Everything MAGE needs from the C++ standard library.
+// -------------
+// Category: Core
+// Has Hooks: N/A
+// Script-Accessable: N/A
+// -------------
+
 #include "platformDeduction.h"
 
 // STDLIB
@@ -20,3 +28,4 @@
 #include <type_traits>
 #include <memory>
 #include <regex>
+#include <numeric>

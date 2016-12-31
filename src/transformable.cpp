@@ -2,67 +2,74 @@
 
 using namespace mage;
 
-point2f mage::transformable::getPosition() const
+mage::transformable::transformable()
 {
-	return point2f(sf::Transformable::getPosition());
 }
 
-point2f mage::transformable::getAnchor() const
+mage::transformable::transformable(const pointF & position)
 {
-	return point2f(sf::Transformable::getOrigin());
+	m_position = position;
 }
 
-point2f mage::transformable::getScale() const
+pointF mage::transformable::getPosition() const
 {
-	return point2f(sf::Transformable::getScale());
+	return m_position;
+}
+
+pointF mage::transformable::getAnchor() const
+{
+	return m_anchor;
+}
+
+pointF mage::transformable::getScale() const
+{
+	return m_scale;
 }
 
 float mage::transformable::getRotation() const
 {
-	return sf::Transformable::getRotation();
+	return m_rotation;
 }
 
-void mage::transformable::setPosition(point2f & position)
+void mage::transformable::setPosition(pointF & position)
 {
+	m_position = position;
+
 	onTransformed.notify(this);
 	onMoved.notify(this);
-
-	sf::Transformable::setPosition(position.toSf());
 }
 
-void mage::transformable::setAnchor(point2f & origin)
+void mage::transformable::setAnchor(pointF & origin)
 {
+	m_anchor = origin;
+
 	onTransformed.notify(this);
 	onAnchored.notify(this);
-
-	sf::Transformable::setOrigin(origin.toSf());
 }
 
-void mage::transformable::setScale(point2f & sc)
+void mage::transformable::setScale(pointF & sc)
 {
+	m_scale = sc;
+
 	onTransformed.notify(this);
 	onScaled.notify(this);
-
-	sf::Transformable::setScale(sc.toSf());
 }
 
 void mage::transformable::setRotation(float rot)
 {
+	m_rotation = rot;
+
 	onTransformed.notify(this);
 	onRotated.notify(this);
-
-	sf::Transformable::setRotation(rot);
 }
 
-void mage::transformable::move(point2f & offset)
+void mage::transformable::move(pointF & offset)
 {
-	sf::Transformable::move(offset.toSf());
-
-	onTransformed.notify(this);
-	onMoved.notify(this);
+	auto cur = getPosition();
+	setPosition(cur + offset);
 }
 
-void mage::transformable::shiftAnchor(point2f & offset)
+void mage::transformable::shiftAnchor(pointF & offset)
 {
 	// not a default SFML thing
 	auto curAnchor = getAnchor();
@@ -71,38 +78,33 @@ void mage::transformable::shiftAnchor(point2f & offset)
 
 void mage::transformable::rotate(float offset)
 {
-	sf::Transformable::rotate(offset);
-
-	onTransformed.notify(this);
-	onRotated.notify(this);
+	auto cur = getRotation();
+	setRotation(cur + offset);
 }
 
-void mage::transformable::scale(point2f & scalar)
+void mage::transformable::scale(pointF & scalar)
 {
-	sf::Transformable::scale(scalar.toSf());
-
-	onTransformed.notify(this);
-	onScaled.notify(this);
+	auto cur = getScale();
+	setAnchor(cur + scalar);
 }
 
-point2f mage::transformable::getRealPosition()
+pointF mage::transformable::getRealPosition()
 {
 	return getPosition() - sf::Vector2f(getAnchor().x * getScale().x, getAnchor().y * getScale().y);
 }
 
-void mage::transformable::setRealPosition(point2f p)
+void mage::transformable::setRealPosition(pointF p)
 {
 	setPosition(p + getAnchor());
 }
 
-sf::Transform mage::transformable::getSfTransform()
+void mage::transformable::pixelLock()
 {
-	return getTransform();
-}
+	setPosition(getPosition().floor());
+	setAnchor(getAnchor().floor());
 
-sf::Transform mage::transformable::getSfInverseTransform()
-{
-	return getInverseTransform();
+	setScale(pointF(1.f, 1.f));
+	setRotation(0.f);
 }
 
 // SE
@@ -110,7 +112,7 @@ sf::Transform mage::transformable::getSfInverseTransform()
 
 MAGE_DeclareScriptingType(transformable);
 MAGE_DeclareScriptingConstructor(transformable(), "transformable");
-MAGE_DeclareScriptingConstructor(transformable(const point2f& p), "transformable");
+MAGE_DeclareScriptingConstructor(transformable(const pointF& p), "transformable");
 MAGE_DeclareScriptingConstructor(transformable(const transformable& p), "transformable");
 MAGE_DeclareScriptingCopyOperator(transformable);
 MAGE_DeclareScriptingFunction(&transformable::getAnchor, "getAnchor");
@@ -118,8 +120,6 @@ MAGE_DeclareScriptingFunction(&transformable::getPosition, "getPosition");
 MAGE_DeclareScriptingFunction(&transformable::getRealPosition, "getRealPosition");
 MAGE_DeclareScriptingFunction(&transformable::getRotation, "getRotation");
 MAGE_DeclareScriptingFunction(&transformable::getScale, "getScale");
-MAGE_DeclareScriptingFunction(&transformable::getSfInverseTransform, "getSfInverseTransform");
-MAGE_DeclareScriptingFunction(&transformable::getSfTransform, "getSfTransform");
 MAGE_DeclareScriptingFunction(&transformable::move, "move");
 MAGE_DeclareScriptingFunction(&transformable::rotate, "rotate");
 MAGE_DeclareScriptingFunction(&transformable::scale, "scale");
