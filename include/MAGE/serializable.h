@@ -17,6 +17,7 @@
 
 namespace mage {
 
+// note: this class is not const-correct. You cannot serialize a const object.
 class MAGEDLL serializable {
 public:
 	serializable();

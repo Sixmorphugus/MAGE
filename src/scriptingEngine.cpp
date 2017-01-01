@@ -127,13 +127,20 @@ void scriptingEngine::dump(chaiscript::Boxed_Value* in)
 		p::log("C++ Class: " + in->get_type_info().bare_name());
 	}
 
+	std::vector<chaiscript::Type_Info> bases = getUpTypes(in->get_type_info());
+
 	p::log("Registered functions and members:");
 	for (auto m = s.m_functions.begin(); m != s.m_functions.end(); m++) {
-		if (in) {
-			auto ourType = in->get_type_info();
+		p::log(m->first + " (" + std::to_string((m->second.get()->size())) + " overloads)");
 
-			bool displayIt = false;
-			for (auto o = m->second.get()->begin(); o != m->second.get()->end(); o++) {
+		for (auto o = m->second.get()->begin(); o != m->second.get()->end(); o++) {
+			auto f = o->get();
+
+			if (in) {
+				auto ourType = in->get_type_info();
+
+				bool displayIt = false;
+
 				if (o->get()->get_param_types().size() < 2)
 					continue;
 
@@ -142,16 +149,13 @@ void scriptingEngine::dump(chaiscript::Boxed_Value* in)
 				if (ourType == funcType) {
 					displayIt = true;
 				}
+
+				for (unsigned int b = 0; b < bases.size(); b++) {
+					if (bases[b] == funcType) {
+						displayIt = true;
+					}
+				}
 			}
-
-			if (!displayIt)
-				continue;
-		}
-
-		p::log(m->first + " (" + std::to_string((m->second.get()->size())) + " overloads)");
-
-		for (auto o = m->second.get()->begin(); o != m->second.get()->end(); o++) {
-			auto f = o->get();
 
 			std::string name = f->get_param_types()[0].bare_name();
 			std::string n = "[C++] " + name;
@@ -213,6 +217,90 @@ void scriptingEngine::whatIs(chaiscript::Boxed_Value * in)
 	}
 }
 
+chaiscript::Boxed_Value mage::scriptingEngine::trueForm(chaiscript::Boxed_Value& baseForm)
+{
+	// they said I was mad
+	// they said it couldn't be done
+	// here it is.
+
+	auto convs = getDownConversions(baseForm.get_type_info());
+
+	// try each conversion
+	// if one is successful, run this function again on the returned box value before breaking out
+
+	for (unsigned int i = 0; i < convs.size(); i++) {
+		try {
+			auto result = convs[i]->convert_down(baseForm);
+
+			if (!result.is_null()) { // not sure if this is needed - no harm in checking
+				return trueForm(result);
+			}
+		}
+		catch (std::bad_cast &e) {
+			// we expect several of these so ignore them all.
+		}
+	}
+
+	return baseForm;
+}
+
+std::vector<chaiscript::Type_Info> mage::scriptingEngine::getUpTypes(const chaiscript::Type_Info& of) const
+{
+	std::vector<Type_Info> upTypes;
+	auto upConvs = getUpConversions(of);
+
+	for (unsigned int i = 0; i < upConvs.size(); i++) {
+		upTypes.push_back(upConvs[i]->to);
+	}
+
+	return upTypes;
+}
+
+std::vector<chaiscript::Type_Info> mage::scriptingEngine::getDownTypes(const chaiscript::Type_Info& of) const
+{
+	std::vector<Type_Info> upTypes;
+	auto upConvs = getDownConversions(of);
+
+	for (unsigned int i = 0; i < upConvs.size(); i++) {
+		upTypes.push_back(upConvs[i]->from);
+	}
+
+	return upTypes;
+}
+
+std::vector<chaiscript::Type_Conversion> mage::scriptingEngine::getConversions(const chaiscript::Type_Info & of) const
+{
+	std::vector<chaiscript::Type_Conversion> list;
+
+	for (unsigned int i = 0; i < knownTypeConversions.size(); i++) {
+		if (knownTypeConversions[i]->from == of || (knownTypeConversions[i]->to == of && knownTypeConversions[i]->bidir())) {
+			list.push_back(knownTypeConversions[i]);
+		}
+	}
+}
+
+std::vector<chaiscript::Type_Conversion> mage::scriptingEngine::getUpConversions(const chaiscript::Type_Info & of) const
+{
+	std::vector<chaiscript::Type_Conversion> list;
+
+	for (unsigned int i = 0; i < knownTypeConversions.size(); i++) {
+		if (knownTypeConversions[i]->from == of) {
+			list.push_back(knownTypeConversions[i]);
+		}
+	}
+}
+
+std::vector<chaiscript::Type_Conversion> mage::scriptingEngine::getDownConversions(const chaiscript::Type_Info & of) const
+{
+	std::vector<chaiscript::Type_Conversion> list;
+
+	for (unsigned int i = 0; i < knownTypeConversions.size(); i++) {
+		if (knownTypeConversions[i]->to == of && knownTypeConversions[i]->bidir()) {
+			list.push_back(knownTypeConversions[i]);
+		}
+	}
+}
+
 // -------------------------------------------------------------
 // FUNCTIONS
 // -------------------------------------------------------------
@@ -249,10 +337,10 @@ namespace mage {
 }
 
 MAGE_DeclareScriptingListable(int);
-MAGE_DeclareScriptingListableNamed(unsigned int, "uIntVector");
+MAGE_DeclareScriptingListable(unsigned int);
 MAGE_DeclareScriptingListable(float);
 MAGE_DeclareScriptingListable(bool);
 
-MAGE_DeclareScriptingListableNamed(sf::IntRect, "intRectVector");
-MAGE_DeclareScriptingListableNamed(sf::FloatRect, "floatRectVector");
-MAGE_DeclareScriptingListableNamed(std::string, "stringVector");
+MAGE_DeclareScriptingListable(sf::IntRect);
+MAGE_DeclareScriptingListable(sf::FloatRect);
+MAGE_DeclareScriptingListable(std::string);

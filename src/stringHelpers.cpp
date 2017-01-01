@@ -156,6 +156,11 @@ std::string removeWhitespace(std::string in)
 	return in;
 }
 
+MAGEDLL std::string fixChaiName(std::string in)
+{
+	return strFilter(strReplace(in, " ", "_"), ":");
+}
+
 }
 
 // SE

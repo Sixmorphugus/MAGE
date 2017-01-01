@@ -14,6 +14,7 @@ using namespace mage;
 using namespace chaiscript;
 
 ModulePtr sePreBoundObjects;
+std::vector<Type_Conversion> sePreBoundKnownTypeConversions;
 
 void sePreBoundCreatedCheck() {
 	if (sePreBoundObjects.get() == nullptr) {
@@ -46,6 +47,7 @@ seScriptingEngineRegistration::seScriptingEngineRegistration(Type_Conversion d)
 {
 	sePreBoundCreatedCheck();
 	sePreBoundObjects->add(d);
+	sePreBoundKnownTypeConversions.push_back(d);
 }
 
 seScriptingEngineRegistration::seScriptingEngineRegistration(Proxy_Function f, std::string name)
@@ -106,6 +108,9 @@ void scriptingEngine::bindMAGE()
 	// Object bindings registered before main() in the memory.
 	chai->add(sePreBoundObjects);
 
+	// knowing all possible type conversions means we can do some crazy shit later on
+	knownTypeConversions = sePreBoundKnownTypeConversions;
+
 	// platform.h
 	chai->add(fun(&platform::clearConsoleInput), "clearConsoleInput");
 	chai->add(fun(&platform::fileDelete), "fileDelete");
@@ -139,6 +144,7 @@ void scriptingEngine::bindMAGE()
 	chai->add(fun([&]() { theGame()->scripting->dump(); }), "dump");
 	chai->add(fun([&](Boxed_Value& input) { theGame()->scripting->dump(&input); }), "dump");
 	chai->add(fun([&](Boxed_Value& input) { theGame()->scripting->whatIs(&input); }), "whatIs");
+	chai->add(fun([&](Boxed_Value& input) { return theGame()->scripting->trueForm(input); }), "trueForm");
 	chai->add(fun([&]() { theGame()->getRenderWindow().close(); }), "quit");
 
 	chai->add(fun([&](int fpsl) { theGame()->setFramerateLimit(fpsl); }), "setFramerateLimit");

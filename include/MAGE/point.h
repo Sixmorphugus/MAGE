@@ -14,6 +14,8 @@
 #include "StdAfx.h"
 #include "SfmlAfx.h"
 
+#include "stringHelpers.h"
+
 namespace mage {
 
 template<typename T> class point {
@@ -23,6 +25,7 @@ public:
 	point(T angle2D);
 	point(const sf::Vector2<T>& in);
 	point(const sf::Vector3<T>& in);
+	point(std::string& in);
 
 	// the implicit copy operators and operator= are fine.
 
@@ -61,6 +64,9 @@ public:
 	sf::Vector2<T> toSf2() const;
 	sf::Vector3<T> toSf3() const;
 
+	// conversion to string
+	std::string toString() const;
+
 public:
 	T x, y, z;
 };
@@ -80,6 +86,7 @@ MAGE_DeclareScriptingConstructor(mage::point<type>(), name);\
 MAGE_DeclareScriptingConstructor(mage::point<type>(type), name);\
 MAGE_DeclareScriptingConstructor(mage::point<type>(type, type), name);\
 MAGE_DeclareScriptingConstructor(mage::point<type>(mage::point<type>&), name);\
+MAGE_DeclareScriptingConstructor(mage::point<type>(std::string), name);\
 MAGE_DeclareScriptingFunction(&mage::point<type>::ceil, "ceil");\
 MAGE_DeclareScriptingFunction(&mage::point<type>::floor, "floor");\
 MAGE_DeclareScriptingFunction(&mage::point<type>::getAngle2DTo, "getAngle2DTo");\

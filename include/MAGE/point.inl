@@ -48,7 +48,23 @@ namespace mage {
 	}
 
 	template<typename T>
-	inline point & point<T>::operator+=(const point<T>& rhs)
+	inline point<T>::point(std::string & in)
+	{
+		auto split = splitString(in);
+
+		if (split.size() > 0) {
+			x = atof(split[0]);
+		}
+		if (split.size() > 1) {
+			y = atof(split[1]);
+		}
+		if (split.size() > 2) {
+			z = atof(split[2]);
+		}
+	}
+
+	template<typename T>
+	inline point<T> & point<T>::operator+=(const point<T>& rhs)
 	{
 		x += rhs.x;
 		y += rhs.y;
@@ -58,7 +74,7 @@ namespace mage {
 	}
 
 	template<typename T>
-	inline point & point<T>::operator-=(const point<T>& rhs)
+	inline point<T> & point<T>::operator-=(const point<T>& rhs)
 	{
 		x -= rhs.x;
 		y -= rhs.y;
@@ -68,7 +84,7 @@ namespace mage {
 	}
 
 	template<typename T>
-	inline point & point<T>::operator*=(const point<T>& rhs)
+	inline point<T> & point<T>::operator*=(const point<T>& rhs)
 	{
 		x *= rhs.x;
 		y *= rhs.y;
@@ -78,18 +94,23 @@ namespace mage {
 	}
 
 	template<typename T>
-	inline point & point<T>::operator/=(const point<T>& rhs)
+	inline point<T> & point<T>::operator/=(const point<T>& rhs)
 	{
 		// ignore attempts to devide by 0
-		if (rhs.x != 0) x /= rhs.x;
-		if (rhs.y != 0) y /= rhs.y;
-		if (rhs.z != 0) z /= rhs.z;
+		if (rhs.x != 0)
+			x /= rhs.x;
+
+		if (rhs.y != 0)
+			y /= rhs.y;
+
+		if (rhs.z != 0)
+			z /= rhs.z;
 
 		return *this;
 	}
 
 	template<typename T>
-	inline point & point<T>::operator*=(const T rhs)
+	inline point<T> & point<T>::operator*=(const T rhs)
 	{
 		x *= rhs;
 		y *= rhs;
@@ -99,11 +120,11 @@ namespace mage {
 	}
 
 	template<typename T>
-	inline point & point<T>::operator/=(const T rhs)
+	inline point<T> & point<T>::operator/=(const T rhs)
 	{
-		if (rhs == 0) { // ignore attempts to devide by 0
+		// ignore attempts to devide by 0
+		if (rhs == 0)
 			return *this;
-		}
 
 		x /= rhs;
 		y /= rhs;
@@ -113,7 +134,7 @@ namespace mage {
 	}
 
 	template<typename T>
-	inline point mage::point<T>::operator+(const point<T>& rhs)
+	inline point<T> point<T>::operator+(const point<T>& rhs)
 	{
 		point<T> newPt(*this);
 		newPt += rhs;
@@ -122,7 +143,7 @@ namespace mage {
 	}
 
 	template<typename T>
-	inline point mage::point<T>::operator-(const point<T>& rhs)
+	inline point<T> point<T>::operator-(const point<T>& rhs)
 	{
 		point<T> newPt(*this);
 		newPt -= rhs;
@@ -131,7 +152,7 @@ namespace mage {
 	}
 
 	template<typename T>
-	inline point mage::point<T>::operator*(const point<T>& rhs)
+	inline point<T> point<T>::operator*(const point<T>& rhs)
 	{
 		point<T> newPt(*this);
 		newPt *= rhs;
@@ -140,7 +161,7 @@ namespace mage {
 	}
 
 	template<typename T>
-	inline point mage::point<T>::operator/(const point<T>& rhs)
+	inline point<T> point<T>::operator/(const point<T>& rhs)
 	{
 		point<T> newPt(*this);
 		newPt /= rhs;
@@ -149,7 +170,7 @@ namespace mage {
 	}
 
 	template<typename T>
-	inline point mage::point<T>::operator*(const T rhs)
+	inline point<T> point<T>::operator*(const T rhs)
 	{
 		point<T> newPt(*this);
 		newPt *= rhs;
@@ -158,7 +179,7 @@ namespace mage {
 	}
 
 	template<typename T>
-	inline point mage::point<T>::operator/(const T rhs)
+	inline point<T> point<T>::operator/(const T rhs)
 	{
 		point<T> newPt(*this);
 		newPt /= rhs;
@@ -167,13 +188,13 @@ namespace mage {
 	}
 
 	template<typename T>
-	inline bool mage::point<T>::operator==(const point<T>& rhs) const
+	inline bool point<T>::operator==(const point<T>& rhs) const
 	{
 		return (x == rhs.x && y == rhs.y && z == rhs.z);
 	}
 
 	template<typename T>
-	inline bool mage::point<T>::operator!=(const point<T>& rhs) const
+	inline bool point<T>::operator!=(const point<T>& rhs) const
 	{
 		return !(*this == rhs);
 	}
@@ -228,7 +249,7 @@ namespace mage {
 	}
 
 	template<typename T>
-	inline T mage::point<T>::getCross(point<T>& v2) const
+	inline T point<T>::getCross(point<T>& v2) const
 	{
 		return (x + y + z) * (v2.x + v2.y + v2.z);
 	}
@@ -241,5 +262,10 @@ namespace mage {
 	inline sf::Vector3<T> point<T>::toSf3() const
 	{
 		return sf::Vector3<T>(x, y, z);
+	}
+	template<typename T>
+	inline std::string point<T>::toString() const
+	{
+		return std::to_string(x) + " " + std::to_string(y) + " " + std::to_string(z);
 	}
 }

@@ -16,6 +16,7 @@
 #include "ChaiAfx.h"
 
 #include "helperMacros.h"
+#include "stringHelpers.h"
 #include "hook.h"
 
 // temporary - chaiscript wrongfully triggers 4503
@@ -48,8 +49,19 @@ public:
 	chaiscript::Boxed_Value eval(std::string in);
 	void dump(chaiscript::Boxed_Value* in = nullptr);
 	void whatIs(chaiscript::Boxed_Value* in);
+
+	chaiscript::Boxed_Value trueForm(chaiscript::Boxed_Value& baseForm);
+
+	std::vector<chaiscript::Type_Info> getUpTypes(const chaiscript::Type_Info& of) const;
+	std::vector<chaiscript::Type_Info> getDownTypes(const chaiscript::Type_Info& of) const;
+
+	std::vector<chaiscript::Type_Conversion> getConversions(const chaiscript::Type_Info& of) const;
+	std::vector<chaiscript::Type_Conversion> getUpConversions(const chaiscript::Type_Info& of) const;
+	std::vector<chaiscript::Type_Conversion> getDownConversions(const chaiscript::Type_Info& of) const;
+
 public:
 	chaiscript::ChaiScript* chai;
+	std::vector<chaiscript::Type_Conversion> knownTypeConversions;
 
 private:
 	void bindSFML();
@@ -90,7 +102,7 @@ MAGEDLL chaiscript::Module& seGetStartupModule();
 #define MAGE_DeclareScriptingCopyOperator(obj) MAGE_DeclareScriptingCustom(chaiscript::fun([](obj &o1, obj o2) { o1 = o2; }), "=");
 #define MAGE_DeclareScriptingNamed(arg, name) MAGE_DeclareScriptingCustom(arg, name);
 #define MAGE_DeclareScriptingBaseClass(base, derived) MAGE_DeclareScriptingCustom(chaiscript::base_class<base, derived>());
-#define MAGE_DeclareScriptingType(arg) MAGE_DeclareScriptingCustom(chaiscript::user_type<arg>(), STRING(arg));
+#define MAGE_DeclareScriptingType(arg) MAGE_DeclareScriptingCustom(chaiscript::user_type<arg>(), mage::fixChaiName(STRING(arg)));
 #define MAGE_DeclareScriptingTypeNamed(arg, name) MAGE_DeclareScriptingCustom(chaiscript::user_type<arg>(), name);
 #define MAGE_DeclareScriptingFunction(arg, name) MAGE_DeclareScriptingCustom(chaiscript::fun(arg), name);
 #define MAGE_DeclareScriptingConstructor(arg, name) MAGE_DeclareScriptingCustom(chaiscript::constructor<arg>(), name);
@@ -102,6 +114,6 @@ MAGEDLL chaiscript::Module& seGetStartupModule();
 MAGE_DeclareScriptingCustom(chaiscript::vector_conversion<std::vector<type>>());
 
 #define MAGE_DeclareScriptingListableShared(type, name) MAGE_DeclareScriptingListableNamed(std::shared_ptr<type>, name);
-#define MAGE_DeclareScriptingListable(type) MAGE_DeclareScriptingListableNamed(type, STRING(type) "Vector")
+#define MAGE_DeclareScriptingListable(type) MAGE_DeclareScriptingListableNamed(type, mage::fixChaiName(STRING(type)) + "Vector")
 
 #define BIND_COPY_OPERATOR(obj) chai->add(fun([&](obj &o1, obj o2) { o1 = o2; }), "="); // internal legacy system use only
