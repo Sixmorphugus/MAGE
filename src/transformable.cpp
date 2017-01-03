@@ -2,36 +2,36 @@
 
 using namespace mage;
 
-mage::transformable::transformable()
+transformable::transformable()
 {
 }
 
-mage::transformable::transformable(const pointF & position)
+transformable::transformable(const pointF & position)
 {
 	m_position = position;
 }
 
-pointF mage::transformable::getPosition() const
+pointF transformable::getPosition() const
 {
 	return m_position;
 }
 
-pointF mage::transformable::getAnchor() const
+pointF transformable::getAnchor() const
 {
 	return m_anchor;
 }
 
-pointF mage::transformable::getScale() const
+pointF transformable::getScale() const
 {
 	return m_scale;
 }
 
-float mage::transformable::getRotation() const
+float transformable::getRotation() const
 {
 	return m_rotation;
 }
 
-void mage::transformable::setPosition(pointF & position)
+void transformable::setPosition(const pointF & position)
 {
 	m_position = position;
 
@@ -39,7 +39,7 @@ void mage::transformable::setPosition(pointF & position)
 	onMoved.notify(this);
 }
 
-void mage::transformable::setAnchor(pointF & origin)
+void transformable::setAnchor(const pointF & origin)
 {
 	m_anchor = origin;
 
@@ -47,7 +47,7 @@ void mage::transformable::setAnchor(pointF & origin)
 	onAnchored.notify(this);
 }
 
-void mage::transformable::setScale(pointF & sc)
+void transformable::setScale(const pointF & sc)
 {
 	m_scale = sc;
 
@@ -55,7 +55,7 @@ void mage::transformable::setScale(pointF & sc)
 	onScaled.notify(this);
 }
 
-void mage::transformable::setRotation(float rot)
+void transformable::setRotation(float rot)
 {
 	m_rotation = rot;
 
@@ -63,42 +63,42 @@ void mage::transformable::setRotation(float rot)
 	onRotated.notify(this);
 }
 
-void mage::transformable::move(pointF & offset)
+void transformable::move(const pointF & offset)
 {
 	auto cur = getPosition();
 	setPosition(cur + offset);
 }
 
-void mage::transformable::shiftAnchor(pointF & offset)
+void transformable::shiftAnchor(const pointF & offset)
 {
 	// not a default SFML thing
 	auto curAnchor = getAnchor();
 	setAnchor(curAnchor + offset);
 }
 
-void mage::transformable::rotate(float offset)
+void transformable::rotate(float offset)
 {
 	auto cur = getRotation();
 	setRotation(cur + offset);
 }
 
-void mage::transformable::scale(pointF & scalar)
+void transformable::scale(const pointF & scalar)
 {
 	auto cur = getScale();
 	setAnchor(cur + scalar);
 }
 
-pointF mage::transformable::getRealPosition()
+pointF transformable::getRealPosition()
 {
 	return getPosition() - sf::Vector2f(getAnchor().x * getScale().x, getAnchor().y * getScale().y);
 }
 
-void mage::transformable::setRealPosition(pointF p)
+void transformable::setRealPosition(pointF p)
 {
 	setPosition(p + getAnchor());
 }
 
-void mage::transformable::pixelLock()
+void transformable::pixelLock()
 {
 	setPosition(getPosition().floor());
 	setAnchor(getAnchor().floor());

@@ -242,6 +242,11 @@ chaiscript::Boxed_Value mage::scriptingEngine::trueForm(chaiscript::Boxed_Value&
 	}
 
 	return baseForm;
+
+	// NOTE:
+	// This can be an incredibly slow function to run.
+	// It is only fully usable from within the scripting engine.
+	// It should be your last resort, not your first.
 }
 
 std::vector<chaiscript::Type_Info> mage::scriptingEngine::getUpTypes(const chaiscript::Type_Info& of) const

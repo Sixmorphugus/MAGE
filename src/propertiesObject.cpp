@@ -2,25 +2,25 @@
 
 using namespace mage;
 
-propertiesObject::propBase::propBase(std::string name)
+propBase::propBase(std::string name)
 	: namable(name)
 {
 	m_dataInstance = nullptr;
 	m_whatIsThis = nullptr;
 }
 
-void propertiesObject::propBase::setHidden(bool hidden)
+void propBase::setHidden(bool hidden)
 {
 	m_hidden = hidden;
 	onSetHidden.notify(this);
 }
 
-bool mage::propertiesObject::propBase::isHidden() const
+bool propBase::isHidden() const
 {
 	return m_hidden;
 }
 
-const propertiesObject::propBase* propertiesObject::propBase::getDataInstance() const
+const mage::propBase* propBase::getDataInstance() const
 {
 	if (m_dataInstance)
 		return m_dataInstance;
@@ -53,7 +53,7 @@ unsigned int propertiesObject::getNumProperties() const
 	return m_props.size();
 }
 
-std::shared_ptr<propertiesObject::propBase> propertiesObject::getPropertyData(unsigned int prop) const
+std::shared_ptr<mage::propBase> propertiesObject::getPropertyData(unsigned int prop) const
 {
 	if (m_props.size() < prop) {
 		return nullptr;
@@ -63,7 +63,7 @@ std::shared_ptr<propertiesObject::propBase> propertiesObject::getPropertyData(un
 	return m_props[prop];
 }
 
-std::shared_ptr<propertiesObject::propBase> propertiesObject::getPropertyData(std::string prop) const
+std::shared_ptr<mage::propBase> propertiesObject::getPropertyData(std::string prop) const
 {
 	for (unsigned int i = 0; i < m_props.size(); i++) {
 		if (m_props[i]->getName() == prop) {
@@ -135,7 +135,7 @@ unsigned int propertiesObject::addProperty(std::shared_ptr<propBase> newProperty
 	unsigned int thisPropIndex = getNumProperties();
 	m_props.push_back(newProperty);
 
-	onRemoveProperty.notify(this, thisPropIndex);
+	onAddProperty.notify(this, thisPropIndex);
 
 	return thisPropIndex;
 }
@@ -160,29 +160,28 @@ void propertiesObject::safetyListCleanup()
 #include "scriptingEngine.h"
 using namespace chaiscript;
 
-MAGE_DeclareScriptingTypeNamed(propertiesObject::propBase, "propertiesObjectProperty");
-MAGE_DeclareScriptingBaseClass(namable, propertiesObject::propBase);
-MAGE_DeclareScriptingFunction(&propertiesObject::propBase::getName, "getName");
-MAGE_DeclareScriptingFunction(&propertiesObject::propBase::getTypeInfo, "getTypeInfo");
-MAGE_DeclareScriptingFunction(&propertiesObject::propBase::instPropStringGet, "instPropStringGet");
-MAGE_DeclareScriptingFunction(&propertiesObject::propBase::instPropStringSet, "instPropStringSet");
-MAGE_DeclareScriptingFunction(&propertiesObject::propBase::isHidden, "isHidden");
-MAGE_DeclareScriptingFunction(&propertiesObject::propBase::isReadOnly, "isReadOnly");
-MAGE_DeclareScriptingFunction(&propertiesObject::propBase::setHidden, "setHidden");
-MAGE_DeclareScriptingFunction(&propertiesObject::propBase::onSetHidden, "onSetHidden");
+MAGE_DeclareScriptingTypeNamed(propBase, "propertiesObjectProperty");
+MAGE_DeclareScriptingBaseClass(namable, propBase);
+MAGE_DeclareScriptingFunction(&propBase::getName, "getName");
+MAGE_DeclareScriptingFunction(&propBase::getTypeInfo, "getTypeInfo");
+MAGE_DeclareScriptingFunction(&propBase::instPropStringGet, "instPropStringGet");
+MAGE_DeclareScriptingFunction(&propBase::instPropStringSet, "instPropStringSet");
+MAGE_DeclareScriptingFunction(&propBase::isHidden, "isHidden");
+MAGE_DeclareScriptingFunction(&propBase::isReadOnly, "isReadOnly");
+MAGE_DeclareScriptingFunction(&propBase::setHidden, "setHidden");
+MAGE_DeclareScriptingFunction(&propBase::onSetHidden, "onSetHidden");
 
-MAGE_DeclareScriptingHook("propertiesObjectPropertyHook", propertiesObject::propBase*);
+MAGE_DeclareScriptingHook("propertiesObjectPropertyHook", propBase*);
 
 MAGE_DeclareScriptingType(propertiesObject);
 MAGE_DeclareScriptingBaseClass(serializable, propertiesObject);
 MAGE_DeclareScriptingConstructor(propertiesObject(), "propertiesObject");
 MAGE_DeclareScriptingConstructor(propertiesObject(const propertiesObject&), "propertiesObject");
 MAGE_DeclareScriptingCopyOperator(propertiesObject);
-MAGE_DeclareScriptingFunction(&propertiesObject::addProperty, "addProperty");
 MAGE_DeclareScriptingFunction(&propertiesObject::deserialize, "deserialize");
 MAGE_DeclareScriptingFunction(&propertiesObject::getNumProperties, "getNumProperties");
-MAGE_DeclareScriptingCustom(fun<std::shared_ptr<propertiesObject::propBase>, propertiesObject, unsigned int>(&propertiesObject::getPropertyData), "getPropertyData");
-MAGE_DeclareScriptingCustom(fun<std::shared_ptr<propertiesObject::propBase>, propertiesObject, std::string>(&propertiesObject::getPropertyData), "getPropertyData");
+MAGE_DeclareScriptingCustom(fun<std::shared_ptr<propBase>, propertiesObject, unsigned int>(&propertiesObject::getPropertyData), "getPropertyData");
+MAGE_DeclareScriptingCustom(fun<std::shared_ptr<propBase>, propertiesObject, std::string>(&propertiesObject::getPropertyData), "getPropertyData");
 MAGE_DeclareScriptingFunction(&propertiesObject::getPropertyList, "getPropertyList");
 MAGE_DeclareScriptingFunction(&propertiesObject::indexOfProperty, "indexOfProperty");
 MAGE_DeclareScriptingFunction(&propertiesObject::onAddProperty, "onAddProperty");

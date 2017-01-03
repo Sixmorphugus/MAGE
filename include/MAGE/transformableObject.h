@@ -17,7 +17,7 @@
 
 namespace mage {
 
-class MAGEDLL transformableObject : public transformable {
+class MAGEDLL transformableObject : public virtual transformable {
 public:
 	// ctors (same as transformable)
 	transformableObject();

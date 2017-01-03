@@ -14,6 +14,7 @@
 namespace mage {
 
 class MAGEDLL hookableLifetimeObject {
+public:
 	hookableLifetimeObject();
 	~hookableLifetimeObject();
 

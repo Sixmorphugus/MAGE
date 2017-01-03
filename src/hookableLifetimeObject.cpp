@@ -7,7 +7,7 @@ hookableLifetimeObject::hookableLifetimeObject()
 	onCreated.notify(this);
 }
 
-mage::hookableLifetimeObject::~hookableLifetimeObject()
+hookableLifetimeObject::~hookableLifetimeObject()
 {
 	onDestroyed.notify(this);
 }

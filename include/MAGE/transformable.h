@@ -12,11 +12,11 @@
 // -------------
 
 #include "point.h"
-#include "hookableLifetimeObject.h"
+#include "hook.h"
 
 namespace mage {
 
-class MAGEDLL transformable : public hookableLifetimeObject {
+class MAGEDLL transformable {
 public:
 	transformable();
 	transformable(const pointF& position);
@@ -27,19 +27,19 @@ public:
 	pointF getScale() const;
 	float getRotation() const;
 
-	void setPosition(pointF& position);
-	void setAnchor(pointF& origin);
-	void setScale(pointF& origin);
+	void setPosition(const pointF& position);
+	void setAnchor(const pointF& origin);
+	void setScale(const pointF& origin);
 	void setRotation(float rot);
 
-	void move(pointF& offset);
-	void shiftAnchor(pointF& offset);
+	void move(const pointF& offset);
+	void shiftAnchor(const pointF& offset);
 	void rotate(float rot);
-	void scale(pointF& scalar);
+	void scale(const pointF& scalar);
 
 	// additional functions
 	pointF getRealPosition();
-	void setRealPosition(pointF p);
+	void setRealPosition(const pointF p);
 
 	void pixelLock();
 
