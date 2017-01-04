@@ -42,6 +42,9 @@ public:
 
 	void scale(point<T> scalar);
 
+	box<T> floor();
+	box<T> ceil();
+
 	// detection
 	bool contains(point<T>& pointIn) const;
 	bool contains(box<T>& boxIn) const;

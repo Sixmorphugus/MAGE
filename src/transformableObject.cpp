@@ -2,6 +2,47 @@
 
 using namespace mage;
 
+transformableBox::transformableBox()
+{
+}
+
+transformableBox::transformableBox(pointF pos, pointF size)
+	: transformable(pos)
+{
+}
+
+pointF transformableBox::getCenter() const
+{
+	return pointF(getPosition().x + (m_size.x / 2.f), getPosition().y + (m_size.y / 2.f));
+}
+
+pointF transformableBox::getBaseSize() const
+{
+	return m_size;
+}
+
+floatBox transformableBox::getBaseBox() const
+{
+	return floatBox(getRealPosition(), getBaseSize() * getScale());
+}
+
+void transformableBox::setBaseSize(pointF & newSize)
+{
+	m_size = newSize;
+	onResized.notify(this);
+}
+
+void transformableBox::incBaseSize(pointF & newSize)
+{
+	setBaseSize(getBaseSize() + newSize);
+}
+
+void transformableBox::pixelLock()
+{
+	m_size = m_size.floor();
+}
+
+
 transformableObject::transformableObject()
 {
 }
@@ -51,14 +92,11 @@ std::shared_ptr<collisionBox> transformableObject::getCollisionBox(unsigned int 
 	return m_collisionBoxes[id];
 }
 
-pointF transformableObject::getBaseSize() const
+void mage::transformableObject::pixelLock()
 {
-	return m_size;
-}
-
-floatBox transformableObject::getBaseBox() const
-{
-	return floatBox(getPosition(), getBaseSize());
+	for (unsigned int i = 0; i < m_collisionBoxes.size(); i++) {
+		m_collisionBoxes[i]->setBase(m_collisionBoxes[i]->getBase().floor());
+	}
 }
 
 floatBox transformableObject::getBoundingBox() const
@@ -75,21 +113,8 @@ floatBox transformableObject::getBoundingBox() const
 	return floatBox(boxes);
 }
 
-void transformableObject::setBaseSize(pointF & newSize)
-{
-	m_size = newSize;
-	onResized.notify(this);
-}
-
-void transformableObject::incBaseSize(pointF & newSize)
-{
-	setBaseSize(getBaseSize() + newSize);
-}
-
 void mage::transformableObject::copyTransformableObject(const transformableObject & to)
 {
-	m_size = to.m_size;
-
 	m_collisionBoxes.clear();
 	for (unsigned int i = 0; i < to.m_collisionBoxes.size(); i++) {
 		m_collisionBoxes.push_back(std::make_shared<collisionBox>(m_collisionBoxes[i])); // make a copy

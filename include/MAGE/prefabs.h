@@ -1,22 +1,22 @@
 #pragma once
-#include "basic.h"
+#include "gmo.h"
 #include "taggable.h"
 
 namespace mage {
 
-// class for managing a single saved basic which is used as a template.
+// class for managing a single saved gmo which is used as a template.
 class MAGEDLL prefab : public taggable, public serializable {
 public:
-	prefab(std::shared_ptr<basic> clonable, std::vector<std::string> tags = {});
+	prefab(std::shared_ptr<gmo> clonable, std::vector<std::string> tags = {});
 
 	// "big three" (with default constructor instead of destructor)
 	prefab();
 	prefab(const prefab& p);
 	prefab& operator=(const prefab& p);
 
-	void setTemplate(std::shared_ptr<basic> clonable);
+	void setTemplate(std::shared_ptr<gmo> clonable);
 
-	std::shared_ptr<basic> copyTemplate();
+	std::shared_ptr<gmo> copyTemplate();
 	template<typename T> bool castsTo();
 
 	std::string name();
@@ -25,10 +25,10 @@ public:
 	std::string knownName;
 
 private:
-	std::shared_ptr<basic> templateObject;
+	std::shared_ptr<gmo> templateObject;
 };
 
-// class for managing all the saved basic template objects.
+// class for managing all the saved gmo template objects.
 class MAGEDLL prefabMngr {
 public:
 	prefabMngr();
@@ -46,7 +46,7 @@ public:
 	std::vector<std::shared_ptr<prefab>> list(std::string tag = "");
 	template<typename T> std::vector<std::shared_ptr<prefab>> listType();
 
-	std::shared_ptr<basic> newInstance(std::string name, Group* attachTo = nullptr);
+	std::shared_ptr<gmo> newInstance(std::string name, scene* attachTo = nullptr);
 
 	// default prefab management (not currently exposed)
 	std::shared_ptr<prefab> getDefaultPrefab(const std::type_info& ti);

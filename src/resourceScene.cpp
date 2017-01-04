@@ -1,35 +1,35 @@
-#include "resourceGroup.h"
-#include "group.h"
+#include "resourceScene.h"
+#include "scene.h"
 
 using namespace mage;
 
-resourceGroup::resourceGroup()
+resourceScene::resourceScene()
 {}
 
-resourceGroup::resourceGroup(std::string filepath)
+resourceScene::resourceScene(std::string filepath)
 	: resourceFilepath(filepath)
 {}
 
-bool resourceGroup::load()
+bool resourceScene::load()
 {
-	rc = std::make_shared<Group>();
+	rc = std::make_shared<scene>();
 
 	if (!rc->loadFromFile(filepath)) return false;
 	return resourceFilepath::load();
 }
 
-void resourceGroup::unload()
+void resourceScene::unload()
 {
 	rc = nullptr;
 	resourceFilepath::unload();
 }
 
-std::shared_ptr<Group> resourceGroup::get()
+std::shared_ptr<scene> resourceScene::get()
 {
 	return rc;
 }
 
-bool resourceGroup::isNeeded()
+bool resourceScene::isNeeded()
 {
 	// if this music track isn't referenced anywhere, unload it to save memory.
 	// note that this SHOULD be safe - it's impossible to "get" an unloaded resource.
@@ -38,5 +38,5 @@ bool resourceGroup::isNeeded()
 
 #include "scriptingEngine.h"
 
-MAGE_DeclareScriptingFilepathResource(resourceGroup);
-MAGE_DeclareScriptingFunction(&resourceGroup::get, "get");
+MAGE_DeclareScriptingFilepathResource(resourceScene);
+MAGE_DeclareScriptingFunction(&resourceScene::get, "get");

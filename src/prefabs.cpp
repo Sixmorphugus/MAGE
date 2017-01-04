@@ -1,5 +1,5 @@
 #include "prefabs.h"
-#include "group.h"
+#include "scene.h"
 
 using namespace mage;
 
@@ -25,7 +25,7 @@ prefab::prefab()
 	templateObject = nullptr;
 }
 
-prefab::prefab(std::shared_ptr<basic> clonable, std::vector<std::string> t)
+prefab::prefab(std::shared_ptr<gmo> clonable, std::vector<std::string> t)
 {
 	if (!clonable->isCloneSafe())
 		p::warn("Prefab failed clone test! Expect some odd behavior.");
@@ -47,15 +47,15 @@ prefab& prefab::operator=(const prefab& p) {
 	return *this;
 }
 
-void prefab::setTemplate(std::shared_ptr<basic> clonable)
+void prefab::setTemplate(std::shared_ptr<gmo> clonable)
 {
 	templateObject = clonable;
 }
 
-std::shared_ptr<basic> prefab::copyTemplate()
+std::shared_ptr<gmo> prefab::copyTemplate()
 {
 	if (templateObject)
-		return std::shared_ptr<basic>(templateObject->clone());
+		return std::shared_ptr<gmo>(templateObject->clone());
 	else {
 		p::warn("newInstance was called on a prefab that is uninitialized!")
 		return nullptr;
@@ -152,11 +152,11 @@ std::vector<std::shared_ptr<prefab>> prefabMngr::list(std::string tag)
 	return results;
 }
 
-std::shared_ptr<basic> prefabMngr::newInstance(std::string name, Group* attachTo)
+std::shared_ptr<gmo> prefabMngr::newInstance(std::string name, scene* attachTo)
 {
 	if (exists(name)) {
-		std::shared_ptr<basic> ni = prefabMap[name]->copyTemplate();
-		ni->prefabSource = prefabMap[name];
+		std::shared_ptr<gmo> ni = prefabMap[name]->copyTemplate();
+		ni->m_prefabSource = prefabMap[name];
 
 		if (attachTo)
 			attachTo->attach(ni);
@@ -203,8 +203,8 @@ using namespace chaiscript;
 MAGE_DeclareScriptingType(prefab);
 MAGE_DeclareScriptingBaseClass(taggable, prefab);
 MAGE_DeclareScriptingBaseClass(serializable, prefab);
-MAGE_DeclareScriptingConstructor(prefab(std::shared_ptr<basic> refersTo, std::vector<std::string> strList), "prefab");
-MAGE_DeclareScriptingCustom(fun([](std::shared_ptr<basic> refersTo) { return prefab(refersTo); }), "prefab"); // simplified constructor
+MAGE_DeclareScriptingConstructor(prefab(std::shared_ptr<gmo> refersTo, std::vector<std::string> strList), "prefab");
+MAGE_DeclareScriptingCustom(fun([](std::shared_ptr<gmo> refersTo) { return prefab(refersTo); }), "prefab"); // simplified constructor
 MAGE_DeclareScriptingConstructor(prefab(), "prefab"); // very simplified constructor
 MAGE_DeclareScriptingFunction(&prefab::copyTemplate, "copyTemplate");
 MAGE_DeclareScriptingFunction(&prefab::setTemplate, "setTemplate");

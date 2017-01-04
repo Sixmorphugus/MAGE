@@ -88,7 +88,7 @@ void transformable::scale(const pointF & scalar)
 	setAnchor(cur + scalar);
 }
 
-pointF transformable::getRealPosition()
+pointF transformable::getRealPosition() const
 {
 	return getPosition() - sf::Vector2f(getAnchor().x * getScale().x, getAnchor().y * getScale().y);
 }
@@ -100,11 +100,11 @@ void transformable::setRealPosition(pointF p)
 
 void transformable::pixelLock()
 {
-	setPosition(getPosition().floor());
-	setAnchor(getAnchor().floor());
+	m_position = m_position.floor();
+	m_anchor = m_anchor.floor();
 
-	setScale(pointF(1.f, 1.f));
-	setRotation(0.f);
+	m_scale = pointF(1.f, 1.f);
+	m_rotation = 0.f;
 }
 
 // SE

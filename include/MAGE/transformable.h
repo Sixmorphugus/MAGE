@@ -38,10 +38,10 @@ public:
 	void scale(const pointF& scalar);
 
 	// additional functions
-	pointF getRealPosition();
+	pointF getRealPosition() const;
 	void setRealPosition(const pointF p);
 
-	void pixelLock();
+	virtual void pixelLock();
 
 public:
 	// hooks

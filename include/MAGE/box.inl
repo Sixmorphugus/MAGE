@@ -1,3 +1,4 @@
+#include "box.h"
 namespace mage {
 	template<typename T>
 	inline box<T>::box()
@@ -100,6 +101,18 @@ namespace mage {
 	inline void box<T>::scale(point<T> scalar)
 	{
 		size *= scalar;
+	}
+
+	template<typename T>
+	inline box<T> box<T>::floor()
+	{
+		return box<T>(position.floor(), size.floor());
+	}
+
+	template<typename T>
+	inline box<T> box<T>::ceil()
+	{
+		return box<T>(position.ceil(), size.ceil());
 	}
 
 	template<typename T>

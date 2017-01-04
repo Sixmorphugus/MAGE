@@ -17,7 +17,30 @@
 
 namespace mage {
 
-class MAGEDLL transformableObject : public virtual transformable {
+class MAGEDLL transformableBox : public virtual transformable {
+public:
+	transformableBox();
+	transformableBox(pointF pos, pointF size);
+
+	// massTransformable
+	pointF getCenter() const;
+
+	pointF getBaseSize() const; // base size. 
+	floatBox getBaseBox() const; // base box, generated from the position and size of the transformable
+
+	void setBaseSize(pointF& newSize); // note that you should delete this function and its sibling (like gmoSprited does) if you intend to control the base size yourself
+	void incBaseSize(pointF& newSize);
+
+	virtual void pixelLock();
+
+public:
+	hook<transformableBox*> onResized;
+
+private:
+	pointF m_size;
+};
+
+class MAGEDLL transformableObject : public virtual transformableBox {
 public:
 	// ctors (same as transformable)
 	transformableObject();
@@ -32,25 +55,18 @@ public:
 	void removeCollisionBox(unsigned int id);
 	std::shared_ptr<collisionBox> getCollisionBox(unsigned int id) const;
 
-	// massTransformable
-	pointF getBaseSize() const; // base size. 
-	floatBox getBaseBox() const; // base box, generated from the position and size of the transformable
-	floatBox getBoundingBox() const;
+	virtual void pixelLock();
 
-	void setBaseSize(pointF& newSize); // note that you should delete this function and its sibling (like gmoSprited does) if you intend to control the base size yourself
-	void incBaseSize(pointF& newSize);
+	floatBox getBoundingBox() const;
 
 public:
 	hook<transformableObject*, unsigned int> onCollisionBoxAdded;
 	hook<transformableObject*, unsigned int> onCollisionBoxRemoved;
 
-	hook<transformableObject*> onResized;
-
 private:
 	void copyTransformableObject(const transformableObject& from);
 
 	std::vector<std::shared_ptr<collisionBox>> m_collisionBoxes;
-	pointF m_size;
 };
 
 }

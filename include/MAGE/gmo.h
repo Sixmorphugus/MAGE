@@ -28,6 +28,9 @@ class gmo :
 {
 public:
 	gmo(const pointF& position);
+	gmo(const gmo& cp);
+
+	gmo& operator=(const gmo& cp);
 
 	virtual void preUpdate(sf::Time elapsed);
 	virtual void update(sf::Time elapsed);
@@ -35,13 +38,22 @@ public:
 	scene* getScene();
 	std::shared_ptr<prefab> getPrefabSource();
 
+	bool getRespectsPixelGrid();
+	void setRespectsPixelGrid(bool yes = true);
+
 public:
-	hook<gmo*> onPreUpdate;
-	hook<gmo*> onUpdate;
+	hook<gmo*, sf::Time> onPreUpdate;
+	hook<gmo*, sf::Time> onUpdate;
 
 private:
+	void copyFrom(const gmo& cp);
+
 	std::shared_ptr<prefab> m_prefabSource;
 	scene* m_scene;
+	bool m_respectPixelGrid;
+
+	friend class scene;
+	friend class prefabMngr;
 };
 
 }
