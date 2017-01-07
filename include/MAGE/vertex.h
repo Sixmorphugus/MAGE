@@ -10,7 +10,7 @@
 // Script-Accessable: Yes
 // -------------
 
-#include "color.h"
+#include "colour.h"
 #include "point.h"
 
 namespace mage {
@@ -18,14 +18,14 @@ namespace mage {
 class vertex {
 public:
 	vertex();
-	vertex(pointF& sc, pointF& tc = pointF(), color& t = color());
+	vertex(pointF& sc, pointF& tc = pointF(), colour& t = colour());
 
 	sf::Vertex toSf();
 
 public:
-	pointF screenCoords;
-	pointF textureCoords;
-	sf::Color tint;
+	pointF position;
+	pointF texCoords;
+	colour tint;
 };
 
 }

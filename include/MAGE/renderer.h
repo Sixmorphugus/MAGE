@@ -11,4 +11,16 @@
 // -------------
 
 #include "StdAfx.h"
+#include "SfmlAfx.h"
 
+namespace mage {
+class renderer {
+public:
+	renderer(sf::RenderWindow* rw = nullptr); // Can't be constructed by script
+
+	void render();
+
+private:
+	sf::RenderWindow* m_window;
+};
+}

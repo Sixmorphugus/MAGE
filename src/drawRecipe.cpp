@@ -27,8 +27,6 @@ MAGE_DeclareScriptingConstructor(drawRecipe(std::vector<triangle>& tris, std::sh
 MAGE_DeclareScriptingFunction(&drawRecipe::shader, "shader");
 MAGE_DeclareScriptingFunction(&drawRecipe::texture, "texture");
 MAGE_DeclareScriptingFunction(&drawRecipe::triangles, "triangles");
-
-// extra constructors
 MAGE_DeclareScriptingFunction([](triangle tri) { return drawRecipe({ tri }); }, "drawRecipe");
 MAGE_DeclareScriptingFunction([](std::vector<triangle> tri) { return drawRecipe(tri); }, "drawRecipe");
 MAGE_DeclareScriptingFunction([](std::vector<triangle> tri, std::shared_ptr<resourceTexture> rt) { return drawRecipe(tri, rt); }, "drawRecipe");

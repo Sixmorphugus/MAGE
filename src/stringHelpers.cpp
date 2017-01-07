@@ -97,8 +97,6 @@ std::string strSub(std::string in, unsigned int start, unsigned int finish)
 		output.push_back(in[i]);
 	}
 
-	// output.push_back('\0'); is unneded in std::string apparently
-
 	return output;
 }
 
