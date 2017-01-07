@@ -148,6 +148,11 @@ std::shared_ptr<gmo> scene::get(unsigned int index) const
 	return m_objectList.at(index);
 }
 
+std::vector<std::shared_ptr<gmo>> scene::objectList() const
+{
+	return m_objectList;
+}
+
 unsigned int scene::getNumObjects() const
 {
 	return m_objectList.size();

@@ -50,6 +50,8 @@ public:
 
 	std::shared_ptr<gmo> get(unsigned int index) const;
 
+	std::vector<std::shared_ptr<gmo>> objectList() const;
+
 	unsigned int getNumObjects() const;
 
 	void bringToFront(unsigned int index);

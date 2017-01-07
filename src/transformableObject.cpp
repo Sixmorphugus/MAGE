@@ -2,55 +2,14 @@
 
 using namespace mage;
 
-transformableBox::transformableBox()
-{
-}
-
-transformableBox::transformableBox(pointF pos, pointF size)
-	: transformable(pos)
-{
-}
-
-pointF transformableBox::getCenter() const
-{
-	return pointF(getPosition().x + (m_size.x / 2.f), getPosition().y + (m_size.y / 2.f));
-}
-
-pointF transformableBox::getBaseSize() const
-{
-	return m_size;
-}
-
-floatBox transformableBox::getBaseBox() const
-{
-	return floatBox(getRealPosition(), getBaseSize() * getScale());
-}
-
-void transformableBox::setBaseSize(pointF & newSize)
-{
-	m_size = newSize;
-	onResized.notify(this);
-}
-
-void transformableBox::incBaseSize(pointF & newSize)
-{
-	setBaseSize(getBaseSize() + newSize);
-}
-
-void transformableBox::pixelLock()
-{
-	m_size = m_size.floor();
-}
-
-
 transformableObject::transformableObject()
 {
 }
 
-transformableObject::transformableObject(pointF pos, pointF size)
+transformableObject::transformableObject(const pointF& pos, const pointF& size)
 {
 	setPosition(pos);
-	setBaseSize(size);
+	setScale(size);
 }
 
 transformableObject::transformableObject(const transformableObject & copy)
@@ -126,6 +85,7 @@ void mage::transformableObject::copyTransformableObject(const transformableObjec
 
 MAGE_DeclareScriptingType(transformableObject);
 MAGE_DeclareScriptingBaseClass(transformable, transformableObject);
+MAGE_DeclareScriptingBaseClass(transformableBox, transformableObject);
 MAGE_DeclareScriptingConstructor(transformableObject(), "transformableObject");
 MAGE_DeclareScriptingConstructor(transformableObject(const transformableObject&), "transformableObject");
 MAGE_DeclareScriptingConstructor(transformableObject(pointF, pointF), "transformableObject");
@@ -137,8 +97,6 @@ MAGE_DeclareScriptingFunction(&transformableObject::getCollisionBox, "getCollisi
 MAGE_DeclareScriptingFunction(&transformableObject::getBaseSize, "getBaseSize");
 MAGE_DeclareScriptingFunction(&transformableObject::getBaseBox, "getBaseBox");
 MAGE_DeclareScriptingFunction(&transformableObject::getBoundingBox, "getBoundingBox");
-MAGE_DeclareScriptingFunction(&transformableObject::setBaseSize, "setBaseSize");
-MAGE_DeclareScriptingFunction(&transformableObject::incBaseSize, "incBaseSize");
 
 MAGE_DeclareScriptingHook("transformableObjectCollisionHook", transformableObject*, unsigned int);
 MAGE_DeclareScriptingHook("transformableObjectHook", transformableObject*);

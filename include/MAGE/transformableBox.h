@@ -1,0 +1,42 @@
+#pragma once
+
+// mage::transformableBox
+// -------------
+// A transformable object that has a size.
+// -------------
+// Category: Maths
+// Has Hooks: Yes
+// Script-Accessable: Yes
+// -------------
+
+#include "transformable.h"
+#include "box.h"
+
+namespace mage {
+class MAGEDLL transformableBox : public virtual transformable {
+public:
+	transformableBox();
+	transformableBox(pointF pos);
+	transformableBox(pointF pos, pointF size);
+
+	// massTransformable
+	pointF getCenter() const;
+
+	pointF getBaseSize() const; // base size. 
+	floatBox getBox() const; // base box, generated from the position and size of the transformable
+
+	virtual void pixelLock();
+
+protected:
+	// by default the base size is 1 - the size of the object will be exactly what its scale is.
+	// it can be changed by derived versions of the object.
+	void setBaseSize(const pointF& newSize);
+	void incBaseSize(const pointF& newSize);
+
+public:
+	hook<transformableBox*> onResized;
+
+private:
+	pointF m_size;
+};
+}

@@ -1,6 +1,6 @@
 #pragma once
 
-// mage::gameObject
+// mage::gmo (gameObject)
 // -------------
 // Represents an object in a scene.
 // This object is updated each and every frame.

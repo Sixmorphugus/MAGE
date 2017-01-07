@@ -12,39 +12,16 @@
 // Script-Accessable: Yes
 // -------------
 
-#include "transformable.h"
+#include "transformableBox.h"
 #include "collisionBox.h"
 
 namespace mage {
-
-class MAGEDLL transformableBox : public virtual transformable {
-public:
-	transformableBox();
-	transformableBox(pointF pos, pointF size);
-
-	// massTransformable
-	pointF getCenter() const;
-
-	pointF getBaseSize() const; // base size. 
-	floatBox getBaseBox() const; // base box, generated from the position and size of the transformable
-
-	void setBaseSize(pointF& newSize); // note that you should delete this function and its sibling (like gmoSprited does) if you intend to control the base size yourself
-	void incBaseSize(pointF& newSize);
-
-	virtual void pixelLock();
-
-public:
-	hook<transformableBox*> onResized;
-
-private:
-	pointF m_size;
-};
 
 class MAGEDLL transformableObject : public virtual transformableBox {
 public:
 	// ctors (same as transformable)
 	transformableObject();
-	transformableObject(pointF pos, pointF size);
+	transformableObject(const pointF& pos, const pointF& size);
 	transformableObject(const transformableObject& copy);
 
 	transformableObject& operator=(const transformableObject& copy);
