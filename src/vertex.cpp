@@ -5,7 +5,14 @@ using namespace mage;
 vertex::vertex()
 {}
 
-vertex::vertex(pointF & sc, pointF & tc, colour & t)
+vertex::vertex(sf::Vertex & v)
+{
+	position = point2F(v.position);
+	texCoords = point2F(v.texCoords);
+	tint = colour(v.color);
+}
+
+vertex::vertex(point2F & sc, point2F & tc, colour & t)
 {
 	position = sc;
 	texCoords = tc;

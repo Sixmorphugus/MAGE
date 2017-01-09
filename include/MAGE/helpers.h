@@ -36,4 +36,24 @@ template<typename To, typename From> std::vector<std::shared_ptr<To>> dynamicShP
 	return output;
 }
 
+template<typename VType> std::vector<VType> collapseVectorVector(std::vector<std::vector<VType>>& vectorVector)
+{
+	// idk if this increases performance but it's here anyway
+	size_t allsize = 0;
+
+	for (unsigned int i = 0; i < vectorVector.size(); i++) {
+		allsize += vectorVector[i].size();
+	}
+
+	// define output vector, reserve its memory
+	std::vector<VType> output;
+	output.reserve(allsize);
+
+	for (unsigned int i = 0; i < vectorVector.size(); i++) {
+		output.insert(output.end(), vectorVector[i].begin(), vectorVector[i].end());
+	}
+
+	return output;
+}
+
 } // namespace mage

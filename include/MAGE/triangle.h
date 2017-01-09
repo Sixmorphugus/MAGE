@@ -14,7 +14,7 @@
 #include "vertex.h"
 
 namespace mage {
-class triangle {
+class MAGEDLL triangle {
 public:
 	triangle(vertex& v1); // dot
 	triangle(vertex& v1, vertex& v2); // line

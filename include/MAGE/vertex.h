@@ -15,16 +15,17 @@
 
 namespace mage {
 
-class vertex {
+class MAGEDLL vertex {
 public:
 	vertex();
-	vertex(pointF& sc, pointF& tc = pointF(), colour& t = colour());
+	vertex(sf::Vertex& v);
+	vertex(point2F& sc, point2F& tc = point2F(), colour& t = colour());
 
 	sf::Vertex toSf();
 
 public:
-	pointF position;
-	pointF texCoords;
+	point2F position;
+	point2F texCoords;
 	colour tint;
 };
 

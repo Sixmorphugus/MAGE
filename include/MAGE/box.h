@@ -50,7 +50,7 @@ public:
 	bool contains(box<T>& boxIn) const;
 	bool intersects(box<T>& boxIn) const;
 
-	rect<T> normalize() const; // if the rectangle has negative size, fix that.
+	box<T> normalize() const; // if the rectangle has negative size, fix that.
 
 	point<T> clampedPoint(point<T>& pointIn);
 
@@ -70,7 +70,8 @@ public:
 	box<T> operator/(point<T>& rH);
 
 public:
-	point<T> position, size;
+	point<T> position;
+	point<T> size;
 };
 
 typedef box<float> floatBox;

@@ -14,63 +14,51 @@
 
 // unlike most objects cameras don't update independently of rendering - instead, their attributes are managed before every render
 
-#include "group.h"
+#include "scene.h"
 #include "shaders.h"
+
+#include "point.h"
+#include "transformableBox.h"
 
 namespace mage {
 
-class MAGEDLL view : public sf::View, public shadable {
+class MAGEDLL view : public transformableBox, public shadable {
 public:
 	view();
-	view(sf::Vector2f size, std::shared_ptr<groupBase> gr = nullptr);
+	view(pointF size, std::shared_ptr<scene> gr = nullptr);
 
 	virtual void render(sf::RenderTarget& target, sf::Color bgCol = sf::Color::Transparent);
 
-	sf::Vector2f getHalfSize();
+	sf::View toSf();
 
-	sf::Vector2f getPosition();
-	void setPosition(sf::Vector2f pos); // when setCenter isn't enough for you
+	sf::RenderTarget* getTarget();
 
-	void moveTowards(basic& target, float multiplier);
+	floatBox getViewport() const;
+	void setViewport(floatBox vp);
 
-	sf::FloatRect bounds(); // find the boundary the view covers
-
-	void setBaseSize(sf::Vector2f s);
-
-	void setViewportBoundsIn(sf::RenderTarget& target, sf::FloatRect bounds); // set the position of the viewport in pixels rather than via percentages
-	sf::FloatRect getViewportBoundsIn(sf::RenderTarget& target);
-
-	void setZoomLevel(float zl);
-	float getZoomLevel();
-
-	float pythagorasWidth(); // lol
-
-	sf::Vector2f relativePosition(sf::Vector2f mp);
+	void setZoom(float zoomLevel);
 
 private:
 	void setDefaults();
 
 protected:
-	sf::RenderTexture internalRT;
+	sf::RenderTexture m_internalRT;
 	void resizeInternalRT(sf::Vector2u siz);
 
 public:
 	// things that affect rendering
-	std::weak_ptr<groupBase> group;
+	std::weak_ptr<scene> group;
 	std::shared_ptr<resourceShader> shader;
 
-	sf::Vector2f zoomZero;
+	pointF zoomZero;
 	bool respectPixelGrid;
-	sf::FloatRect cameraLimits;
+	floatBox cameraLimits;
 
 	hook<view*> onRender;
+	hook<view*> onViewportResized;
+
+private:
+	floatBox m_viewport;
 };
 
 } // namespace mage
-
-#define MAGE_DeclareScriptingView(type) \
-MAGE_DeclareScriptingBaseClass(sf::View, type);\
-MAGE_DeclareScriptingBaseClass(shadable, type);\
-MAGE_DeclareScriptingBaseClass(view, type);\
-MAGE_DeclareScriptingConstructor(type(), STRING(type));\
-MAGE_DeclareScriptingConstructor(type(sf::Vector2f, std::shared_ptr<groupBase>), STRING(type));

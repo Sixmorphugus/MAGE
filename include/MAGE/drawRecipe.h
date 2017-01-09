@@ -16,23 +16,24 @@
 #include "StdAfx.h"
 
 #include "triangle.h"
+#include "renderStates.h"
 
 namespace mage {
 
 class resourceTexture;
 class resourceShader;
-class shaderSet;
 
-class drawRecipe
+class MAGEDLL drawRecipe
 {
 public:
 	drawRecipe();
-	drawRecipe(std::vector<triangle> tris, std::shared_ptr<resourceTexture> rt = nullptr, std::shared_ptr<resourceShader> sh = nullptr);
+	drawRecipe(std::vector<triangle> tris, unsigned int depth = 0, renderStates& states = renderStates());
 
 public:
 	std::vector<triangle> triangles;
-	std::shared_ptr<resourceTexture> texture;
-	std::shared_ptr<resourceShader> shader;
+	renderStates states;
+
+	unsigned int depth;
 };
 
 }

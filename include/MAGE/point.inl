@@ -21,6 +21,7 @@ namespace mage {
 	{
 		x = cos(xyAngle);
 		y = -sin(xyAngle);
+		z = 0;
 	}
 
 	template<typename T>
@@ -267,5 +268,126 @@ namespace mage {
 	inline std::string point<T>::toString() const
 	{
 		return std::to_string(x) + " " + std::to_string(y) + " " + std::to_string(z);
+	}
+
+	template<typename T>
+	inline point2<T>::point2()
+	{
+		x = 0;
+		y = 0;
+		z = 0;
+	}
+	template<typename T>
+	inline point2<T>::point2(T xIn, T yIn)
+	{
+		x = xIn;
+		y = yIn;
+		z = 0;
+	}
+	template<typename T>
+	inline point2<T>::point2(T angle2D)
+	{
+		x = cos(angle2D);
+		y = -sin(angle2D);
+		z = 0;
+	}
+	template<typename T>
+	inline point2<T>::point2(const sf::Vector2<T>& in)
+	{
+		x = in.x;
+		y = in.y;
+		z = 0;
+	}
+	template<typename T>
+	inline point2<T>::point2(std::string & in)
+	{
+		auto split = splitString(in);
+
+		if (split.size() > 0) {
+			x = atof(split[0]);
+		}
+		if (split.size() > 1) {
+			y = atof(split[1]);
+		}
+
+		z = 0;
+	}
+	template<typename T>
+	inline point2<T>& point2<T>::operator+=(const point2<T>& rhs)
+	{
+		return ((point<T>)*this) += (point<T>)rhs;
+	}
+	template<typename T>
+	inline point2<T>& point2<T>::operator-=(const point2<T>& rhs)
+	{
+		return ((point<T>)*this) -= (point<T>)rhs;
+	}
+	template<typename T>
+	inline point2<T>& point2<T>::operator*=(const point2<T>& rhs)
+	{
+		return ((point<T>)*this) *= (point<T>)rhs;
+	}
+	template<typename T>
+	inline point2<T>& point2<T>::operator/=(const point2<T>& rhs)
+	{
+		return (point<T>)*this /= (point<T>)rhs;
+	}
+	template<typename T>
+	inline point2<T>& point2<T>::operator*=(const T rhs)
+	{
+		return (point<T>)*this *= (point<T>)rhs;
+	}
+	template<typename T>
+	inline point2<T>& point2<T>::operator/=(const T rhs)
+	{
+		return (point<T>)*this /= (point<T>)rhs;
+	}
+	template<typename T>
+	inline point2<T>& point2<T>::operator+(const point2<T>& rhs)
+	{
+		return (point<T>)*this + (point<T>)rhs;
+	}
+	template<typename T>
+	inline point2<T>& point2<T>::operator-(const point2<T>& rhs)
+	{
+		return (point<T>)*this - (point<T>)rhs;
+	}
+	template<typename T>
+	inline point2<T>& point2<T>::operator*(const point2<T>& rhs)
+	{
+		return (point<T>)*this * (point<T>)rhs;
+	}
+	template<typename T>
+	inline point2<T>& point2<T>::operator/(const point2<T>& rhs)
+	{
+		return (point<T>)*this / (point<T>)rhs;
+	}
+	template<typename T>
+	inline point2<T> point2<T>::operator*(const T rhs)
+	{
+		return (point<T>)*this * (point<T>)rhs;
+	}
+	template<typename T>
+	inline point2<T> point2<T>::operator/(const T rhs)
+	{
+		return (point<T>)*this / (point<T>)rhs;
+	}
+	template<typename T>
+	inline point2<T> point2<T>::floor() const
+	{
+		return point2<T>(floor(x), floor(y));
+	}
+	template<typename T>
+	inline point2<T> point2<T>::ceil() const
+	{
+		return point2<T>(ceil(x), ceil(y));
+	}
+	template<typename T>
+	inline std::string point2<T>::toString() const
+	{
+		std::string pointStr = point<T>::toString();
+		auto pointStrSplit = splitString(pointStr);
+
+		return pointStrSplit[0] + " " + pointStrSplit[1];
 	}
 }

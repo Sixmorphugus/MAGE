@@ -7,15 +7,14 @@ using namespace mage;
 
 drawRecipe::drawRecipe()
 {
-	texture = nullptr;
-	shader = nullptr;
+	depth = 0;
 }
 
-drawRecipe::drawRecipe(std::vector<triangle> tris, std::shared_ptr<resourceTexture> rt, std::shared_ptr<resourceShader> sh)
+drawRecipe::drawRecipe(std::vector<triangle> tris, unsigned int d, renderStates & s)
 {
 	triangles = tris;
-	texture = rt;
-	shader = sh;
+	depth = d;
+	states = s;
 }
 
 // SE
@@ -23,10 +22,10 @@ drawRecipe::drawRecipe(std::vector<triangle> tris, std::shared_ptr<resourceTextu
 
 MAGE_DeclareScriptingType(drawRecipe);
 MAGE_DeclareScriptingConstructor(drawRecipe(), "drawRecipe");
-MAGE_DeclareScriptingConstructor(drawRecipe(std::vector<triangle>& tris, std::shared_ptr<resourceTexture> rt, std::shared_ptr<resourceShader> sh), "drawRecipe");
-MAGE_DeclareScriptingFunction(&drawRecipe::shader, "shader");
-MAGE_DeclareScriptingFunction(&drawRecipe::texture, "texture");
+MAGE_DeclareScriptingConstructor(drawRecipe(std::vector<triangle>& tris, unsigned int, renderStates), "drawRecipe");
+MAGE_DeclareScriptingFunction(&drawRecipe::states, "states");
 MAGE_DeclareScriptingFunction(&drawRecipe::triangles, "triangles");
 MAGE_DeclareScriptingFunction([](triangle tri) { return drawRecipe({ tri }); }, "drawRecipe");
 MAGE_DeclareScriptingFunction([](std::vector<triangle> tri) { return drawRecipe(tri); }, "drawRecipe");
-MAGE_DeclareScriptingFunction([](std::vector<triangle> tri, std::shared_ptr<resourceTexture> rt) { return drawRecipe(tri, rt); }, "drawRecipe");
+MAGE_DeclareScriptingFunction([](std::vector<triangle> tri, unsigned int d) { return drawRecipe(tri, d); }, "drawRecipe");
+MAGE_DeclareScriptingFunction([](std::vector<triangle> tri, unsigned int d, renderStates& states) { return drawRecipe(tri, d, states); }, "drawRecipe");

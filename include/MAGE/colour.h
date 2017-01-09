@@ -15,7 +15,7 @@
 #include "SfmlAfx.h"
 
 namespace mage {
-class colour
+class MAGEDLL colour
 {
 public:
 	colour();
