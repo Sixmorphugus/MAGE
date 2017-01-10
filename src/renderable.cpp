@@ -12,10 +12,6 @@ drawRecipe renderable::getDrawRecipe()
 	onRendered.notify(this);
 
 	auto r = generateDrawRecipe();
-	
-	if(!r.shader)
-		r.shader = getShader();
-
 	return r;
 }
 

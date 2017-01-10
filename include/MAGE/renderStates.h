@@ -12,6 +12,7 @@
 // -------------
 
 #include "point.h"
+#include "shaders.h"
 
 namespace mage {
 	extern const blendMode blendDefault;
@@ -19,7 +20,7 @@ namespace mage {
 	class resourceTexture;
 	class resourceShader;
 
-	class MAGEDLL renderStates {
+	class MAGEDLL renderStates : public shadable {
 	public:
 		renderStates();
 		renderStates(sf::RenderStates& states); // WARNING: slow function - please don't do the conversion this way around in releases
@@ -36,7 +37,6 @@ namespace mage {
 
 		bool usePage;
 
-		std::shared_ptr<resourceTexture> texture;
-		std::shared_ptr<resourceShader> shader;
+		std::weak_ptr<resourceTexture> texture;
 	};
 }

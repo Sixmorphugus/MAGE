@@ -33,6 +33,8 @@ protected:
 	void setBaseSize(const pointF& newSize);
 	void incBaseSize(const pointF& newSize);
 
+	virtual void doTransformUpdate();
+
 public:
 	hook<transformableBox*> onResized;
 

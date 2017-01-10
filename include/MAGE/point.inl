@@ -255,6 +255,29 @@ namespace mage {
 		return (x + y + z) * (v2.x + v2.y + v2.z);
 	}
 	template<typename T>
+	inline point<T> point<T>::getRotatedAround(point<T>& pivot, T angle) const
+	{
+		point<T> pos(x, y);
+
+		float s = sin(angle);
+		float c = cos(angle);
+
+		// translate point back to origin:
+		pos -= pivot;
+
+		// rotate point
+		float xnew = pos.x * c - pos.y * s;
+		float ynew = pos.x * s + pos.y * c;
+
+		// translate point back:
+		pos.x = xnew;
+		pos.y = ynew;
+
+		pos += pivot;
+
+		return pos;
+	}
+	template<typename T>
 	inline sf::Vector2<T> point<T>::toSf2() const
 	{
 		return sf::Vector2<T>(x, y);
@@ -383,11 +406,46 @@ namespace mage {
 		return point2<T>(ceil(x), ceil(y));
 	}
 	template<typename T>
+	inline point2<T> point2<T>::getRotatedAround(point2<T>& pivot, T angle) const
+	{
+		return point<T>::getRotatedAround(pivot.to3(), angle);
+	}
+	template<typename T>
 	inline std::string point2<T>::toString() const
 	{
 		std::string pointStr = point<T>::toString();
 		auto pointStrSplit = splitString(pointStr);
 
 		return pointStrSplit[0] + " " + pointStrSplit[1];
+	}
+	template<typename T>
+	inline point<T> point2<T>::to3() const
+	{
+		return point<T>(x, y);
+	}
+	template<typename T>
+	template<typename To>
+	inline point<To> point<T>::convertAxis() const
+	{
+		point<To> newPt;
+
+		newPt.x = (To)x;
+		newPt.y = (To)y;
+		newPt.z = (To)z;
+	}
+
+	template<typename T>
+	template<typename To>
+	inline point2<To> point2<T>::convertAxis() const
+	{
+		point2<To> newPt;
+
+		newPt.x = (To)x;
+		newPt.y = (To)y;
+	}
+	template<typename T>
+	inline point2<T> point<T>::to2() const
+	{
+		return point2<T>(x, y);
 	}
 }

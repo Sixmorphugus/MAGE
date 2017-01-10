@@ -1,5 +1,17 @@
 #pragma once
+
+// mage::shadable
+// -------------
+// This is a legacy class that was used for objects that can be shaded.
+// It is now part of renderStates.
+// -------------
+// Category: Rendering
+// Has Hooks: No
+// Script-Accessable: Yes
+// -------------
+
 #include "platform.h"
+#include "point.h"
 
 namespace mage {
 
@@ -9,18 +21,11 @@ class MAGEDLL shadable {
 public:
 	shadable();
 
-	void setShader(std::shared_ptr<resourceShader> shaderResource = nullptr);
-	void clearShader();
-
-	virtual std::shared_ptr<resourceShader> getShader() const;
-
 	void shaderRestartEffect();
-	void shaderUpdate(sf::Vector2f texSize) const;
-	void shaderUpdateCustom(sf::Shader* cShader, sf::Vector2f texSize) const;
+	void shaderUpdate(point2F texSize = point2F()) const;
+	void shaderUpdateCustom(sf::Shader* cShader, point2F texSize = point2F()) const;
 
-	void applyShader(sf::RenderStates& st, sf::Vector2f texSize = sf::Vector2f(0.f, 0.f)) const;
-
-private:
+public:
 	std::weak_ptr<resourceShader> shader;
 };
 

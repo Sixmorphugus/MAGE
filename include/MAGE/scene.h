@@ -24,7 +24,7 @@ namespace mage {
 class resourceScene;
 class gmo;
 
-class MAGEDLL scene : public serializable, public shadable
+class MAGEDLL scene : public serializable
 {
 public:
 	scene();

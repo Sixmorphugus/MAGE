@@ -1,6 +1,8 @@
 #pragma once
 #include "resourceFilepath.h"
 
+#include "point.h"
+
 namespace mage {
 
 // SFML Texture Resource
@@ -15,8 +17,10 @@ public:
 
 	std::shared_ptr<sf::Texture> get();
 
+	point2U getSize();
+
 private:
-	std::shared_ptr<sf::Texture> data;
+	std::shared_ptr<sf::Texture> m_data;
 };
 
 } // namespace mage

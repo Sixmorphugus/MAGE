@@ -31,11 +31,21 @@ float transformable::getRotation() const
 	return m_rotation;
 }
 
+float mage::transformable::getDepth() const
+{
+	return m_position.z;
+}
+
+pointF transformable::getRotationalCenter() const
+{
+	return getAnchor() * getScale();
+}
+
 void transformable::setPosition(const pointF & position)
 {
 	m_position = position;
 
-	onTransformed.notify(this);
+	doTransformUpdate();
 	onMoved.notify(this);
 }
 
@@ -43,7 +53,7 @@ void transformable::setAnchor(const pointF & origin)
 {
 	m_anchor = origin;
 
-	onTransformed.notify(this);
+	doTransformUpdate();
 	onAnchored.notify(this);
 }
 
@@ -51,7 +61,7 @@ void transformable::setScale(const pointF & sc)
 {
 	m_scale = sc;
 
-	onTransformed.notify(this);
+	doTransformUpdate();
 	onScaled.notify(this);
 }
 
@@ -59,7 +69,6 @@ void transformable::setRotation(float rot)
 {
 	m_rotation = rot;
 
-	onTransformed.notify(this);
 	onRotated.notify(this);
 }
 
@@ -85,12 +94,12 @@ void transformable::rotate(float offset)
 void transformable::scale(const pointF & scalar)
 {
 	auto cur = getScale();
-	setAnchor(cur + scalar);
+	setScale(cur + scalar);
 }
 
 pointF transformable::getRealPosition() const
 {
-	return getPosition() - sf::Vector2f(getAnchor().x * getScale().x, getAnchor().y * getScale().y);
+	return getPosition() - (getRotationalCenter());
 }
 
 void transformable::setRealPosition(pointF p)
@@ -105,6 +114,34 @@ void transformable::pixelLock()
 
 	m_scale = pointF(1.f, 1.f);
 	m_rotation = 0.f;
+}
+
+std::vector<point2F> transformable::getTransformedPoints()
+{
+	return m_transformedPoints;
+}
+
+void transformable::doTransformUpdate()
+{
+	m_transformedPoints.clear();
+
+	// were this object to be drawn...
+	// ...where would the verteces be?
+
+	// for the base transform, we only need to know where one point is.
+	// The position.
+	point2F pos = getRealPosition().to2();
+
+	if (getRotation() != 0) {
+		// this is where it gets tricky - if the anchor has moved, we have to rotate around it.
+		pos = pos.getRotatedAround(getRotationalCenter().to2(), getRotation());
+	}
+
+	// add our new point
+	m_transformedPoints.push_back(pos);
+
+	// notify hook
+	onTransformed.notify(this);
 }
 
 // SE

@@ -63,7 +63,7 @@ floatBox transformableObject::getBoundingBox() const
 	// gather collision boxes
 	std::vector<floatBox> boxes;
 
-	boxes.push_back(getBaseBox());
+	boxes.push_back(getBox());
 	
 	for (unsigned int i = 0; i < m_collisionBoxes.size(); i++) {
 		boxes.push_back(m_collisionBoxes[i]->getTransformed());
@@ -95,7 +95,7 @@ MAGE_DeclareScriptingFunction(&transformableObject::getNumCollisionBoxes, "getNu
 MAGE_DeclareScriptingFunction(&transformableObject::removeCollisionBox, "removeCollisionBox");
 MAGE_DeclareScriptingFunction(&transformableObject::getCollisionBox, "getCollisionBox");
 MAGE_DeclareScriptingFunction(&transformableObject::getBaseSize, "getBaseSize");
-MAGE_DeclareScriptingFunction(&transformableObject::getBaseBox, "getBaseBox");
+MAGE_DeclareScriptingFunction(&transformableObject::getBox, "getBox");
 MAGE_DeclareScriptingFunction(&transformableObject::getBoundingBox, "getBoundingBox");
 
 MAGE_DeclareScriptingHook("transformableObjectCollisionHook", transformableObject*, unsigned int);

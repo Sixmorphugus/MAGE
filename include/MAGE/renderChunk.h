@@ -21,8 +21,9 @@ namespace mage {
 class MAGEDLL renderChunk {
 public:
 	renderChunk();
+	renderChunk(renderStates& st);
 
-	void pushTriangle(triangle& tri, unsigned int depth = 0);
+	void pushTriangle(triangle& tri, float depth = 0.f);
 	void clearVerts();
 
 	std::vector<vertex> getVertexList(); // don't use this in normal code, it's for debugging
@@ -32,6 +33,6 @@ public:
 	renderStates states;
 
 private:
-	std::vector< std::vector<sf::Vertex> > m_verteces; // we store the verteces as SF so we don't have to convert during render time
+	std::map< float, std::vector<sf::Vertex> > m_verteces; // we store the verteces as SF so we don't have to convert during render time
 };
 }

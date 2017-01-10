@@ -18,6 +18,8 @@
 
 namespace mage {
 
+template<typename T> class point2;
+
 template<typename T> class point {
 public:
 	point();
@@ -59,6 +61,7 @@ public:
 	T getAngle2DTo(point<T>& v2) const; // angle between two positions as a float.
 	T getDot(point<T>& v2) const; // dot product.
 	T getCross(point<T>& v2) const; // dot product.
+	point<T> getRotatedAround(point<T>& pivot, T angle) const;
 
 	// conversion to the sfml types
 	sf::Vector2<T> toSf2() const;
@@ -70,6 +73,8 @@ public:
 	// conversion to other point type
 	template<typename To>
 	point<To> convertAxis() const;
+
+	point2<T> to2() const;
 
 public:
 	T x, y, z;
@@ -113,12 +118,15 @@ public:
 	using point<T>::getCross;
 
 	using point<T>::toSf2;
+
+	point2<T> getRotatedAround(point2<T>& pivot, T angle) const;
 	
 	std::string toString() const;
 
 	// conversion to other point type
 	template<typename To>
 	point2<To> convertAxis() const;
+	point<T> to3() const;
 
 public:
 	using point<T>::x;
@@ -133,33 +141,13 @@ typedef point2<float> point2F;
 typedef point2<int> point2I;
 typedef point2<unsigned int> point2U;
 
-template<typename T>
-template<typename To>
-inline point<To> point<T>::convertAxis() const
-{
-	point<To> newPt;
-
-	newPt.x = (To)x;
-	newPt.y = (To)y;
-	newPt.z = (To)z;
-}
-
-template<typename T>
-template<typename To>
-inline point2<To> point2<T>::convertAxis() const
-{
-	point2<To> newPt;
-
-	newPt.x = (To)x;
-	newPt.y = (To)y;
-}
 }
 
 // inline definitions
 #include "point.inl"
 
 // Scripting engine declaration macro
-#define MAGE_DeclareScriptingPointTypeNamed(type, name) MAGE_DeclareScriptingType(mage::point<type>, name);\
+#define MAGE_DeclareScriptingPointTypeNamed(type, name, name2) MAGE_DeclareScriptingType(mage::point<type>, name);\
 MAGE_DeclareScriptingConstructor(mage::point<type>(), name);\
 MAGE_DeclareScriptingConstructor(mage::point<type>(type), name);\
 MAGE_DeclareScriptingConstructor(mage::point<type>(type, type), name);\
@@ -173,6 +161,7 @@ MAGE_DeclareScriptingFunction(&mage::point<type>::getDot, "getDot");\
 MAGE_DeclareScriptingFunction(&mage::point<type>::getCross, "getCross");\
 MAGE_DeclareScriptingFunction(&mage::point<type>::getLength, "getLength");\
 MAGE_DeclareScriptingFunction(&mage::point<type>::getAngle2D, "getAngle2D");\
+MAGE_DeclareScriptingFunction(&mage::point<type>::getRotatedAround, "getRotatedAround");\
 MAGE_DeclareScriptingCopyOperator(mage::point<type>);\
 MAGE_DeclareScriptingFunction(&mage::point<type>::operator+, "+");\
 MAGE_DeclareScriptingFunction(&mage::point<type>::operator-, "-");\
@@ -187,11 +176,11 @@ MAGE_DeclareScriptingCustom(chaiscript::fun<mage::point<type>&, mage::point<type
 MAGE_DeclareScriptingCustom(chaiscript::fun<mage::point<type>&, mage::point<type>, const mage::point<type>&>(&mage::point<type>::operator*=), "*=");\
 MAGE_DeclareScriptingCustom(chaiscript::fun<mage::point<type>&, mage::point<type>, const mage::point<type>&>(&mage::point<type>::operator/=), "/=");\
 \
-MAGE_DeclareScriptingConstructor(mage::point2<type>(), name); \
-MAGE_DeclareScriptingConstructor(mage::point2<type>(type), name); \
-MAGE_DeclareScriptingConstructor(mage::point2<type>(type, type), name); \
-MAGE_DeclareScriptingConstructor(mage::point2<type>(mage::point2<type>&), name); \
-MAGE_DeclareScriptingConstructor(mage::point2<type>(std::string), name); \
+MAGE_DeclareScriptingConstructor(mage::point2<type>(), name2); \
+MAGE_DeclareScriptingConstructor(mage::point2<type>(type), name2); \
+MAGE_DeclareScriptingConstructor(mage::point2<type>(type, type), name2); \
+MAGE_DeclareScriptingConstructor(mage::point2<type>(mage::point2<type>&), name2); \
+MAGE_DeclareScriptingConstructor(mage::point2<type>(std::string), name2); \
 MAGE_DeclareScriptingFunction(&mage::point2<type>::ceil, "ceil"); \
 MAGE_DeclareScriptingFunction(&mage::point2<type>::floor, "floor"); \
 MAGE_DeclareScriptingFunction(&mage::point2<type>::getAngle2DTo, "getAngle2DTo"); \
@@ -200,6 +189,7 @@ MAGE_DeclareScriptingFunction(&mage::point2<type>::getDot, "getDot"); \
 MAGE_DeclareScriptingFunction(&mage::point2<type>::getCross, "getCross"); \
 MAGE_DeclareScriptingFunction(&mage::point2<type>::getLength, "getLength"); \
 MAGE_DeclareScriptingFunction(&mage::point2<type>::getAngle2D, "getAngle2D"); \
+MAGE_DeclareScriptingFunction(&mage::point2<type>::getRotatedAround, "getRotatedAround");\
 MAGE_DeclareScriptingCopyOperator(mage::point2<type>); \
 MAGE_DeclareScriptingFunction(&mage::point2<type>::operator+, "+"); \
 MAGE_DeclareScriptingFunction(&mage::point2<type>::operator-, "-"); \
@@ -214,4 +204,4 @@ MAGE_DeclareScriptingCustom(chaiscript::fun<mage::point2<type>&, mage::point2<ty
 MAGE_DeclareScriptingCustom(chaiscript::fun<mage::point2<type>&, mage::point2<type>, const mage::point2<type>&>(&mage::point2<type>::operator*=), "*="); \
 MAGE_DeclareScriptingCustom(chaiscript::fun<mage::point2<type>&, mage::point2<type>, const mage::point2<type>&>(&mage::point2<type>::operator/=), "/=");
 
-#define MAGE_DeclareScriptingpointType(type) MAGE_DeclareScriptingPointTypeNamed(type, "point" STRING(type))
+#define MAGE_DeclareScriptingPointType(type) MAGE_DeclareScriptingPointTypeNamed(type, "point" STRING(type))

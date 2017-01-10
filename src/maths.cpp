@@ -74,3 +74,6 @@ MAGE_DeclareScriptingCustom(fun<float, float>(&sin), "sin");
 MAGE_DeclareScriptingCustom(fun<float, float>(&cos), "cos");
 MAGE_DeclareScriptingCustom(fun<float, float>(&tan), "tan");
 MAGE_DeclareScriptingCustom(fun<float, float>(&abs), "abs");
+
+MAGE_DeclareScriptingEnum(shapeInit, POSANDSIZE);
+MAGE_DeclareScriptingEnum(shapeInit, CORNERS);

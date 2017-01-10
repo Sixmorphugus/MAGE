@@ -12,8 +12,8 @@ const blendMode mage::blendDefault = sf::BlendAlpha;
 renderStates::renderStates()
 {
 	blend = blendDefault;
-	texture = nullptr;
-	shader = nullptr;
+	texture.reset();
+	shader.reset();
 	usePage = false;
 }
 
@@ -21,8 +21,8 @@ renderStates::renderStates(sf::RenderStates& states)
 {
 	// slow!
 	blend = states.blendMode;
-	texture = nullptr;
-	shader = nullptr;
+	texture.reset();
+	shader.reset();
 	usePage = false;
 
 	auto texList = theGame()->resources->listType<resourceTexture>();
@@ -55,8 +55,8 @@ sf::RenderStates renderStates::toSf()
 	sf::RenderStates states;
 
 	states.blendMode = blend;
-	states.shader = shader->get().get();
-	states.texture = texture->get().get();
+	states.shader = shader.lock()->get.get();
+	states.texture = texture.lock()->get().get();
 }
 
 bool renderStates::operator==(renderStates & rh)
@@ -64,8 +64,8 @@ bool renderStates::operator==(renderStates & rh)
 	return (
 		blend == rh.blend &&
 		usePage == rh.usePage &&
-		texture == rh.texture &&
-		shader == rh.shader
+		texture.lock() == rh.texture.lock() &&
+		shader.lock() == rh.shader.lock()
 	);
 }
 

@@ -16,6 +16,7 @@
 namespace mage {
 class MAGEDLL triangle {
 public:
+	triangle(); // default
 	triangle(vertex& v1); // dot
 	triangle(vertex& v1, vertex& v2); // line
 	triangle(vertex& v1, vertex& v2, vertex& v3); // triangle

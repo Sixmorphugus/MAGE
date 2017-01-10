@@ -1,6 +1,6 @@
 #pragma once
 
-// mage::drawRecipe
+// mage::renderRecipe
 // -------------
 // A complex set of triangles and extra information that the renderer will batch together with others and attempt to draw as quickly as possible.
 // Consists of:
@@ -23,11 +23,11 @@ namespace mage {
 class resourceTexture;
 class resourceShader;
 
-class MAGEDLL drawRecipe
+class MAGEDLL renderRecipe
 {
 public:
-	drawRecipe();
-	drawRecipe(std::vector<triangle> tris, unsigned int depth = 0, renderStates& states = renderStates());
+	renderRecipe();
+	renderRecipe(std::vector<triangle> tris, unsigned int depth = 0, renderStates& states = renderStates());
 
 public:
 	std::vector<triangle> triangles;

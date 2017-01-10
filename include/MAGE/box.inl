@@ -15,7 +15,13 @@ namespace mage {
 	}
 
 	template<typename T>
-	inline box<T>::box(point<T> corner1OrPosition, point<T> corner2OrSize, boxInit inm)
+	inline box<T>::box(point<T> positionIn)
+	{
+		position = positionIn;
+	}
+
+	template<typename T>
+	inline box<T>::box(point<T> corner1OrPosition, point<T> corner2OrSize, shapeInit inm)
 	{
 		if (inm == POSANDSIZE) {
 			position = corner1OrPosition;
@@ -125,9 +131,34 @@ namespace mage {
 	}
 
 	template<typename T>
+	inline bool box<T>::contains(line<T>& lineIn) const
+	{
+		if (contains(lineIn.start) && contains(lineIn.getEndPoint()))
+			return true;
+
+		return false;
+	}
+
+	template<typename T>
 	inline bool box<T>::contains(box<T>& boxIn) const
 	{
 		if (contains(boxIn.position) && contains(boxIn.getSecondCorner()))
+			return true;
+
+		return false;
+	}
+
+	template<typename T>
+	inline bool box<T>::intersects(line<T>& lineIn) const
+	{
+		auto lines = getLines();
+
+		// we know we have 4 lines
+		if (lines[0].intersects(lineIn) || lines[1].intersects(lineIn) || lines[2].intersects(lineIn) || lines[3].intersects(lineIn) || )
+			return true;
+
+		// line could also be completely inside
+		if (contains(lineIn))
 			return true;
 
 		return false;
@@ -187,35 +218,50 @@ namespace mage {
 	}
 
 	template<typename T>
-	inline box<T>& box<T>::operator*=(T rH)
+	inline std::vector<line<T>> box<T>::getLines() const
+	{
+		std::vector<line<T>> lines;
+
+		lines.reserve(4);
+
+		lines.push_back(line<T>(position, position + pointF(width, 0.f))); // top
+		lines.push_back(line<T>(position + pointF(0.f, height), position + pointF(width, height))); // bottom
+		lines.push_back(line<T>(position, position + pointF(0.f, height))); // left
+		lines.push_back(line<T>(position + pointF(width, 0.f), position + pointF(width, height))); // right
+
+		return lines;
+	}
+
+	template<typename T>
+	inline box<T>& box<T>::operator*=(const T rH)
 	{
 		scale(point<T>(rH, rH));
 		return *this;
 	}
 
 	template<typename T>
-	inline box<T>& box<T>::operator/=(T rH)
+	inline box<T>& box<T>::operator/=(const T rH)
 	{
 		scale(point<T>(1 / rH, 1 / rH));
 		return *this;
 	}
 
 	template<typename T>
-	inline box<T>& box<T>::operator*=(point<T>& rH)
+	inline box<T>& box<T>::operator*=(const point<T>& rH)
 	{
 		scale(rH);
 		return *this;
 	}
 
 	template<typename T>
-	inline box<T>& box<T>::operator/=(point<T>& rH)
+	inline box<T>& box<T>::operator/=(const point<T>& rH)
 	{
 		scale(point<T>(1, 1) / rH);
 		return *this;
 	}
 
 	template<typename T>
-	inline box<T> box<T>::operator*(T rH)
+	inline box<T> box<T>::operator*(const T rH)
 	{
 		box<T> newBox(*this);
 		newBox *= rH;
@@ -224,7 +270,7 @@ namespace mage {
 	}
 
 	template<typename T>
-	inline box<T> box<T>::operator/(T rH)
+	inline box<T> box<T>::operator/(const T rH)
 	{
 		box<T> newBox(*this);
 		newBox /= rH;
@@ -233,7 +279,7 @@ namespace mage {
 	}
 
 	template<typename T>
-	inline box<T> box<T>::operator*(point<T>& rH)
+	inline box<T> box<T>::operator*(const point<T>& rH)
 	{
 		box<T> newBox(*this);
 		newBox *= rH;
@@ -242,7 +288,7 @@ namespace mage {
 	}
 
 	template<typename T>
-	inline box<T> box<T>::operator/(point<T>& rH)
+	inline box<T> box<T>::operator/(const point<T>& rH)
 	{
 		box<T> newBox(*this);
 		newBox /= rH;

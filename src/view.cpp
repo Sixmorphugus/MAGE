@@ -4,6 +4,7 @@
 #include "helpers.h"
 #include "gameState.h"
 #include "gmo.h"
+#include "drawSprite.h"
 
 using namespace mage;
 
@@ -64,13 +65,16 @@ void view::render(sf::RenderTarget & target, sf::Color bgCol)
 
 	// we're drawing on the internal texture
 	m_internalRT.setView(toSf()); // use this view
-
-	if (bgCol != sf::Color::Transparent)
-		m_internalRT.clear(bgCol); // this'll only actually happen in the viewport (i think...)
+	m_internalRT.clear(bgCol); // this'll only actually happen in the viewport (i think...)
 	
 	onRender.notify(this);
 
-	// TODO: render with the renderer
+	// TODO: render with the renderer to internalRT
+
+	// draw the internal RT into the target
+	sf::Sprite drawSprite(m_internalRT.getTexture());
+
+	target.draw(drawSprite, states.toSf());
 }
 
 sf::View view::toSf()
@@ -119,7 +123,7 @@ void view::setDefaults()
 
 	setPosition(pointF(0, 0));
 
-	shader = nullptr;
+	states = renderStates();
 	respectPixelGrid = true;
 
 	setZoom(MAGE_ZOOMDEFAULT);

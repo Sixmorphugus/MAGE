@@ -26,6 +26,9 @@ public:
 	pointF getAnchor() const;
 	pointF getScale() const;
 	float getRotation() const;
+	float getDepth() const;
+
+	pointF getRotationalCenter() const;
 
 	void setPosition(const pointF& position);
 	void setAnchor(const pointF& origin);
@@ -42,6 +45,11 @@ public:
 	void setRealPosition(const pointF p);
 
 	virtual void pixelLock();
+	
+	std::vector<point2F> getTransformedPoints();
+
+protected:
+	virtual void doTransformUpdate();
 
 public:
 	// hooks
@@ -52,9 +60,13 @@ public:
 
 	hook<transformable*> onTransformed;
 
+protected:
+	std::vector<point2F> m_transformedPoints;
+
 private:
 	float m_rotation; // objects in MAGE can only be rotated on one axis because we're still rendering sprites - 3D stuff simply isn't doable here
-	pointF m_position, m_anchor, m_scale;
+
+	pointF m_position, m_scale, m_anchor;
 };
 
 }

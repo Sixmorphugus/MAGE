@@ -7,10 +7,15 @@ renderChunk::renderChunk()
 {
 }
 
-void renderChunk::pushTriangle(triangle & tri, unsigned int depth)
+renderChunk::renderChunk(renderStates& st)
 {
-	if (m_verteces.size() < depth) {
-		m_verteces.resize(depth);
+	states = st;
+}
+
+void renderChunk::pushTriangle(triangle & tri, float depth)
+{
+	if (!m_verteces.count(depth)) {
+		m_verteces[depth] = std::vector<sf::Vertex>();
 	}
 
 	// do insertion
@@ -38,5 +43,14 @@ std::vector<vertex> renderChunk::getVertexList()
 
 std::vector<sf::Vertex> renderChunk::getSfVertexList()
 {
-	return collapseVectorVector<sf::Vertex>(m_verteces);
+	return collapseVectorMap<float, sf::Vertex>(m_verteces);
 }
+
+#include "scriptingEngine.h"
+MAGE_DeclareScriptingType(renderChunk);
+MAGE_DeclareScriptingConstructor(renderChunk(), "renderChunk");
+MAGE_DeclareScriptingConstructor(renderChunk(renderStates&), "renderChunk");
+MAGE_DeclareScriptingFunction(&renderChunk::clearVerts, "clearVerts");
+MAGE_DeclareScriptingFunction(&renderChunk::getVertexList, "getVertexList");
+MAGE_DeclareScriptingFunction(&renderChunk::pushTriangle, "pushTriangle");
+MAGE_DeclareScriptingFunction(&renderChunk::states, "states");

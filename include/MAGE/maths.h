@@ -16,6 +16,11 @@
 
 namespace mage {
 
+enum shapeInit {
+	POSANDSIZE,
+	CORNERS
+};
+
 // MATHS
 // ---------------------------------------------------------------------
 MAGEDLL float lerp(float a, float b, float f); // linear interpolation

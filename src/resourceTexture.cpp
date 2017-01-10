@@ -15,9 +15,9 @@ bool resourceTexture::load()
 {
 	auto t = resourceFilepath::load();
 
-	data = std::make_shared<sf::Texture>();
+	m_data = std::make_shared<sf::Texture>();
 
-	bool success = data->loadFromFile(filepath);
+	bool success = m_data->loadFromFile(filepath);
 
 	if (success) {
 		return t;
@@ -28,15 +28,19 @@ bool resourceTexture::load()
 
 void resourceTexture::unload()
 {
-	data = std::shared_ptr<sf::Texture>();
+	m_data = std::shared_ptr<sf::Texture>();
 	resourceFilepath::unload();
 }
 
 std::shared_ptr<sf::Texture> resourceTexture::get()
 {
-	return data;
+	return m_data;
+}
+
+point2U resourceTexture::getSize()
+{
+	return point2U(m_data->getSize());
 }
 
 // sfTextureResource
 MAGE_DeclareScriptingFilepathResource(resourceTexture);
-MAGE_DeclareScriptingFunction(&resourceTexture::get, "get");

@@ -10,17 +10,17 @@
 // Script-Accessable: Yes
 // -------------
 
-#include "drawRecipe.h"
+#include "renderRecipe.h"
 #include "shaders.h"
 #include "hook.h"
 
 namespace mage {
 
-class renderable : public shadable {
+class renderable {
 public:
 	renderable();
 
-	drawRecipe getDrawRecipe();
+	renderRecipe getDrawRecipe();
 
 	bool getIsVisible() const;
 	void setIsVisible(bool visible);
@@ -29,7 +29,7 @@ public:
 	hook<renderable*> onRendered;
 
 protected:
-	virtual drawRecipe generateDrawRecipe();
+	virtual renderRecipe generateDrawRecipe();
 
 private:
 	bool m_visible;
