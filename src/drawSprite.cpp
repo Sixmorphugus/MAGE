@@ -9,19 +9,13 @@ drawSprite::drawSprite()
 
 drawSprite::drawSprite(std::shared_ptr<resourceTexture> tex)
 {
-	states.texture = tex;
-
-	sizeToTexture(tex);
-	mapTextureCoordsToFullTexture(tex);
+	setTexture(tex);
 }
 
 drawSprite::drawSprite(pointF & position, pointF& size, std::shared_ptr<resourceTexture> tex)
 	: drawBox(position, size)
 {
-	states.texture = tex;
-
-	sizeToTexture(tex);
-	mapTextureCoordsToFullTexture(tex);
+	setTexture(tex);
 }
 
 void drawSprite::setTexture(std::shared_ptr<resourceTexture>& tex)
@@ -30,6 +24,8 @@ void drawSprite::setTexture(std::shared_ptr<resourceTexture>& tex)
 
 	sizeToTexture(tex);
 	mapTextureCoordsToFullTexture(tex);
+
+	generateFrameRects();
 }
 
 std::shared_ptr<resourceTexture> drawSprite::getTexture() const

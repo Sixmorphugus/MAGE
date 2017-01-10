@@ -1,12 +1,23 @@
 #pragma once
+
+// mage::animator
+// -------------
+// Animation manager for a drawSprite.
+// -------------
+// Category: Rendering
+// Has Hooks: Yes
+// Script-Accessable: Yes
+// -------------
+
 #include "StdAfx.h"
 #include "SfmlAfx.h"
+
+#include "drawSprite.h"
 
 namespace mage {
 
 // basic rewrite of thor's animator class.
-class basic;
-class resourceTexture;
+class drawSprite;
 
 class MAGEDLL animator
 {

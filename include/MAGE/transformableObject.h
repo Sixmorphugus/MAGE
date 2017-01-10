@@ -13,11 +13,31 @@
 // -------------
 
 #include "transformableBox.h"
-#include "collisionBox.h"
 
 namespace mage {
 
 class MAGEDLL transformableObject : public virtual transformableBox {
+public:
+	class MAGEDLL collisionBox {
+	public:
+		collisionBox();
+		collisionBox(floatBox& fBox);
+
+		floatBox getTransformed() const;
+		floatBox getBase() const;
+
+		void setBase(floatBox rect);
+
+	public:
+		hook<collisionBox*> onChanged;
+
+	private:
+		floatBox m_base;
+
+		transformableObject* m_owner;
+		friend class transformableObject;
+	};
+
 public:
 	// ctors (same as transformable)
 	transformableObject();
