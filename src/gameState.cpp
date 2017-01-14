@@ -99,7 +99,7 @@ gameState::gameState()
 	setVarDefaults();
 }
 
-gameState::gameState(Group & gr)
+gameState::gameState(gameState & gr)
 {
 	setVarDefaults();
 	group::set<basic, basic>(&gr);

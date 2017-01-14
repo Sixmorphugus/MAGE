@@ -295,4 +295,14 @@ namespace mage {
 
 		return newBox;
 	}
+	template<typename T>
+	inline bool box<T>::operator==(const box<T>& bx)
+	{
+		return (position == bx.position && size == bx.size);
+	}
+	template<typename T>
+	inline bool box<T>::operator!=(const box<T>& bx)
+	{
+		return !(*this == bx);
+	}
 }

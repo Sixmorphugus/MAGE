@@ -13,12 +13,13 @@ public:
 	resourceShader(std::string vgfComboV, std::string vgfComboG, std::string vgfComboF);
 
 	bool load();
-	void unload();
 
-	std::shared_ptr<sf::Shader> get();
+	sf::Shader* get();
 
 	bool isType(sf::Shader::Type t);
 	void setTypePath(sf::Shader::Type t, std::string path);
+
+	// SFML proxy functions
 
 public:
 	std::string vertexPath;
@@ -28,7 +29,7 @@ public:
 private:
 	void showShaderErrorOnce(std::string err);
 
-	std::shared_ptr<sf::Shader> data;
+	sf::Shader m_data;
 	bool shShaderError;
 };
 

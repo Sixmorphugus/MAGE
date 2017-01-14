@@ -31,23 +31,21 @@ resourceShader::resourceShader(std::string vgfComboV, std::string vgfComboG, std
 
 bool resourceShader::load()
 {
-	data = std::make_shared<sf::Shader>();
-
 	bool anythingFailed = false;
 
 	if (isType(sf::Shader::Vertex)) {
 		p::log("\tVertex Shader: " + vertexPath);
-		if (!data->loadFromFile(vertexPath, sf::Shader::Vertex)) anythingFailed = true;
+		if (!m_data.loadFromFile(vertexPath, sf::Shader::Vertex)) anythingFailed = true;
 	}
 
 	if (isType(sf::Shader::Geometry)) {
 		p::log("\tGeometry Shader: " + geometryPath);
-		if (!data->loadFromFile(geometryPath, sf::Shader::Geometry)) anythingFailed = true;
+		if (!m_data.loadFromFile(geometryPath, sf::Shader::Geometry)) anythingFailed = true;
 	}
 
 	if (isType(sf::Shader::Fragment)) {
 		p::log("\tFragment Shader: " + fragmentPath);
-		if (!data->loadFromFile(fragmentPath, sf::Shader::Fragment)) anythingFailed = true;
+		if (!m_data.loadFromFile(fragmentPath, sf::Shader::Fragment)) anythingFailed = true;
 	}
 
 	if (anythingFailed)
@@ -56,16 +54,9 @@ bool resourceShader::load()
 	return resource::load();
 }
 
-void resourceShader::unload()
+sf::Shader* resourceShader::get()
 {
-	data = std::shared_ptr<sf::Shader>();
-
-	resource::unload();
-}
-
-std::shared_ptr<sf::Shader> resourceShader::get()
-{
-	return data;
+	return &m_data;
 }
 
 bool resourceShader::isType(sf::Shader::Type t)
@@ -87,7 +78,7 @@ void resourceShader::setTypePath(sf::Shader::Type t, std::string path)
 	auto rpath = p::realPath(path);
 
 	if (!sf::Shader::isAvailable()) {
-		showShaderErrorOnce("This machine does not support shaders!");
+		showShaderErrorOnce("This machine does not support shaders.");
 	}
 
 	switch (t) {

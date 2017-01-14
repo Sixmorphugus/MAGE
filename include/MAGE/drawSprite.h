@@ -13,29 +13,38 @@
 // -------------
 
 #include "drawBox.h"
+#include "time.h"
+#include "namable.h"
 
 namespace mage {
 
 class MAGEDLL drawSprite : public drawBox {
 public:
-	class MAGEDLL animation {
+	class MAGEDLL animation : public renamable {
 	public:
+		animation();
 		animation(time& ft, std::vector<unsigned int>& frameList, bool fbf = false);
 
-		void play(bool loop = true);
-		void stop();
+		void play(bool dontLoop = false, unsigned int startFrame = 0);
+		bool isPlaying() const;
+
+		void setParentFrameToAnimationFrame(unsigned int frame);
+
+		unsigned int findIndex() const;
 
 	public:
 		hook<animation*> onPlayed;
 		hook<animation*> onStopped;
 
 		bool fadeBetweenFrames;
+		bool skipOnStop;
 		time frameTime;
 
 		std::vector<unsigned int> frames;
 
 	private:
 		drawSprite* m_owner;
+
 		friend class drawSprite;
 	};
 
@@ -55,32 +64,37 @@ public:
 	void mapTextureCoordsToFullTexture(std::shared_ptr<resourceTexture> tex);
 
 	// frames
-	void regenerateFrames(point2U frameSize);
+	void regenerateFrames(point2U frameSize = point2U());
 	void setFrame(unsigned int frame, bool interrupt = true); // if interrupt is true and an animation is playing it'll be stopped.
-	unsigned int getFrame(sf::Sprite &spr) const;
+	int getFrameIndex(floatBox fr) const;
 
-	unsigned int getFrameFromRect(sf::IntRect fr) const;
-
-	unsigned int framesToEnd();
-
-	std::vector<unsigned int> getFrameList();
+	floatBox getFrame(point2U position) const;
+	floatBox getFrame(unsigned int index) const;
+	unsigned int getNumFrames() const;
 
 	// animation
-	void continueAnimation(sf::Time elapsed);
+	void continueAnimation(time elapsed);
 
-	bool isPlayingAnAnimation();
+	void stopAnimation(); // stop playing and reset animation position to 0.
+
+	bool isPlayingAnAnimation() const;
 
 	unsigned int getNumAnimations();
-	std::shared_ptr<animation> getPlayingAnimation();
-	std::shared_ptr<animation> getAnimation(unsigned int id);
-	std::shared_ptr<animation> getAnimation(std::string name);
+	std::shared_ptr<animation> getCurrentAnimation() const;
+	std::shared_ptr<animation> getAnimation(unsigned int id) const;
+	std::shared_ptr<animation> getAnimation(std::string name) const;
 
 	unsigned int addAnimation(std::shared_ptr<animation> newAnim);
 
 	void removeAnimation(unsigned int id);
 	void removeAnimation(std::string name);
 
-	void indexOfAnimation(std::shared_ptr<animation> anim);
+	unsigned int indexOfAnimation(std::shared_ptr<animation> anim) const;
+
+	unsigned int getAnimationProgress();
+
+protected:
+	virtual renderRecipe generateDrawRecipe(); // calls parent and overlays a fade animation on top if current animation has fade.
 
 public:
 	hook<drawSprite*, animation*> onAddAnimation;
@@ -88,6 +102,7 @@ public:
 
 	hook<drawSprite*> onPlayAnimation;
 	hook<drawSprite*> onStopAnimation;
+
 	hook<drawSprite*> onFrameChanged;
 
 private:
@@ -96,14 +111,14 @@ private:
 private:
 	std::vector<std::shared_ptr<animation>> m_animations;
 
-	std::vector<sf::IntRect> m_frameRectangles;
-
-	unsigned int m_curAnimationId;
-	bool m_playingAnimation;
-	bool m_autoStopAnimation;
-
 	unsigned int m_animationProgress;
-	sf::Time m_toAnimationFrameEnd;
+	time m_toAnimationFrameEnd;
+	bool m_autoStop;
+	unsigned int m_rows; // number of rows assumed by the sprite atlas version of getFrame.
+
+	int m_curAnimation;
+
+	std::vector<floatBox> m_frameRectangles;
 
 	friend class animation;
 };

@@ -12,21 +12,15 @@ resourceScene::resourceScene(std::string filepath)
 
 bool resourceScene::load()
 {
-	rc = std::make_shared<scene>();
-
-	if (!rc->loadFromFile(filepath)) return false;
+	if (!loadFromFile(filepath)) return false;
 	return resourceFilepath::load();
 }
 
 void resourceScene::unload()
 {
-	rc = nullptr;
-	resourceFilepath::unload();
-}
+	clearObjects();
 
-std::shared_ptr<scene> resourceScene::get()
-{
-	return rc;
+	resourceFilepath::unload();
 }
 
 bool resourceScene::isNeeded()
@@ -39,4 +33,3 @@ bool resourceScene::isNeeded()
 #include "scriptingEngine.h"
 
 MAGE_DeclareScriptingFilepathResource(resourceScene);
-MAGE_DeclareScriptingFunction(&resourceScene::get, "get");

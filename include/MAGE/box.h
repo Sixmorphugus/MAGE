@@ -71,6 +71,10 @@ public:
 	box<T> operator*(const point<T>& rH);
 	box<T> operator/(const point<T>& rH);
 
+	// equal to/not equal to
+	bool operator==(const box<T>& bx);
+	bool operator!=(const box<T>& bx);
+
 public:
 	point<T> position;
 	point<T> size;

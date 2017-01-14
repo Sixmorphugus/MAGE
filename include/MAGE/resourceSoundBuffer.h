@@ -2,6 +2,7 @@
 #include "resourceFilepath.h"
 
 namespace mage {
+class time;
 
 // SFML Sound Resource
 class MAGEDLL resourceSoundBuffer : public resourceFilepath
@@ -13,10 +14,14 @@ public:
 	bool load();
 	void unload();
 
-	std::shared_ptr<sf::SoundBuffer> get();
+	sf::SoundBuffer* get();
+
+	unsigned int getChannelCount();
+	time getDuration();
+	unsigned int getSampleRate();
 
 private:
-	std::shared_ptr<sf::SoundBuffer> data;
+	sf::SoundBuffer data;
 };
 
 } // namespace mage

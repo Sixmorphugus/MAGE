@@ -15,12 +15,17 @@ public:
 	bool load();
 	void unload();
 
-	std::shared_ptr<sf::Texture> get();
+	sf::Texture* get();
 
 	point2U getSize();
+	bool getIsRepeated();
+	bool getIsSmooth();
+
+	void setRepeated(bool repeated);
+	void setSmooth(bool smooth);
 
 private:
-	std::shared_ptr<sf::Texture> m_data;
+	sf::Texture m_data;
 };
 
 } // namespace mage

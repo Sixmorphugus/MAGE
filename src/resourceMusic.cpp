@@ -14,19 +14,15 @@ bool resourceMusic::load()
 {
 	auto t = resourceFilepath::load();
 
-	data = std::make_shared<sf::Music>();
+	if (!m_data.openFromFile(filepath)) return false;
 
-	if (!data->openFromFile(filepath)) return false;
-
-	data->setLoop(true);
+	m_data.setLoop(true);
 
 	return t;
 }
 
 void resourceMusic::unload()
 {
-	data = std::shared_ptr<sf::Music>();
-
 	resource::unload();
 }
 
@@ -39,7 +35,7 @@ bool resourceMusic::isNeeded()
 
 std::shared_ptr<sf::Music> resourceMusic::get()
 {
-	return data;
+	return &m_data;
 }
 
 // sfMusicResource

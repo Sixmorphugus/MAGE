@@ -51,7 +51,7 @@ gmo & gmo::operator=(const gmo & cp)
 	return *this;
 }
 
-void gmo::preUpdate(sf::Time elapsed)
+void gmo::preUpdate(time elapsed)
 {
 	if (m_respectPixelGrid) {
 		pixelLock();
@@ -60,7 +60,7 @@ void gmo::preUpdate(sf::Time elapsed)
 	onPreUpdate.notify(this, elapsed);
 }
 
-void mage::gmo::update(sf::Time elapsed)
+void mage::gmo::update(time elapsed)
 {
 	onUpdate.notify(this, elapsed);
 }

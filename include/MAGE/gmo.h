@@ -32,8 +32,8 @@ public:
 
 	gmo& operator=(const gmo& cp);
 
-	virtual void preUpdate(sf::Time elapsed);
-	virtual void update(sf::Time elapsed);
+	virtual void preUpdate(time elapsedSinceLastUpdate);
+	virtual void update(time elapsedSinceLastUpdate);
 
 	scene* getScene();
 	std::shared_ptr<prefab> getPrefabSource();
@@ -42,8 +42,8 @@ public:
 	void setRespectsPixelGrid(bool yes = true);
 
 public:
-	hook<gmo*, sf::Time> onPreUpdate;
-	hook<gmo*, sf::Time> onUpdate;
+	hook<gmo*, time> onPreUpdate;
+	hook<gmo*, time> onUpdate;
 
 private:
 	void copyFrom(const gmo& cp);
@@ -57,11 +57,3 @@ private:
 };
 
 }
-
-#define MAGE_DeclareScriptingBasic(type)\
-MAGE_DeclareScriptingType(type); \
-MAGE_DeclareScriptingBaseClass(mage::basic, type); \
-MAGE_DeclareScriptingBaseClass(mage::serializable, type); \
-MAGE_DeclareScriptingBaseClass(sf::Transformable, type); \
-MAGE_DeclareScriptingBaseClass(mage::shadable, type); \
-MAGE_DeclareScriptingCastingFunction("to_" STRING(type), mage::basic, type);

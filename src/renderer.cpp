@@ -1,4 +1,5 @@
 #include "renderer.h"
+
 #include "view.h"
 #include "resourceTexture.h"
 #include "helpers.h"
@@ -169,7 +170,7 @@ bool renderer::pushPageTexture(std::shared_ptr<resourceTexture> res)
 	point2U nextPasteLocation(m_currentPageTextureCol, m_nextPageTexturePos);
 
 	// use a sprite to draw the texture into the page
-	sf::Sprite sfSprite(*res->get().get());
+	sf::Sprite sfSprite(*res->get());
 
 	sfSprite.setPosition(nextPasteLocation.convertAxis<float>().toSf2());
 	m_page.draw(sfSprite);

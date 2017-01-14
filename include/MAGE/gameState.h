@@ -1,5 +1,5 @@
 #pragma once
-#include "group.h"
+#include "scene.h"
 #include "taggable.h"
 
 namespace mage {
@@ -18,11 +18,11 @@ class resourceMusic;
 // this new gameState definition means that states are defined via scripting, NOT via their resource file.
 // a resource file can now only hold an object group - a state must be created around it for it to work.
 
-class MAGEDLL gameState : public Group, public taggable
+class MAGEDLL gameState : public scene, public taggable
 {
 public:
 	gameState(); // creates empty state
-	gameState(Group& gr); // creates state with a group as the main objects (copying them out immediately)
+	gameState(gameState& gr); // creates state with a group as the main objects (copying them out immediately)
 	gameState(std::shared_ptr<resourceGroup> gr);
 	gameState(std::shared_ptr<resourceGameState> gs);
 

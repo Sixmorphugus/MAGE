@@ -15,9 +15,9 @@ bool resourceTexture::load()
 {
 	auto t = resourceFilepath::load();
 
-	m_data = std::make_shared<sf::Texture>();
+	m_data = sf::Texture();
 
-	bool success = m_data->loadFromFile(filepath);
+	bool success = m_data.loadFromFile(filepath);
 
 	if (success) {
 		return t;
@@ -28,19 +28,44 @@ bool resourceTexture::load()
 
 void resourceTexture::unload()
 {
-	m_data = std::shared_ptr<sf::Texture>();
+	m_data = sf::Texture();
 	resourceFilepath::unload();
 }
 
-std::shared_ptr<sf::Texture> resourceTexture::get()
+sf::Texture* resourceTexture::get()
 {
-	return m_data;
+	return &m_data;
 }
 
 point2U resourceTexture::getSize()
 {
-	return point2U(m_data->getSize());
+	return point2U(m_data.getSize());
+}
+
+bool resourceTexture::getIsRepeated()
+{
+	return m_data.isRepeated();
+}
+
+bool resourceTexture::getIsSmooth()
+{
+	return m_data.isSmooth();
+}
+
+void resourceTexture::setRepeated(bool repeated)
+{
+	m_data.setRepeated(repeated);
+}
+
+void resourceTexture::setSmooth(bool smooth)
+{
+	m_data.setRepeated(smooth);
 }
 
 // sfTextureResource
 MAGE_DeclareScriptingFilepathResource(resourceTexture);
+MAGE_DeclareScriptingFunction(&resourceTexture::getSize, "getSize");
+MAGE_DeclareScriptingFunction(&resourceTexture::getIsRepeated, "getIsRepeated");
+MAGE_DeclareScriptingFunction(&resourceTexture::getIsSmooth, "getIsSmooth");
+MAGE_DeclareScriptingFunction(&resourceTexture::setRepeated, "setRepeated");
+MAGE_DeclareScriptingFunction(&resourceTexture::setSmooth, "setSmooth");

@@ -14,9 +14,9 @@ bool resourceSoundBuffer::load()
 {
 	auto t = resourceFilepath::load();
 
-	data = std::make_shared<sf::SoundBuffer>();
+	data = sf::SoundBuffer();
 
-	bool success = data->loadFromFile(filepath);
+	bool success = data.loadFromFile(filepath);
 
 	if (success) {
 		return t;
@@ -27,17 +27,34 @@ bool resourceSoundBuffer::load()
 
 void resourceSoundBuffer::unload()
 {
-	data = std::shared_ptr<sf::SoundBuffer>();
+	data = sf::SoundBuffer();
 	resourceFilepath::unload();
 }
 
-std::shared_ptr<sf::SoundBuffer> resourceSoundBuffer::get()
+sf::SoundBuffer* resourceSoundBuffer::get()
 {
-	return data;
+	return &data;
+}
+
+unsigned int resourceSoundBuffer::getChannelCount()
+{
+	return data.getChannelCount();
+}
+
+time mage::resourceSoundBuffer::getDuration()
+{
+	return data.getDuration();
+}
+
+unsigned int resourceSoundBuffer::getSampleRate()
+{
+	return data.getSampleRate();
 }
 
 // SE
 #include "scriptingEngine.h"
 
 MAGE_DeclareScriptingFilepathResource(resourceSoundBuffer);
-MAGE_DeclareScriptingFunction(&resourceSoundBuffer::get, "get");
+MAGE_DeclareScriptingFunction(&resourceSoundBuffer::getChannelCount, "getChannelCount");
+MAGE_DeclareScriptingFunction(&resourceSoundBuffer::getDuration, "getDuration");
+MAGE_DeclareScriptingFunction(&resourceSoundBuffer::getSampleRate, "getSampleRate");
