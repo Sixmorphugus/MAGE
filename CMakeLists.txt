@@ -7,10 +7,17 @@ cmake_minimum_required(VERSION 3.6)
 project(MAGE)
 
 # MAGE's files
-file(GLOB MAGE_SRC
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/MAGE/*.h"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/*.inl"
+file(GLOB MAGE_INCLUDE_FOLDERS
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/MAGE/*"
+)
+
+file(GLOB MAGE_SRC_FOLDERS
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*"
+)
+
+file(GLOB MAGE_FILES
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/MAGE/*/*.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*/*.cpp"
 )
 
 # make everything output to the same place (we do not have to copy sfml's libs to where MAGE is if MAGE already outputs next to them)
@@ -32,8 +39,8 @@ set(MAGE_CHAI_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/extlibs/chaiscript)
 # COMPILE DATA
 
 # Multipurpose Arcade Game Engine (Core)
-add_library(MAGE SHARED ${MAGE_SRC})
-include_directories("./include/MAGE")
+add_executable(MAGE ${MAGE_FILES})
+include_directories(${MAGE_INCLUDE_FOLDERS})
 
 target_compile_definitions(MAGE PRIVATE MAGEDLL_EXPORT) # tell MAGE's header files that they are exporting functions, not importing them
 
