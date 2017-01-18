@@ -123,11 +123,15 @@ void scriptingEngine::dump(chaiscript::Boxed_Value* in)
 
 	auto s = chai->get_state().engine_state;
 
+	std::vector<chaiscript::Type_Info> bases;
+
 	if (in) {
 		p::log("C++ Class: " + in->get_type_info().bare_name());
+		bases = getUpTypes(in->get_type_info());
 	}
-
-	std::vector<chaiscript::Type_Info> bases = getUpTypes(in->get_type_info());
+	else {
+		p::log("You're dumping without a target.\nHOLD ONTO YOUR HATS BOYS");
+	}
 
 	p::log("Registered functions and members:");
 	for (auto m = s.m_functions.begin(); m != s.m_functions.end(); m++) {
@@ -136,10 +140,12 @@ void scriptingEngine::dump(chaiscript::Boxed_Value* in)
 		for (auto o = m->second.get()->begin(); o != m->second.get()->end(); o++) {
 			auto f = o->get();
 
+			bool displayIt = true;
+
 			if (in) {
 				auto ourType = in->get_type_info();
 
-				bool displayIt = false;
+				displayIt = false;
 
 				if (o->get()->get_param_types().size() < 2)
 					continue;
@@ -156,6 +162,9 @@ void scriptingEngine::dump(chaiscript::Boxed_Value* in)
 					}
 				}
 			}
+
+			if (!displayIt)
+				continue;
 
 			std::string name = f->get_param_types()[0].bare_name();
 			std::string n = "[C++] " + name;
@@ -255,7 +264,7 @@ std::vector<chaiscript::Type_Info> scriptingEngine::getUpTypes(const chaiscript:
 	auto upConvs = getUpConversions(of);
 
 	for (unsigned int i = 0; i < upConvs.size(); i++) {
-		upTypes.push_back(upConvs[i]->to);
+		upTypes.push_back(upConvs[i]->to());
 	}
 
 	return upTypes;
@@ -267,7 +276,7 @@ std::vector<chaiscript::Type_Info> scriptingEngine::getDownTypes(const chaiscrip
 	auto upConvs = getDownConversions(of);
 
 	for (unsigned int i = 0; i < upConvs.size(); i++) {
-		upTypes.push_back(upConvs[i]->from);
+		upTypes.push_back(upConvs[i]->from());
 	}
 
 	return upTypes;
@@ -283,6 +292,8 @@ std::vector<chaiscript::Type_Conversion> scriptingEngine::getConversions(const c
 			list.push_back(knownTypeConversions[i]);
 		}
 	}
+
+	return list;
 }
 
 std::vector<chaiscript::Type_Conversion> scriptingEngine::getUpConversions(const chaiscript::Type_Info & of) const
@@ -294,6 +305,8 @@ std::vector<chaiscript::Type_Conversion> scriptingEngine::getUpConversions(const
 			list.push_back(knownTypeConversions[i]);
 		}
 	}
+
+	return list;
 }
 
 std::vector<chaiscript::Type_Conversion> scriptingEngine::getDownConversions(const chaiscript::Type_Info & of) const
@@ -305,6 +318,8 @@ std::vector<chaiscript::Type_Conversion> scriptingEngine::getDownConversions(con
 			list.push_back(knownTypeConversions[i]);
 		}
 	}
+
+	return list;
 }
 
 // -------------------------------------------------------------

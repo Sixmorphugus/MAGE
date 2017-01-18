@@ -3,6 +3,11 @@
 
 using namespace mage;
 
+scheduleWait::scheduleWait()
+{
+	length = 0;
+}
+
 scheduleWait::scheduleWait(interval toWait, std::function<void()> callee)
 {
 	length = toWait;

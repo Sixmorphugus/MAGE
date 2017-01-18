@@ -2,6 +2,10 @@
 
 using namespace mage;
 
+gmoResizable::gmoResizable()
+{
+}
+
 gmoResizable::gmoResizable(pointF position, pointF size)
 	: gmo(position), transformableBox(position, size)
 {
@@ -10,7 +14,7 @@ gmoResizable::gmoResizable(pointF position, pointF size)
 // SE
 #include "scriptingEngine.h"
 
-MAGE_DeclareScriptingType(gmoResizable);
+MAGE_DeclareScriptingGmoType(gmoResizable);
 MAGE_DeclareScriptingBaseClass(gmo, gmoResizable);
-MAGE_DeclareScriptingBaseClass(gmo, transformableBox);
+MAGE_DeclareScriptingBaseClass(transformableBox, gmoResizable);
 MAGE_DeclareScriptingConstructor(gmoResizable(pointF, pointF), "gmoResizable");

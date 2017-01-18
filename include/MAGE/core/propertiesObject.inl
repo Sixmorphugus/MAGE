@@ -9,7 +9,7 @@ namespace mage {
 	// prop functions
 	template<typename T>
 	inline prop<T>::prop(std::string name,
-		const std::function<T(propertiesObject*)> getFunction,
+		std::function<T(const propertiesObject*)> getFunction,
 		std::function<void(propertiesObject*, T)> setFunction,
 		std::function<T(std::string&)> strConvFunction1,
 		std::function<std::string(T&)> strConvFunction2)
@@ -55,7 +55,8 @@ namespace mage {
 	inline std::string prop<T>::getString() const
 	{
 		if (m_strConv2) { // use a conversion if we have one
-			return m_strConv2(get());
+			T obj = get();
+			return m_strConv2(obj);
 		}
 
 		// if we don't, stick it in a string stream + hope shit works out
@@ -178,12 +179,12 @@ namespace mage {
 	}
 
 	template<typename T>
-	inline std::string prop<T>::instPropStringGet(propertiesObject * inst)
+	inline std::string prop<T>::instPropStringGet(propertiesObject& inst)
 	{
 		// a hack to get a property as a string on a specific instance.
 		auto oldThis = m_whatIsThis;
 
-		m_whatIsThis = inst;
+		m_whatIsThis = &inst;
 		auto str = getString();
 		m_whatIsThis = oldThis;
 
@@ -191,12 +192,12 @@ namespace mage {
 	}
 
 	template<typename T>
-	inline void prop<T>::instPropStringSet(propertiesObject * inst, std::string setTo)
+	inline void prop<T>::instPropStringSet(propertiesObject& inst, std::string setTo)
 	{
 		// a hack to get a property as a string on a specific instance.
 		auto oldThis = m_whatIsThis;
 
-		m_whatIsThis = inst;
+		m_whatIsThis = &inst;
 		setString(setTo);
 		m_whatIsThis = oldThis;
 	}
@@ -218,13 +219,13 @@ namespace mage {
 			return nullptr;
 
 		// make a copy.
-		std::shared_ptr<prop<T>> propConvCpy = std::make_shared<prop<T>>(propConv);
+		std::shared_ptr<prop<T>> propConvCpy = std::make_shared<prop<T>>(*propConv.get());
 		propConvCpy->m_whatIsThis = this;
 		propConvCpy->m_dataInstance = propConv.get();
 
 		// add the copy to our safety list.
 		// the safety list makes sure that any remote properties that still exist for this object know when we are destroyed and can't crash the game.
-		m_safetyList.push_back(std::weak_ptr(propConvCpy));
+		m_safetyList.push_back(std::weak_ptr<prop<T>>(propConvCpy));
 
 		// return the copy.
 		return propConvCpy;
@@ -234,7 +235,7 @@ namespace mage {
 	{
 		for (unsigned int i = 0; i < m_props.size(); i++) {
 			if (m_props[i]->getName() == prop) {
-				return createPropertyProxy<T>(m_props[i]);
+				return createPropertyProxy<T>(i);
 			}
 		}
 

@@ -35,7 +35,6 @@ bool renderable::getIsVisible() const
 #include "scriptingEngine.h"
 
 MAGE_DeclareScriptingType(renderable);
-MAGE_DeclareScriptingBaseClass(shadable, renderable);
 MAGE_DeclareScriptingConstructor(renderable(), "renderable");
 MAGE_DeclareScriptingCopyOperator(renderable);
 MAGE_DeclareScriptingFunction(&renderable::setIsVisible, "setIsVisible");

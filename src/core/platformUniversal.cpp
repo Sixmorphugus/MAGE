@@ -50,3 +50,7 @@ void platform::diagnosticError(std::string file, std::string func, int line, std
 	// crash
 	abort();
 }
+
+#ifdef MAGEDLL_EXPORT
+MAGE_DeclareGame(Game); // base engine main function.
+#endif

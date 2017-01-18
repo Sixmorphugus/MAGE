@@ -5,44 +5,38 @@
 
 using namespace mage;
 
+gmo::gmo()
+{
+	init();
+}
+
 gmo::gmo(const pointF & position)
 	: transformable(position)
 {
-	// defaults
-	m_scene = nullptr;
-	m_prefabSource = nullptr;
-	m_respectPixelGrid = false;
-
-	// object properties.
-	addProperty(std::make_shared<prop<std::string>>("name",
-		prop<std::string>::makeGetFunc<renamable>(&getName),
-		prop<std::string>::makeSetFunc<renamable>(&setName)
-		));
-
-	addProperty(std::make_shared<prop<pointF>>("position",
-		prop<pointF>::makeGetFunc<transformable>(&getPosition),
-		prop<pointF>::makeSetFunc<transformable>(&setPosition)
-		));
-
-	addProperty(std::make_shared<prop<pointF>>("anchor",
-		prop<pointF>::makeGetFunc<transformable>(&getAnchor),
-		prop<pointF>::makeSetFunc<transformable>(&setAnchor)
-		));
-
-	addProperty(std::make_shared<prop<pointF>>("scale",
-		prop<pointF>::makeGetFunc<transformable>(&getScale),
-		prop<pointF>::makeSetFunc<transformable>(&setScale)
-		));
-
-	addProperty(std::make_shared<prop<float>>("rotation",
-		prop<float>::makeGetFunc<transformable>(&getRotation),
-		prop<float>::makeSetFunc<transformable>(&setRotation)
-		));
+	init();
 }
 
 gmo::gmo(const gmo & cp)
 {
 	copyFrom(cp);
+}
+
+void gmo::init()
+{
+	m_scene = nullptr;
+	m_prefabSource = nullptr;
+	m_respectPixelGrid = false;
+	test = false;
+
+	// object properties.
+	addProperty(std::make_shared<prop<std::string>>("name", MAGE_PropLambdasFromMethods(std::string, gmo, setName, getName)));
+	addProperty(std::make_shared<prop<pointF>>("position", MAGE_PropLambdasFromMethods(pointF, gmo, setPosition, getPosition)));
+	addProperty(std::make_shared<prop<pointF>>("anchor", MAGE_PropLambdasFromMethods(pointF, gmo, setAnchor, getAnchor)));
+	addProperty(std::make_shared<prop<pointF>>("scale", MAGE_PropLambdasFromMethods(pointF, gmo, setScale, getScale)));
+	addProperty(std::make_shared<prop<float>>("rotation", MAGE_PropLambdasFromMethods(float, gmo, setRotation, getRotation)));
+	addProperty(std::make_shared<prop<bool>>("respect pixel grid", MAGE_PropLambdasFromMethods(bool, gmo, setRespectsPixelGrid, getRespectsPixelGrid)));
+
+	addProperty(std::make_shared<prop<bool>>("test", MAGE_PropLambdasFromMember(bool, gmo, test))); // test
 }
 
 bool gmo::isCloneable()
@@ -52,7 +46,7 @@ bool gmo::isCloneable()
 
 std::shared_ptr<gmo> gmo::clone()
 {
-	return std::make_shared<gmo>(this);
+	return std::make_shared<gmo>(*this);
 }
 
 gmo & gmo::operator=(const gmo & cp)
@@ -70,7 +64,7 @@ void gmo::preUpdate(interval elapsed)
 	onPreUpdate.notify(this, elapsed);
 }
 
-void mage::gmo::update(interval elapsed)
+void gmo::update(interval elapsed)
 {
 	onUpdate.notify(this, elapsed);
 }
@@ -89,7 +83,7 @@ std::shared_ptr<prefab> gmo::getPrefabSource()
 	return theGame()->prefabs->getDefaultPrefab(t);
 }
 
-bool gmo::getRespectsPixelGrid()
+bool gmo::getRespectsPixelGrid() const
 {
 	return m_respectPixelGrid;
 }
@@ -105,3 +99,19 @@ void gmo::copyFrom(const gmo & cp)
 	m_respectPixelGrid = cp.m_respectPixelGrid;
 	m_scene = nullptr;
 }
+
+#include "scriptingEngine.h"
+
+MAGE_DeclareScriptingGmoType(gmo);
+MAGE_DeclareScriptingConstructor(gmo(), "gmo");
+MAGE_DeclareScriptingConstructor(gmo(const gmo&), "gmo");
+MAGE_DeclareScriptingConstructor(gmo(const pointF&), "gmo");
+MAGE_DeclareScriptingFunction(&gmo::isCloneable, "isClonable");
+MAGE_DeclareScriptingFunction(&gmo::clone, "clone");
+MAGE_DeclareScriptingFunction(&gmo::operator=, "=");
+MAGE_DeclareScriptingFunction(&gmo::preUpdate, "preUpdate");
+MAGE_DeclareScriptingFunction(&gmo::update, "update");
+MAGE_DeclareScriptingFunction(&gmo::getScene, "getScene");
+MAGE_DeclareScriptingFunction(&gmo::getPrefabSource, "getPrefabSource");
+MAGE_DeclareScriptingFunction(&gmo::getRespectsPixelGrid, "getRespectsPixelGrid");
+MAGE_DeclareScriptingFunction(&gmo::setRespectsPixelGrid, "setRespectsPixelGrid");

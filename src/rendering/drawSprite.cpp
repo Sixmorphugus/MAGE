@@ -220,6 +220,8 @@ unsigned int drawSprite::addAnimation(std::shared_ptr<animation> newAnim)
 	m_animations.push_back(newAnim);
 
 	onAddAnimation.notify(this, newAnim.get());
+
+	return m_animations.size() - 1;
 }
 
 void drawSprite::removeAnimation(unsigned int id)

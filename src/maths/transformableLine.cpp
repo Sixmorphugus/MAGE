@@ -41,7 +41,7 @@ void transformableLine::setEndOffset(point2F & offset)
 void transformableLine::pixelLock()
 {
 	transformable::pixelLock();
-	m_endOffset.floor();
+	m_endOffset.getFloor();
 }
 
 void transformableLine::doTransformUpdate()

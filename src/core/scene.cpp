@@ -282,7 +282,6 @@ using namespace chaiscript;
 
 MAGE_DeclareScriptingType(scene);
 MAGE_DeclareScriptingBaseClass(serializable, scene);
-MAGE_DeclareScriptingBaseClass(shadable, scene);
 MAGE_DeclareScriptingConstructor(scene(), "scene");
 MAGE_DeclareScriptingConstructor(scene(const scene&), "scene");
 MAGE_DeclareScriptingCopyOperator(scene);

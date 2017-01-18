@@ -18,8 +18,8 @@ namespace mage {
 class MAGEDLL vertex {
 public:
 	vertex();
-	vertex(sf::Vertex& v);
-	vertex(point2F& sc, point2F& tc = point2F(), colour& t = colour());
+	vertex(const sf::Vertex& v);
+	vertex(const point2F& sc, const point2F& tc = point2F(), const colour& t = colour());
 
 	sf::Vertex toSf();
 

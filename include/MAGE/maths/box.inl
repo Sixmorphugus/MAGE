@@ -111,7 +111,7 @@ namespace mage {
 	template<typename T>
 	inline box<T> box<T>::floor()
 	{
-		return box<T>(position.floor(), size.floor());
+		return box<T>(position.getFloor(), size.getFloor());
 	}
 
 	template<typename T>

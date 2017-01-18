@@ -80,7 +80,7 @@ void transformableBox::doTransformUpdate()
 
 void transformableBox::pixelLock()
 {
-	m_size = m_size.floor();
+	m_size = m_size.getFloor();
 }
 
 // se

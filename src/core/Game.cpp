@@ -47,6 +47,28 @@ Game::Game(int argc, char* argv[], sf::RenderWindow* wind):
 		p::fatal("Platform init failed!\nPlease check that you're running the latest version of the game.");
 	}
 
+	init();
+
+	p::log("\nREADY TO START", true);
+	p::log("------------------------------------------", true);
+}
+
+Game::~Game()
+{
+	onGameDone.notify();
+	platform::deInit();
+}
+
+void Game::init()
+{
+	// reboot safety
+	onGameDone.clearObservers();
+	onGameDraw.clearObservers();
+	onGameInitDone.clearObservers();
+	onGamePreUpdate.clearObservers();
+	onGameUpdate.clearObservers();
+
+	// actual boot stuff
 	debug = false;
 
 	p::log("\nMAGE GAME ENGINE r" + MAGE_BUILDSTRING + " for " + MAGE_PLATFORM_STRING + "\nCopyright Deadhand 2016.\n", true);
@@ -100,7 +122,6 @@ Game::Game(int argc, char* argv[], sf::RenderWindow* wind):
 	inMainUpdateLoop = false;
 	colBoxes = MAGE_SHOWCOLLISIONBOXES;
 	showFps = MAGE_SHOWFPS;
-	didRunInit = false;
 	tickScale = 1.f;
 	state = states->current; // this never changes at the moment so only needs to be set once
 
@@ -120,30 +141,15 @@ Game::Game(int argc, char* argv[], sf::RenderWindow* wind):
 	//p::info("Creating prefabs");
 	//createPrefabs();
 
-	if (argc > 0 && !(argc % 2)) {
-		p::info("Reading launch args");
+	p::info("Loading resources");
+	loadResources();
 
-		for (int i = 0; i < argc; i) {
-			std::string argData = argv[i];
-			std::string argPeram = argv[i+1];
+	onGameInitDone.notify();
 
-			p::info("- " + argData + "/" + argPeram);
-		}
-	}
-	else {
-		p::info("No valid launch args");
-	}
+	tickClock.restart();
+	updateTime.restart();
 
 	p::log("\nDONE!", true);
-
-	p::log("\nREADY TO START", true);
-	p::log("------------------------------------------", true);
-}
-
-Game::~Game()
-{
-	onGameDone.notify();
-	platform::deInit();
 }
 
 bool Game::renderWindowExists()
@@ -304,19 +310,6 @@ void Game::update(interval elapsed) {
 }
 
 int Game::run(bool tickByTick) {
-	if (!didRunInit) {
-		p::info("Loading resources");
-		loadResources();
-
-		onGameInitDone.notify();
-
-		tickClock.restart();
-
-		didRunInit = true;
-
-		updateTime.restart();
-	}
-
 	bool stopLooping = false;
 	sf::Clock frameTimer;
 

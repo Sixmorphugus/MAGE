@@ -10,6 +10,7 @@ Wait Task : call a function(using a hook<>) after a set amount of interval on up
 */
 class MAGEDLL scheduleWait : public schedule {
 public:
+	scheduleWait();
 	scheduleWait(interval toWait, std::function<void()> callee);
 	scheduleWait(interval toWait, std::function<void()> callee, std::function<bool()> stopCond);
 

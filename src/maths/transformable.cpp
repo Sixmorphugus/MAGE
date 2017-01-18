@@ -109,8 +109,8 @@ void transformable::setRealPosition(pointF p)
 
 void transformable::pixelLock()
 {
-	m_position = m_position.floor();
-	m_anchor = m_anchor.floor();
+	m_position = m_position.getFloor();
+	m_anchor = m_anchor.getFloor();
 
 	m_scale = pointF(1.f, 1.f);
 	m_rotation = 0.f;

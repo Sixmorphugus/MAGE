@@ -17,7 +17,7 @@ bool resourceTexture::load()
 
 	m_data = sf::Texture();
 
-	bool success = m_data.loadFromFile(filepath);
+	bool success = m_data.loadFromFile(getFilepath());
 
 	if (success) {
 		return t;

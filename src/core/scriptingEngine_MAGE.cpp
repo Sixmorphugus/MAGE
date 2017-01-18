@@ -133,6 +133,7 @@ void scriptingEngine::bindMAGE()
 	chai->add(fun([&](Boxed_Value& input) { theGame()->scripting->whatIs(&input); }), "whatIs");
 	chai->add(fun([&](Boxed_Value& input) { return theGame()->scripting->trueForm(input); }), "trueForm");
 	chai->add(fun([&]() { theGame()->getRenderWindow().close(); }), "quit");
+	chai->add(fun([&]() { theGame()->init(); }), "restart");
 
 	chai->add(fun([&](int fpsl) { theGame()->setFramerateLimit(fpsl); }), "setFramerateLimit");
 	chai->add(fun([&](bool in) { theGame()->setFullscreen(in); }), "setFullscreen");

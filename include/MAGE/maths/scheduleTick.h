@@ -10,6 +10,7 @@ Tick Task: call a function (using a hook<unsigned int>) every set amount of inte
 */
 class MAGEDLL scheduleTick : public schedule {
 public:
+	scheduleTick();
 	scheduleTick(interval toWait, std::function<void(int)> callee);
 	scheduleTick(interval toWait, std::function<void(int)> callee, std::function<bool()> stopCond);
 

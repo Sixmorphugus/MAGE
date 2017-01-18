@@ -19,14 +19,14 @@ namespace mage {
 	template<typename T>
 	inline line<T>::line(const point2<T>& zeroVector)
 	{
-		setEndOffset(zeroVector);
+		endOffset = zeroVector;
 	}
 
 	template<typename T>
 	inline line<T>::line(T zeroAngle)
 	{
 		auto zeroVector = point2<T>(zeroAngle);
-		setEndOffset(zeroVector);
+		endOffset = zeroVector;
 	}
 
 	template<typename T>

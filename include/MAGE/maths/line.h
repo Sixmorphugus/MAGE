@@ -53,8 +53,8 @@ namespace mage {
 MAGE_DeclareScriptingTypeNamed(mage::line<T>, name);\
 MAGE_DeclareScriptingConstructor(mage::line<T>(), name);\
 MAGE_DeclareScriptingConstructor(mage::line<T>(const mage::line<T>&), name);\
-MAGE_DeclareScriptingConstructor(mage::line<T>(const mage::point<T>& p1, const mage::point<T>& p2), name);\
-MAGE_DeclareScriptingConstructor(mage::line<T>(const mage::point<T>& zeroPoint), name);\
+MAGE_DeclareScriptingConstructor(mage::line<T>(const mage::point<T>& p1, const mage::point2<T>& p2), name);\
+MAGE_DeclareScriptingConstructor(mage::line<T>(const mage::point2<T>& zeroPoint), name);\
 MAGE_DeclareScriptingConstructor(mage::line<T>(T zeroAngle), name);\
 MAGE_DeclareScriptingCopyOperator(mage::line<T>);\
 MAGE_DeclareScriptingFunction(&mage::line<T>::endOffset, "endOffset");\
@@ -66,5 +66,5 @@ MAGE_DeclareScriptingFunction(&mage::line<T>::getAngle, "getAngle");\
 MAGE_DeclareScriptingFunction(&mage::line<T>::setStartOffset, "setStartOffset");\
 MAGE_DeclareScriptingFunction(&mage::line<T>::setEndPoint, "setEndPoint");\
 MAGE_DeclareScriptingFunction(&mage::line<T>::getEndPoint, "getEndPoint");\
-MAGE_DeclareScriptingCustom(chaiscript::fun<bool, mage::line<T>, mage::point<T>&>(&mage::line<T>::intersects), "intersects");\
-MAGE_DeclareScriptingCustom(chaiscript::fun<bool, mage::line<T>, mage::line<T>&>(&mage::line<T>::intersects), "intersects");
+MAGE_DeclareScriptingCustom(chaiscript::fun<bool, mage::line<T>, const mage::point<T>&>(&mage::line<T>::intersects), "intersects");\
+MAGE_DeclareScriptingCustom(chaiscript::fun<bool, mage::line<T>, const mage::line<T>&>(&mage::line<T>::intersects), "intersects");

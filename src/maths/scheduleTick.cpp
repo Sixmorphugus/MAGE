@@ -3,6 +3,12 @@
 
 using namespace mage;
 
+scheduleTick::scheduleTick()
+{
+	length = 0;
+	lastTickTime = theGame()->getSimTime();
+}
+
 scheduleTick::scheduleTick(interval toWait, std::function<void(int)> callee)
 {
 	length = toWait;

@@ -58,8 +58,8 @@ public:
 	bool operator>(const point<T> &rhs) const;
 
 	// some functions that used to live in maths.h
-	point<T> floor() const; // floor the three values of a vector.
-	point<T> ceil() const; // ceil the three values of a vector.
+	point<T> getFloor() const; // floor the three values of a vector.
+	point<T> getCeil() const; // ceil the three values of a vector.
 
 	T getAngle2D() const; // get the angles of the vector
 	T getLength() const; // pythagoras.
@@ -67,6 +67,7 @@ public:
 	T getAngle2DTo(point<T>& v2) const; // angle between two positions as a float.
 	T getDot(point<T>& v2) const; // dot product.
 	T getCross(point<T>& v2) const; // dot product.
+	T getSum() const;
 
 	point<T> getRotatedAround(point<T>& pivot, T angle) const;
 
@@ -120,8 +121,8 @@ public:
 	bool operator<=(const point2<T> &rhs) const;
 	bool operator>(const point2<T> &rhs) const;
 
-	point2<T> floor() const; // floor the two values of a vector.
-	point2<T> ceil() const; // ceil the two values of a vector.
+	point2<T> getFloor() const; // floor the two values of a vector.
+	point2<T> getCeil() const; // ceil the two values of a vector.
 
 	T getAngle2D() const; // get the angles of the vector
 	T getLength() const; // pythagoras.
@@ -129,6 +130,7 @@ public:
 	T getAngle2DTo(point2<T>& v2) const; // angle between two positions as a float.
 	T getDot(point2<T>& v2) const; // dot product.
 	T getCross(point2<T>& v2) const; // dot product.
+	T getSum() const;
 
 	using point<T>::toSf2; // safe to "using" this because we don't expose it to scripting.
 
@@ -165,10 +167,11 @@ MAGE_DeclareScriptingTypeNamed(mage::point<type>, name);\
 MAGE_DeclareScriptingConstructor(mage::point<type>(), name);\
 MAGE_DeclareScriptingConstructor(mage::point<type>(type), name);\
 MAGE_DeclareScriptingConstructor(mage::point<type>(type, type), name);\
+MAGE_DeclareScriptingConstructor(mage::point<type>(type, type, type), name);\
 MAGE_DeclareScriptingConstructor(mage::point<type>(mage::point<type>&), name);\
 MAGE_DeclareScriptingConstructor(mage::point<type>(std::string), name);\
-MAGE_DeclareScriptingFunction(&mage::point<type>::ceil, "ceil");\
-MAGE_DeclareScriptingFunction(&mage::point<type>::floor, "floor");\
+MAGE_DeclareScriptingFunction(&mage::point<type>::getFloor, "getFloor");\
+MAGE_DeclareScriptingFunction(&mage::point<type>::getCeil, "getCeil");\
 MAGE_DeclareScriptingFunction(&mage::point<type>::getAngle2DTo, "getAngle2DTo");\
 MAGE_DeclareScriptingFunction(&mage::point<type>::getDistanceTo, "getDistanceTo");\
 MAGE_DeclareScriptingFunction(&mage::point<type>::getDot, "getDot");\
@@ -176,6 +179,7 @@ MAGE_DeclareScriptingFunction(&mage::point<type>::getCross, "getCross");\
 MAGE_DeclareScriptingFunction(&mage::point<type>::getLength, "getLength");\
 MAGE_DeclareScriptingFunction(&mage::point<type>::getAngle2D, "getAngle2D");\
 MAGE_DeclareScriptingFunction(&mage::point<type>::getRotatedAround, "getRotatedAround");\
+MAGE_DeclareScriptingFunction(&mage::point<type>::getSum, "getSum");\
 MAGE_DeclareScriptingCopyOperator(mage::point<type>);\
 MAGE_DeclareScriptingFunction(&mage::point<type>::operator+, "+");\
 MAGE_DeclareScriptingFunction(&mage::point<type>::operator-, "-");\
@@ -201,8 +205,8 @@ MAGE_DeclareScriptingConstructor(mage::point2<type>(type), name2); \
 MAGE_DeclareScriptingConstructor(mage::point2<type>(type, type), name2); \
 MAGE_DeclareScriptingConstructor(mage::point2<type>(mage::point2<type>&), name2); \
 MAGE_DeclareScriptingConstructor(mage::point2<type>(std::string), name2); \
-MAGE_DeclareScriptingFunction(&mage::point2<type>::ceil, "ceil"); \
-MAGE_DeclareScriptingFunction(&mage::point2<type>::floor, "floor"); \
+MAGE_DeclareScriptingFunction(&mage::point2<type>::getFloor, "getFloor"); \
+MAGE_DeclareScriptingFunction(&mage::point2<type>::getCeil, "getCeil"); \
 MAGE_DeclareScriptingFunction(&mage::point2<type>::getAngle2DTo, "getAngle2DTo"); \
 MAGE_DeclareScriptingFunction(&mage::point2<type>::getDistanceTo, "getDistanceTo"); \
 MAGE_DeclareScriptingFunction(&mage::point2<type>::getDot, "getDot"); \
@@ -210,6 +214,7 @@ MAGE_DeclareScriptingFunction(&mage::point2<type>::getCross, "getCross"); \
 MAGE_DeclareScriptingFunction(&mage::point2<type>::getLength, "getLength"); \
 MAGE_DeclareScriptingFunction(&mage::point2<type>::getAngle2D, "getAngle2D"); \
 MAGE_DeclareScriptingFunction(&mage::point2<type>::getRotatedAround, "getRotatedAround");\
+MAGE_DeclareScriptingFunction(&mage::point2<type>::getSum, "getSum");\
 MAGE_DeclareScriptingCopyOperator(mage::point2<type>); \
 MAGE_DeclareScriptingFunction(&mage::point2<type>::operator+, "+"); \
 MAGE_DeclareScriptingFunction(&mage::point2<type>::operator-, "-"); \

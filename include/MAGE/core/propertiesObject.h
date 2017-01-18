@@ -4,8 +4,8 @@
 // -------------
 // A propertiesObject is a serializable object that can be given imaginary "attributes" as strings - these attributes can then be dynamically read and changed through their
 // string.
-// Attributes are generally just named combinations of get/set functions. In some cases, however, it may be nessicary to directly change an exposed value - hence lambdas must
-// be generated as the get/set combo.
+// Attributes are just named combinations of get/set lambda or standalone functions. In some cases, however, it may be nessicary to directly change an exposed value - 
+// hence lambdas must be generated as the get/set combo. There are MAGE_PropLambdas macros for both of these possibilities.
 // An object can only list its own methods and members as properties. Attempts to list attributes outside the scope of the object itself will fail spectacularly.
 // This is to ensure deletion safety.
 // The "point" of this is that once an attribute is dynamically reflected and named, it can be serialized and reloaded without ambiguity. It can also be displayed in editors,
@@ -35,8 +35,8 @@ public:
 	virtual bool isReadOnly() const = 0;
 	virtual const std::type_info& getTypeInfo() const = 0;
 
-	virtual std::string instPropStringGet(propertiesObject* inst) = 0;
-	virtual void instPropStringSet(propertiesObject* inst, std::string val) = 0;
+	virtual std::string instPropStringGet(propertiesObject& inst) = 0;
+	virtual void instPropStringSet(propertiesObject& inst, std::string val) = 0;
 public:
 	hook<propBase*> onSetHidden;
 
@@ -56,12 +56,9 @@ private:
 template<typename T>
 class prop : public propBase {
 public:
-	template <typename T2> static const std::function<T(propertiesObject*)> makeGetFunc(std::function<T(T2*)> originalGetFunc);
-	template <typename T2> static std::function<void(propertiesObject*, T)> makeSetFunc(std::function<void(T2*, T)> originalSetFunc);
-
-public:
+	// It is reccomended you use the MAGE_Prop macros when creating these in C++.
 	prop(std::string name,
-		const std::function<T(propertiesObject*)> getFunction,
+		std::function<T(const propertiesObject*)> getFunction,
 		std::function<void(propertiesObject*, T)> setFunction = nullptr,
 		std::function<T(std::string&)> strConvFunction1 = nullptr,
 		std::function<std::string(T&)> strConvFunction2 = nullptr);
@@ -76,14 +73,14 @@ public:
 	std::function<T(std::string&)> getStringFromConverter() const;
 	std::function<std::string(T&)> getStringToConverter() const;
 
-	std::string instPropStringGet(propertiesObject* inst);
-	void instPropStringSet(propertiesObject* inst, std::string val);
+	std::string instPropStringGet(propertiesObject& inst);
+	void instPropStringSet(propertiesObject& inst, std::string val);
 
 public:
 	hook<prop<T>*> onSet;
 
 private:
-	const std::function<T(propertiesObject*)> m_getFunction;
+	std::function<T(const propertiesObject*)> m_getFunction;
 	std::function<void(propertiesObject*, T)> m_setFunction;
 
 	std::function<T(std::string&)> m_strConv1;
@@ -131,54 +128,46 @@ private:
 	std::vector<std::weak_ptr<propBase>> m_safetyList;
 };
 
-template<typename T>
-template<typename T2>
-inline const std::function<T(propertiesObject*)> prop<T>::makeGetFunc(std::function<T(T2* obj)> originalGetFunc)
-{
-	return [&](propertiesObject* po) {
-		auto castPo = dynamic_cast<T2*>(po);
-
-		if (!castPo)
-			return nullptr;
-
-		return originalGetFunc(castPo);
-	};
-}
-
-template<typename T>
-template<typename T2>
-inline std::function<void(propertiesObject*, T)> prop<T>::makeSetFunc(std::function<void(T2* obj, T arg)> originalSetFunc)
-{
-	return [&](propertiesObject* po, T updatedVar) {
-		auto castPo = dynamic_cast<T2*>(po);
-
-		if (!castPo)
-			return;
-
-		originalSetFunc(castPo, updatedVar);
-	};
-}
-
 }
 
 #include "propertiesObject.inl"
 
 // se stuff
+#define MAGE_PropGetLambdaFromMethod(className, getFunction)\
+[](const propertiesObject* po) {auto castPo = dynamic_cast<const className*>(po); if (!castPo) { p::fatal("unexpected propcast failure!"); } return castPo->getFunction(); }
+
+#define MAGE_PropSetLambdaFromMethod(propType, className, setFunction)\
+[](propertiesObject* po, propType toSet) {auto castPo = dynamic_cast<className*>(po); if (!castPo) { p::fatal("unexpected propcast failure!"); } castPo->setFunction(toSet); }
+
+#define MAGE_PropGetLambdaFromMember(className, propName)\
+[](const propertiesObject* po) {auto castPo = dynamic_cast<const className*>(po); if (!castPo) { p::fatal("unexpected propcast failure!"); } return castPo->propName; }
+
+#define MAGE_PropSetLambdaFromMember(propType, className, propName)\
+[](propertiesObject* po, propType toSet) {auto castPo = dynamic_cast<className*>(po); if (!castPo) { p::fatal("unexpected propcast failure!"); } castPo->propName = toSet; }
+
+#define MAGE_PropLambdasFromMethods(propType, className, setFunction, getFunction)\
+MAGE_PropGetLambdaFromMethod(className, getFunction),\
+MAGE_PropSetLambdaFromMethod(propType, className, setFunction)
+
+#define MAGE_PropLambdasFromMember(propType, className, propName)\
+MAGE_PropGetLambdaFromMember(className, propName),\
+MAGE_PropSetLambdaFromMember(propType, className, propName)
+
 #define MAGE_DeclareScriptingPropertiesObjectPropType(type)\
 MAGE_DeclareScriptingTypeNamed(prop<type>, mage::fixChaiName(STRING(type)) + "Property");\
 MAGE_DeclareScriptingBaseClass(propBase, prop<type>);\
 MAGE_DeclareScriptingBaseClass(namable, prop<type>);\
 MAGE_DeclareScriptingConstructor(prop<type>(std::string name,\
- std::function<type(propertiesObject*)> getFunction,\
+ std::function<type(const propertiesObject*)> getFunction,\
  std::function<void(propertiesObject*, type)> setFunction,\
  std::function<type(std::string&)> strConvFunction1,\
  std::function<std::string(type&)> strConvFunction2),\
  mage::fixChaiName(STRING(type)) + "Property");\
 MAGE_DeclareScriptingFunction([](std::string name,\
- std::function<type(propertiesObject*)> getFunction) { return prop<type>(name, getFunction); },\
+ std::function<type(const propertiesObject*)> getFunction) { return prop<type>(name, getFunction); },\
  mage::fixChaiName(STRING(type)) + "Property");\
 MAGE_DeclareScriptingFunction([](std::string name,\
- std::function<type(propertiesObject*)> getFunction,\
+ std::function<type(const propertiesObject*)> getFunction,\
  std::function<void(propertiesObject*, type)> setFunction) { return prop<type>(name, getFunction, setFunction); },\
  mage::fixChaiName(STRING(type)) + "Property");\
 MAGE_DeclareScriptingFunction(&prop<type>::get, "get");\

@@ -15,13 +15,24 @@ view::view()
 	setDefaults();
 }
 
-view::view(pointF size, std::shared_ptr<scene> gr)
+view::view(const pointF& size, std::shared_ptr<scene> gr)
+	: transformableBox(pointF(0.f, 0.f), size)
 {
-	setScale(size);
-	resizeInternalRT(sf::Vector2u((unsigned int)getScale().x, (unsigned int)getScale().y));
-
 	setDefaults();
 	viewScene = gr;
+
+	resizeInternalRT(sf::Vector2u((unsigned int)getScale().x, (unsigned int)getScale().y));
+}
+
+view::view(const view & copy)
+{
+	copyFrom(copy);
+}
+
+view& mage::view::operator=(const view & rhs)
+{
+	copyFrom(rhs);
+	return *this;
 }
 
 void view::render(sf::RenderTarget & target, colour bgCol)
@@ -148,13 +159,26 @@ void view::setDefaults()
 	setZoom(MAGE_ZOOMDEFAULT);
 }
 
+void view::copyFrom(const view & from)
+{
+	viewScene = from.viewScene;
+	states = from.states;
+	zoomZero = from.zoomZero;
+	respectPixelGrid = from.respectPixelGrid;
+	cameraLimits = from.cameraLimits;
+
+	m_viewport = from.m_viewport;
+}
+
 // SE Bind
 #include "scriptingEngine.h"
 
 MAGE_DeclareScriptingType(view);
 MAGE_DeclareScriptingBaseClass(transformable, view);
 MAGE_DeclareScriptingBaseClass(transformableBox, view);
-MAGE_DeclareScriptingBaseClass(shadable, view);
+MAGE_DeclareScriptingConstructor(view(), "view");
+MAGE_DeclareScriptingConstructor(view(const pointF&, std::shared_ptr<scene>), "view");
+MAGE_DeclareScriptingConstructor(view(const view&), "view");
 MAGE_DeclareScriptingFunction(&view::render, "render");
 MAGE_DeclareScriptingFunction(&view::respectPixelGrid, "respectPixelGrid");
 MAGE_DeclareScriptingFunction(&view::viewScene, "viewScene");

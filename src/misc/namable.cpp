@@ -7,7 +7,7 @@ namable::namable(std::string name)
 	m_name = name;
 }
 
-std::string namable::getName()
+std::string namable::getName() const
 {
 	return m_name;
 }

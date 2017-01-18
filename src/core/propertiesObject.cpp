@@ -20,7 +20,7 @@ bool propBase::isHidden() const
 	return m_hidden;
 }
 
-const mage::propBase* propBase::getDataInstance() const
+const propBase* propBase::getDataInstance() const
 {
 	if (m_dataInstance)
 		return m_dataInstance;
@@ -53,7 +53,7 @@ unsigned int propertiesObject::getNumProperties() const
 	return m_props.size();
 }
 
-std::shared_ptr<mage::propBase> propertiesObject::getPropertyData(unsigned int prop) const
+std::shared_ptr<propBase> propertiesObject::getPropertyData(unsigned int prop) const
 {
 	if (m_props.size() < prop) {
 		return nullptr;
@@ -63,7 +63,7 @@ std::shared_ptr<mage::propBase> propertiesObject::getPropertyData(unsigned int p
 	return m_props[prop];
 }
 
-std::shared_ptr<mage::propBase> propertiesObject::getPropertyData(std::string prop) const
+std::shared_ptr<propBase> propertiesObject::getPropertyData(std::string prop) const
 {
 	for (unsigned int i = 0; i < m_props.size(); i++) {
 		if (m_props[i]->getName() == prop) {
@@ -85,7 +85,7 @@ int propertiesObject::indexOfProperty(std::shared_ptr<propBase> prop) const
 	return -1;
 }
 
-std::vector<std::string> mage::propertiesObject::getPropertyList() const
+std::vector<std::string> propertiesObject::getPropertyList() const
 {
 	std::vector<std::string> propNames;
 
@@ -96,7 +96,7 @@ std::vector<std::string> mage::propertiesObject::getPropertyList() const
 	return propNames;
 }
 
-std::string mage::propertiesObject::serialize()
+std::string propertiesObject::serialize()
 {
 	std::stringstream saveFile;
 
@@ -106,7 +106,7 @@ std::string mage::propertiesObject::serialize()
 			continue;
 		}
 
-		saveFile << pList[j] << "=\"" << getPropertyData(pList[j])->instPropStringGet(this) << "\",";
+		saveFile << pList[j] << "=\"" << getPropertyData(pList[j])->instPropStringGet(*this) << "\",";
 	}
 
 	return saveFile.str();
@@ -124,7 +124,7 @@ bool propertiesObject::deserialize(std::string data)
 			continue;
 
 		if (getPropertyData(pair[0]))
-			getPropertyData(pair[0])->instPropStringSet(this, strFilter(pair[1], "\""));
+			getPropertyData(pair[0])->instPropStringSet(*this, strFilter(pair[1], "\""));
 	}
 
 	return true;

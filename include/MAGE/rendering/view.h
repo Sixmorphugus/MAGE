@@ -28,7 +28,10 @@ namespace mage {
 class MAGEDLL view : public transformableBox {
 public:
 	view();
-	view(pointF size, std::shared_ptr<scene> gr = nullptr);
+	view(const pointF& size, std::shared_ptr<scene> gr = nullptr);
+	view(const view& copy);
+
+	view& operator=(const view& rhs);
 
 	virtual void render(sf::RenderTarget& target, colour bgCol = colour(sf::Color::Transparent));
 
@@ -45,6 +48,7 @@ public:
 
 private:
 	void setDefaults();
+	void copyFrom(const view& from);
 
 protected:
 	sf::RenderTexture m_internalRT;

@@ -55,8 +55,14 @@ sf::RenderStates renderStates::toSf()
 	sf::RenderStates states;
 
 	states.blendMode = blend;
-	states.shader = shader.lock()->get();
-	states.texture = texture.lock()->get();
+
+	if(!shader.expired())
+		states.shader = shader.lock()->get();
+
+	if (!texture.expired())
+		states.texture = texture.lock()->get();
+
+	return states;
 }
 
 bool renderStates::operator==(renderStates & rh)

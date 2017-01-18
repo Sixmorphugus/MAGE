@@ -28,7 +28,7 @@ colour::colour(int8_t red, int8_t green, int8_t blue, int8_t alpha)
 	a = (float)alpha / 255.f;
 }
 
-mage::colour::colour(float gray)
+colour::colour(float gray)
 {
 	r = gray;
 	g = gray;
@@ -36,7 +36,7 @@ mage::colour::colour(float gray)
 	a = 1.f;
 }
 
-mage::colour::colour(int8_t gray)
+colour::colour(int8_t gray)
 {
 	float grayF = (float)gray / 255.f;
 
@@ -214,22 +214,22 @@ sf::Color colour::toSf() const
 	return sf::Color((int8_t)(255.f * r), (int8_t)(255.f * g), (int8_t)(255.f * b), (int8_t)(255.f * a));
 }
 
-int8_t mage::colour::r8()
+int8_t colour::r8()
 {
 	return (int8_t)(r * 255.f);
 }
 
-int8_t mage::colour::g8()
+int8_t colour::g8()
 {
 	return (int8_t)(g * 255.f);
 }
 
-int8_t mage::colour::b8()
+int8_t colour::b8()
 {
 	return (int8_t)(b * 255.f);
 }
 
-int8_t mage::colour::a8()
+int8_t colour::a8()
 {
 	return (int8_t)(a * 255.f);
 }
@@ -320,5 +320,7 @@ MAGE_DeclareScriptingFunction(&colour::operator*=, "*=");
 MAGE_DeclareScriptingFunction(&colour::operator/=, "/=");
 MAGE_DeclareScriptingFunction(&colour::operator==, "==");
 MAGE_DeclareScriptingFunction(&colour::operator!=, "!=");
+MAGE_DeclareScriptingFunction([](float r, float g, float b) { return colour(r, g, b); }, "colour");
+MAGE_DeclareScriptingFunction([](int8_t r, int8_t g, int8_t b) { return colour(r, g, b); }, "colour");
 MAGE_DeclareScriptingCustom(fun<colour, colour, float, bool>(&colour::getScaled), "getScaled");
 MAGE_DeclareScriptingCustom(fun<colour, colour, float, float, float, float>(&colour::getScaled), "getScaled");

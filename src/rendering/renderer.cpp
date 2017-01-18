@@ -10,7 +10,7 @@ renderer::renderer()
 {
 	// make the "page" as large as possible.
 	if (!m_page.create(sf::Texture::getMaximumSize(), sf::Texture::getMaximumSize()))
-		p::fatal("Renderer page init failed!");
+		p::warn("Renderer page allocation failed - reverting to legacy draw system");
 
 	// the page is used to draw things very quickly.
 	// It basically caches lots of textures at once for you.

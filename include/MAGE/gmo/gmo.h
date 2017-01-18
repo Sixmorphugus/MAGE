@@ -21,21 +21,18 @@ class scene;
 class prefab;
 class interval;
 
-// put MAGE_GmoOverloads in your class below the constructors to:
-// - allow the class to be cloned without knowing its type in C++
-// - allow the class to be a prefab
-#define MAGE_GmoOverloads(gmoType)\
-virtual std::shared_ptr<gmo> clone() { return std::make_shared<gmoType>(*this); }
-
 class gmo :
 	public renamable, // all game objects can have a name
 	public propertiesObject, // all game objects get registered properties
-	public virtual transformable,
-	public hookableLifetimeObject
+	public virtual transformable, // all game objects are (basically) transformable
+	public hookableLifetimeObject // onCreated + onDestroyed
 {
 public:
+	gmo();
 	gmo(const pointF& position);
 	gmo(const gmo& cp);
+
+	void init();
 
 	bool isCloneable();
 	virtual std::shared_ptr<gmo> clone();
@@ -48,12 +45,14 @@ public:
 	scene* getScene();
 	std::shared_ptr<prefab> getPrefabSource();
 
-	bool getRespectsPixelGrid();
+	bool getRespectsPixelGrid() const;
 	void setRespectsPixelGrid(bool yes = true);
 
 public:
 	hook<gmo*, interval> onPreUpdate;
 	hook<gmo*, interval> onUpdate;
+
+	bool test;
 
 private:
 	void copyFrom(const gmo& cp);
@@ -67,3 +66,18 @@ private:
 };
 
 }
+
+// put MAGE_GmoOverloads in your class below the constructors to:
+// - allow the class to be cloned without knowing its type in C++
+// - allow the class to be a prefab
+#define MAGE_GmoOverloads(gmoType)\
+virtual std::shared_ptr<gmo> clone() { return std::make_shared<gmoType>(*this); }
+
+#define MAGE_DeclareScriptingGmoType(type)\
+MAGE_DeclareScriptingType(type);\
+MAGE_DeclareScriptingBaseClass(namable, type);\
+MAGE_DeclareScriptingBaseClass(renamable, type);\
+MAGE_DeclareScriptingBaseClass(serializable, type);\
+MAGE_DeclareScriptingBaseClass(propertiesObject, type);\
+MAGE_DeclareScriptingBaseClass(transformable, type);\
+MAGE_DeclareScriptingBaseClass(hookableLifetimeObject, type);

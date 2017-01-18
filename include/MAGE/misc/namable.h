@@ -17,7 +17,7 @@ namespace mage {
 class MAGEDLL namable {
 public:
 	namable(std::string name = "");
-	virtual std::string getName();
+	virtual std::string getName() const;
 
 protected:
 	std::string m_name;

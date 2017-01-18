@@ -217,13 +217,13 @@ namespace mage {
 	}
 
 	template<typename T>
-	inline point<T> point<T>::floor() const
+	inline point<T> point<T>::getFloor() const
 	{
 		return point<T>(floor(x), floor(y), floor(z));
 	}
 
 	template<typename T>
-	inline point<T> point<T>::ceil() const
+	inline point<T> point<T>::getCeil() const
 	{
 		return point<T>(ceil(x), ceil(y), ceil(z));
 	}
@@ -262,13 +262,18 @@ namespace mage {
 	template<typename T>
 	inline T point<T>::getDot(point<T>& v2) const
 	{
-		return ((*this) * v2);
+		return ((*this) * v2).getSum();
 	}
 
 	template<typename T>
 	inline T point<T>::getCross(point<T>& v2) const
 	{
-		return (x + y + z) * (v2.x + v2.y + v2.z);
+		return getSum() * v2.getSum();
+	}
+	template<typename T>
+	inline T point<T>::getSum() const
+	{
+		return x + y + z;
 	}
 	template<typename T>
 	inline point<T> point<T>::getRotatedAround(point<T>& pivot, T angle) const
@@ -343,10 +348,10 @@ namespace mage {
 		auto split = splitString(in);
 
 		if (split.size() > 0) {
-			x = atof(split[0]);
+			x = atof(split[0].c_str());
 		}
 		if (split.size() > 1) {
-			y = atof(split[1]);
+			y = atof(split[1].c_str());
 		}
 
 		z = 0;
@@ -354,32 +359,38 @@ namespace mage {
 	template<typename T>
 	inline point2<T>& point2<T>::operator+=(const point2<T>& rhs)
 	{
-		return point<T>::operator+=(rhs).to2();
+		point<T>::operator+=(rhs);
+		return *this;
 	}
 	template<typename T>
 	inline point2<T>& point2<T>::operator-=(const point2<T>& rhs)
 	{
-		return point<T>::operator-=(rhs).to2();
+		point<T>::operator-=(rhs);
+		return *this;
 	}
 	template<typename T>
 	inline point2<T>& point2<T>::operator*=(const point2<T>& rhs)
 	{
-		return point<T>::operator*=(rhs).to2();
+		point<T>::operator*=(rhs);
+		return *this;
 	}
 	template<typename T>
 	inline point2<T>& point2<T>::operator/=(const point2<T>& rhs)
 	{
-		return point<T>::operator/=(rhs).to2();
+		point<T>::operator/=(rhs);
+		return *this;
 	}
 	template<typename T>
 	inline point2<T>& point2<T>::operator*=(const T rhs)
 	{
-		return point<T>::operator*=(rhs).to2();
+		point<T>::operator*=(rhs);
+		return *this;
 	}
 	template<typename T>
 	inline point2<T>& point2<T>::operator/=(const T rhs)
 	{
-		return point<T>::operator/=(rhs).to2();
+		point<T>::operator/=(rhs);
+		return *this;
 	}
 	template<typename T>
 	inline point2<T> point2<T>::operator+(const point2<T>& rhs) const
@@ -442,12 +453,12 @@ namespace mage {
 		return point<T>::operator>(rhs.to3());
 	}
 	template<typename T>
-	inline point2<T> point2<T>::floor() const
+	inline point2<T> point2<T>::getFloor() const
 	{
 		return point2<T>(floor(x), floor(y));
 	}
 	template<typename T>
-	inline point2<T> point2<T>::ceil() const
+	inline point2<T> point2<T>::getCeil() const
 	{
 		return point2<T>(ceil(x), ceil(y));
 	}
@@ -482,9 +493,14 @@ namespace mage {
 		return point<T>::getCross(v2.to3());
 	}
 	template<typename T>
+	inline T point2<T>::getSum() const
+	{
+		return point<T>::getSum();
+	}
+	template<typename T>
 	inline point2<T> point2<T>::getRotatedAround(point2<T>& pivot, T angle) const
 	{
-		return point<T>::getRotatedAround(pivot.to3(), angle);
+		return point<T>::getRotatedAround(pivot.to3(), angle).to2();
 	}
 	template<typename T>
 	inline std::string point2<T>::toString() const
@@ -518,6 +534,8 @@ namespace mage {
 
 		newPt.x = (To)x;
 		newPt.y = (To)y;
+
+		return newPt;
 	}
 	template<typename T>
 	inline point2<T> point<T>::to2() const

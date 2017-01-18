@@ -18,6 +18,7 @@ class gmoResizable :
 public transformableBox, public gmo
 {
 public:
+	gmoResizable();
 	gmoResizable(pointF position, pointF size = pointF());
 	MAGE_GmoOverloads(gmoResizable);
 };

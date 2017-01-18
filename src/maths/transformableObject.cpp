@@ -76,7 +76,7 @@ void mage::transformableObject::copyTransformableObject(const transformableObjec
 {
 	m_collisionBoxes.clear();
 	for (unsigned int i = 0; i < to.m_collisionBoxes.size(); i++) {
-		m_collisionBoxes.push_back(std::make_shared<collisionBox>(m_collisionBoxes[i])); // make a copy
+		m_collisionBoxes.push_back(std::make_shared<collisionBox>(*m_collisionBoxes[i].get())); // make a copy
 		m_collisionBoxes[i]->m_owner = this; // rather than the previous owner, we own the copy.
 	}
 }

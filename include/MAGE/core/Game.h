@@ -54,6 +54,8 @@ public:
 	Game(int argc, char* argv[], sf::RenderWindow* wind);
 	~Game();
 
+	void init();
+
 	bool renderWindowExists();
 	void windowInit(sf::RenderWindow* window);
 
@@ -151,8 +153,8 @@ protected:
 
 	bool consoleMode;
 
-	bool didRunInit;
 	std::string windowTitle;
+
 private:
 	sf::RenderWindow* window;
 };
@@ -161,9 +163,9 @@ MAGEDLL Game* theGame();
 
 } // namespace mage
 
-#define DeclareGame(typ) int main(int argc, char *argv[]) {\
+#define MAGE_DeclareGame(typ) int main(int argc, char *argv[]) {\
 sf::RenderWindow wind;\
 \
 typ gm(argc, argv, &wind);\
-return  gm.run();\
+return gm.run();\
 }

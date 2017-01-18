@@ -6,22 +6,25 @@
 using namespace mage;
 
 shadable::shadable() {
-
+	shader.reset();
 }
 
 void shadable::shaderRestartEffect()
 {
-	auto shL = shader.lock();
-
-	if (shL)
+	if (shader.expired())
 		return;
 
+	auto shL = shader.lock();
 	shL->get()->setUniform("clockTimeStart", theGame()->getSimTime().get());
 }
 
 void shadable::shaderUpdate(point2F texSize) const
 {
-	shaderUpdateCustom(shader.lock()->get(), texSize);
+	if (shader.expired())
+		return;
+
+	auto shL = shader.lock();
+	shaderUpdateCustom(shL->get(), texSize);
 }
 
 void shadable::shaderUpdateCustom(sf::Shader* cShader, point2F texSize) const

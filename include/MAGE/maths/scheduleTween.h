@@ -12,6 +12,7 @@ Tween Task: call a function (using a hook<float>) every update frame with a vary
 */
 class MAGEDLL scheduleTween : public schedule {
 public:
+	scheduleTween();
 	scheduleTween(interval toTake, unsigned int phases, easingFunction ef, std::function<void(float)> callee);
 	scheduleTween(interval toTake, unsigned int phases, easingFunction ef, std::function<void(float)> callee, std::function<bool()> stopCond);
 

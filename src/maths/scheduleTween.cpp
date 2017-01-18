@@ -3,6 +3,15 @@
 
 using namespace mage;
 
+scheduleTween::scheduleTween()
+{
+	length = 0;
+	numFrames = 0;
+	easing = nullptr;
+	skipOnEnd = true;
+	tLast = -1.f;
+}
+
 scheduleTween::scheduleTween(interval toTake, unsigned int phases, easingFunction ef, std::function<void(float)> callee)
 {
 	length = toTake;
