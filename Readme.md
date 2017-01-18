@@ -1,4 +1,4 @@
-#Multiplatform Arcade Game Engine
+#Multiplatform Arcade Game Engine v2
 ![Imgur](http://i.imgur.com/Qf707M2.png)
 
 Unfinished SFML-based game engine with:
@@ -17,11 +17,18 @@ Unfinished SFML-based game engine with:
 #Ish good, ja!
 You can easily compile the engine with help from CMake (https://cmake.org/) to generate a visual studio project. If you're going to make a game with it, however:
 - Wait for me to actually finish and document the engine (for now, the "documentation" is typing dump() in the console)
-- Use the MAGEDevkit (https://github.com/Sixmorphugus/MAGEDevkit) which includes a cool level editor and example project already written in for you.
 
-#Using MAGE on its own
-- If you want to use MAGE on its own you need to compile it.
-- Cmake the project anywhere you want and then compile the versions you need - most likley Debug and Release.
-- Import the MAGE library into your IDE the usual way.
-- MAKE SURE TO ALSO IMPORT /MAGE'S COPY/ OF THE SFML LIBRARY - includes are in extlibs/SFML/include, and libs are in the bin dir next to MAGE.dll.
-- Honestly, MAGEDevkit is quite a bit easier...
+#Compiling MAGE
+- If you want to use MAGE you need to compile it.
+- Cmake the project anywhere you want.
+- No, you shouldn't need to import anything. Dependencies are included.
+- THAT IS, unless you need MAGEdit. In that case, you're going to need wxWidgets installed somewhere on your computer for Cmake to let you compile the editor.
+
+#Folder Structure?
+- Cmake will generate a folder for your project when it plonks down the MAGE executable. You have:
+  - A "Modules" folder for DLL extensions based off the extension template (included, probably) and containing that
+  - A "Packs" folder for your resources and scripts.
+  - Some DLLs the engine needs next to MAGE.exe to start up including sfml and openal DLLs.
+  - A copy of MAGEdit.exe (if you compiled it)
+- The Packs folder is the most important. MAGE Games are meant to be moddable - when the engine starts, every "pack" in the Packs folder will be loaded (via execution of main.chai). Your game content need only reside in one Pack, but you could spread it over multiple packs too.
+- At present, "packs" are just folders that must contain main.chai.
