@@ -32,3 +32,8 @@ You can easily compile the engine with help from CMake (https://cmake.org/) to g
   - A copy of MAGEdit.exe (if you compiled it)
 - The Packs folder is the most important. MAGE Games are meant to be moddable - when the engine starts, every "pack" in the Packs folder will be loaded (via execution of main.chai). Your game content need only reside in one Pack, but you could spread it over multiple packs too.
 - At present, "packs" are just folders that must contain main.chai.
+- The Modules folder allows you to add extra capabilities to the engine in C++ rather than writing chaiscript code, via new DLL files. You can also write general code for your game in C++, I guess.
+
+#Scripting
+- The game engine uses chaiscript as its scripting engine.
+- This is a big topic and the wiki (soon) elaborates on it.
