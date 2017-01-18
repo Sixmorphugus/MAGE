@@ -37,4 +37,5 @@ You can easily compile the engine with help from CMake (https://cmake.org/) to g
 
 #Scripting
 - The game engine uses chaiscript as its scripting engine.
+- You can also make the engine do even cooler things using C++ modules.
 - This is a big topic and the wiki (soon) elaborates on it.
