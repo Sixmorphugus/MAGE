@@ -49,12 +49,11 @@ namespace mage {
 	{
 		auto end = getEndPoint();
 
-		// from geeksforgeeks.com
-		// http://www.geeksforgeeks.org/check-if-two-given-line-segments-intersect/
-
-		if (end.x <= std::max(start.x, point.x) && end.x >= std::min(start.x, point.x) &&
-			end.y <= std::max(end.y, point.y) && end.y >= std::min(start.y, point.y))
-			return (point.z == start.z);
+		T AB = sqrt((end.x - start.x)*(end.x - start.x) + (end.y - start.y)*(end.y - start.y) + (end.z - start.z)*(end.z - start.z));
+		T AP = sqrt((point.x - start.x)*(point.x - start.x) + (point.y - start.y)*(point.y - start.y) + (point.z - start.z)*(point.z - start.z));
+		T PB = sqrt((end.x - point.x)*(end.x - point.x) + (end.y - point.y)*(end.y - point.y) + (end.z - point.z)*(end.z - point.z));
+		if (AB == AP + PB)
+			return true;
 
 		return false;
 	}

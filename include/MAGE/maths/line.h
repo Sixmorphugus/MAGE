@@ -54,6 +54,7 @@ MAGE_DeclareScriptingTypeNamed(mage::line<T>, name);\
 MAGE_DeclareScriptingConstructor(mage::line<T>(), name);\
 MAGE_DeclareScriptingConstructor(mage::line<T>(const mage::line<T>&), name);\
 MAGE_DeclareScriptingConstructor(mage::line<T>(const mage::point<T>& p1, const mage::point2<T>& p2), name);\
+MAGE_DeclareScriptingConstructor(mage::line<T>(const mage::point<T>& p1, const mage::point2<T>& p2, mage::shapeInit), name);\
 MAGE_DeclareScriptingConstructor(mage::line<T>(const mage::point2<T>& zeroPoint), name);\
 MAGE_DeclareScriptingConstructor(mage::line<T>(T zeroAngle), name);\
 MAGE_DeclareScriptingCopyOperator(mage::line<T>);\
