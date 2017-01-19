@@ -4,11 +4,14 @@ using namespace mage;
 
 transformable::transformable()
 {
+	m_rotation = 0.f;
+	doTransformUpdate();
 }
 
 transformable::transformable(const pointF & position)
 {
-	m_position = position;
+	m_rotation = 0.f;
+	setPosition(position);
 }
 
 pointF transformable::getPosition() const

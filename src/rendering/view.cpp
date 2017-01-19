@@ -6,7 +6,7 @@
 #include "gmo.h"
 #include "drawSprite.h"
 #include "Game.h"
-#include "renderer.h"
+#include "batchRenderer.h"
 
 using namespace mage;
 
@@ -79,24 +79,24 @@ void view::render(sf::RenderTarget & target, colour bgCol)
 	resizeInternalRT(target.getSize());
 
 	// we're drawing on the internal texture
-	m_internalRT.setView(toSf()); // use this view
+	m_internalRT.setView(windowView); // use this view
 	m_internalRT.clear(bgCol.toSf()); // this'll only actually happen in the viewport (i think...)
 	
 	onRender.notify(this);
-
-	theGame()->mainRenderer->frameCleanup();
 
 	for (unsigned int i = 0; i < lScene->getNumObjects(); i++) {
 		auto renObj = lScene->getAs<renderable>(i);
 
 		if (renObj) {
-			theGame()->mainRenderer->pushFrameRenderable(*renObj);
+			theGame()->renderer->pushFrameRenderable(*renObj);
 		}
 	}
 
-	theGame()->mainRenderer->renderFrame(*this);
+	theGame()->renderer->renderFrame(*this);
+	theGame()->renderer->frameCleanup(); // clean up after drawing our content
 
 	// draw the internal RT into the target
+	m_internalRT.display();
 	sf::Sprite drawSprite(m_internalRT.getTexture());
 
 	target.draw(drawSprite, states.toSf());

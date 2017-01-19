@@ -12,7 +12,7 @@ drawSprite::drawSprite(std::shared_ptr<resourceTexture> tex)
 	setTexture(tex);
 }
 
-drawSprite::drawSprite(pointF & position, pointF& size, std::shared_ptr<resourceTexture> tex)
+drawSprite::drawSprite(const pointF& position, const pointF& size, std::shared_ptr<resourceTexture> tex)
 	: drawBox(position, size)
 {
 	setTexture(tex);
@@ -38,7 +38,7 @@ floatBox drawSprite::getSpriteTextureCoords()
 	return floatBox(pointF(texCoord1.x, texCoord1.y), pointF(texCoord4.x, texCoord4.y), mage::CORNERS);
 }
 
-void drawSprite::setSpriteTextureCoords(floatBox& box)
+void drawSprite::setSpriteTextureCoords(const floatBox& box)
 {
 	texCoord1 = point2F(box.position.x, box.position.y);
 	texCoord2 = point2F(box.position.x + box.size.x, box.position.y);
@@ -62,7 +62,7 @@ void drawSprite::mapTextureCoordsToFullTexture(std::shared_ptr<resourceTexture> 
 	setSpriteTextureCoords(floatBox(pointF(0.f, 0.f), tex->getSize().convertAxis<float>().to3()));
 }
 
-void drawSprite::regenerateFrames(point2U frameSize)
+void drawSprite::regenerateFrames(const point2U& frameSize)
 {
 	m_frameRectangles.clear();
 
@@ -102,7 +102,7 @@ void drawSprite::setFrame(unsigned int frame, bool interrupt)
 	onFrameChanged.notify(this);
 }
 
-int drawSprite::getFrameIndex(floatBox fr) const
+int drawSprite::getFrameIndex(const floatBox& fr) const
 {
 	for (unsigned int i = 0; i < m_frameRectangles.size(); i++) {
 		auto rect = m_frameRectangles[i];
@@ -140,7 +140,7 @@ void drawSprite::resetFrameEndTimer()
 	m_toAnimationFrameEnd = interval(0.f);
 }
 
-void drawSprite::continueAnimation(interval elapsed)
+void drawSprite::continueAnimation(const interval& elapsed)
 {
 	if (!isPlayingAnAnimation())
 		return;

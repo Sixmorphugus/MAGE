@@ -16,8 +16,8 @@ namespace mage {
 class MAGEDLL transformableBox : public virtual transformable {
 public:
 	transformableBox();
-	transformableBox(pointF pos);
-	transformableBox(pointF pos, pointF size);
+	transformableBox(const pointF& pos);
+	transformableBox(const pointF& pos, const pointF& size);
 
 	// massTransformable
 	pointF getCenter() const;

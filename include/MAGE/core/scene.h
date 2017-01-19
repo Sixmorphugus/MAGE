@@ -3,7 +3,7 @@
 // mage::scene
 // -------------
 // A scene is a collection of objects that are rendered and updated together.
-// It has a renderer for drawing any renderable GMOs that make it up.
+// It has a batchRenderer for drawing any renderable GMOs that make it up.
 // You can derive scene with a gmo to make composite objects.
 // -------------
 // Category: Maths

@@ -1,4 +1,4 @@
-#include "renderer.h"
+#include "batchRenderer.h"
 
 #include "view.h"
 #include "resourceTexture.h"
@@ -6,7 +6,7 @@
 
 using namespace mage;
 
-renderer::renderer()
+batchRenderer::batchRenderer()
 {
 	// make the "page" as large as possible.
 	if (!m_page.create(sf::Texture::getMaximumSize(), sf::Texture::getMaximumSize()))
@@ -23,7 +23,7 @@ renderer::renderer()
 	m_nextPageTextureCol = 0;
 }
 
-void renderer::renderSingleChunk(renderChunk& chunk, view& renderView)
+void batchRenderer::renderSingleChunk(renderChunk& chunk, view& renderView)
 {
 	sf::RenderTarget* window = renderView.getTarget();
 
@@ -34,59 +34,69 @@ void renderer::renderSingleChunk(renderChunk& chunk, view& renderView)
 	window->draw(&chunk.getSfVertexList()[0], chunk.getSfVertexList().size(), sf::Triangles, rendererSfState(chunk.states));
 }
 
-void renderer::renderFrame(view& renderView)
+void batchRenderer::renderFrame(view& renderView)
 {
 	sf::RenderTarget* window = renderView.getTarget();
 
 	// use default view if there's none given
 	window->setView(renderView.toSf());
 
-	auto frameChunks = collapseVectorMap<float, renderChunk>(m_frameChunks);
-
 	// draw each chunk quickly
-	for (unsigned int i = 0; i < frameChunks.size(); i++) {
-		auto vList = frameChunks[i].getSfVertexList();
+	for (unsigned int i = 0; i < m_frameChunks.size(); i++) {
+		auto vList = m_frameChunks[i].getSfVertexList();
+
+		/*
+		for (unsigned int v = 0; v < vList.size(); v++) {
+			p::info(std::to_string(vList[v].position.x) + "," + std::to_string(vList[v].position.y));
+		}
+		*/
+
 		// sanity
-		if (vList.size() == 0)
+		if (vList.size() == 0) {
 			continue;
+		}
 
 		// do the draw
-		window->draw(&vList[0], vList.size(), sf::Triangles, rendererSfState(frameChunks[i].states));
+		window->draw(&vList[0], vList.size(), sf::Triangles, rendererSfState(m_frameChunks[i].states));
 	}
 }
 
-void renderer::processFrameRecipe(renderRecipe r)
+void batchRenderer::processFrameRecipe(renderRecipe r)
 {
-	if (!m_frameChunks.count(r.depth)) {
-		m_frameChunks[r.depth] = std::vector<renderChunk>();
-	}
-
 	tryRecipePage(r); // try to make this recipe draw faster
 
 	// is the LAST chunk in this list compatible with our renderStates?
 	// if we tried others it would work but things would draw out of order.
 	// we're trying to preserve the order.
-	auto thisList = m_frameChunks[r.depth];
-	renderChunk& lastChunk = thisList[thisList.size() - 1];
+	if (m_frameChunks.size() > 0) {
+		renderChunk& lastChunk = m_frameChunks[m_frameChunks.size() - 1];
 
-	if (lastChunk.states != r.states) {
-		// insert into new chunk.
-		thisList.push_back(renderChunk(r.states));
-		lastChunk = thisList[thisList.size() - 1];
+		if (lastChunk.states != r.states) {
+			// insert into new chunk.
+			m_frameChunks.push_back(renderChunk(r.states));
+			lastChunk = m_frameChunks[m_frameChunks.size() - 1];
+		}
+
+		for (unsigned int i = 0; i < r.triangles.size(); i++) {
+			lastChunk.pushTriangle(r.triangles[i]);
+		}
 	}
+	else {
+		m_frameChunks.push_back(renderChunk(r.states));
 
-	for (unsigned int i = 0; i < r.triangles.size(); i++) {
-		lastChunk.pushTriangle(r.triangles[i]);
+		for (unsigned int i = 0; i < r.triangles.size(); i++) {
+			m_frameChunks[0].pushTriangle(r.triangles[i]);
+		}
 	}
 }
 
-void renderer::frameCleanup()
+void batchRenderer::frameCleanup()
 {
 	clearFrameChunks();
 	clearPage();
 }
 
-bool renderer::tryRecipePage(renderRecipe & toPage)
+bool batchRenderer::tryRecipePage(renderRecipe & toPage)
 {
 	// we have been given a draw recipe that:
 	// a) has a texture.
@@ -125,7 +135,7 @@ bool renderer::tryRecipePage(renderRecipe & toPage)
 	return true;
 }
 
-bool renderer::textureFitsPage(std::shared_ptr<resourceTexture> res, bool swapCol)
+bool batchRenderer::textureFitsPage(std::shared_ptr<resourceTexture> res, bool swapCol)
 {
 	point2U nextPasteLocation(m_currentPageTextureCol, m_nextPageTexturePos);
 
@@ -148,12 +158,12 @@ bool renderer::textureFitsPage(std::shared_ptr<resourceTexture> res, bool swapCo
 	return true;
 }
 
-bool renderer::textureIsInPage(std::shared_ptr<resourceTexture> res)
+bool batchRenderer::textureIsInPage(std::shared_ptr<resourceTexture> res)
 {
 	return m_pagePositions.count(res.get());
 }
 
-point2U renderer::texturePagePosition(std::shared_ptr<resourceTexture> res)
+point2U batchRenderer::texturePagePosition(std::shared_ptr<resourceTexture> res)
 {
 	if(!textureIsInPage(res))
 		return point2U(m_page.getSize());
@@ -161,12 +171,12 @@ point2U renderer::texturePagePosition(std::shared_ptr<resourceTexture> res)
 	return m_pagePositions[res.get()];
 }
 
-bool renderer::pushPageTexture(std::shared_ptr<resourceTexture> res)
+bool batchRenderer::pushPageTexture(std::shared_ptr<resourceTexture> res)
 {
 	if (textureIsInPage(res) || !textureFitsPage(res, true))
 		return false;
 
-	// paste the texture into the renderer's page
+	// paste the texture into the batchRenderer's page
 	point2U nextPasteLocation(m_currentPageTextureCol, m_nextPageTexturePos);
 
 	// use a sprite to draw the texture into the page
@@ -178,46 +188,41 @@ bool renderer::pushPageTexture(std::shared_ptr<resourceTexture> res)
 	return true;
 }
 
-void renderer::clearPage()
+void batchRenderer::clearPage()
 {
 	m_currentPageTextureCol = 0;
 	m_nextPageTexturePos = 0;
 	m_nextPageTextureCol = 0;
 }
 
-void renderer::clearFrameChunks()
+void batchRenderer::clearFrameChunks()
 {
 	m_pagePositions.clear();
 	m_frameChunks.clear();
 }
 
-unsigned int renderer::getNumFrameChunks() const
+unsigned int batchRenderer::getNumFrameChunks() const
 {
 	return m_frameChunks.size();
 }
 
-void renderer::pushFrameRecipe(renderRecipe& r)
+void batchRenderer::pushFrameRecipe(renderRecipe& r)
 {
 	processFrameRecipe(r);
 }
 
-void renderer::pushFrameRenderable(renderable& r)
+void batchRenderer::pushFrameRenderable(renderable& r)
 {
 	if(r.getIsVisible())
 		pushFrameRecipe(r.getDrawRecipe());
 }
 
-void renderer::pushFrameChunk(renderChunk & chunk, float depth)
+void batchRenderer::pushFrameChunk(renderChunk & chunk, float depth)
 {
-	// if you need to use this function you're not using the renderer properly
-	if (!m_frameChunks.count(depth)) {
-		m_frameChunks[depth] = std::vector<renderChunk>();
-	}
-
-	m_frameChunks[depth].push_back(chunk);
+	m_frameChunks.push_back(chunk);
 }
 
-sf::RenderStates renderer::rendererSfState(renderStates & states)
+sf::RenderStates batchRenderer::rendererSfState(renderStates & states)
 {
 	auto sfState = states.toSf();
 
@@ -229,4 +234,19 @@ sf::RenderStates renderer::rendererSfState(renderStates & states)
 
 // SE
 #include "scriptingEngine.h"
-MAGE_DeclareScriptingFunction([](renderer* r, std::shared_ptr<resourceTexture> tex) {return r->textureFitsPage(tex); }, "textureFitsPage");
+MAGE_DeclareScriptingUnlistableType(batchRenderer);
+MAGE_DeclareScriptingConstructor(batchRenderer(), "batchRenderer");
+MAGE_DeclareScriptingFunction(&batchRenderer::clearFrameChunks, "clearFrameChunks");
+MAGE_DeclareScriptingFunction(&batchRenderer::clearPage, "clearPage");
+MAGE_DeclareScriptingFunction(&batchRenderer::frameCleanup, "frameCleanup");
+MAGE_DeclareScriptingFunction(&batchRenderer::getNumFrameChunks, "getNumFrameChunks");
+MAGE_DeclareScriptingFunction(&batchRenderer::processFrameRecipe, "processFrameRecipe");
+MAGE_DeclareScriptingFunction(&batchRenderer::pushFrameChunk, "pushFrameChunk");
+MAGE_DeclareScriptingFunction(&batchRenderer::pushFrameRecipe, "pushFrameRecipe");
+MAGE_DeclareScriptingFunction(&batchRenderer::pushFrameRenderable, "pushFrameRenderable");
+MAGE_DeclareScriptingFunction(&batchRenderer::renderFrame, "renderFrame");
+MAGE_DeclareScriptingFunction(&batchRenderer::renderSingleChunk, "renderSingleChunk");
+MAGE_DeclareScriptingFunction(&batchRenderer::textureFitsPage, "textureFitsPage");
+MAGE_DeclareScriptingFunction([](batchRenderer* r, std::shared_ptr<resourceTexture> tex) {return r->textureFitsPage(tex); }, "textureFitsPage");
+MAGE_DeclareScriptingFunction(&batchRenderer::textureIsInPage, "textureIsInPage");
+MAGE_DeclareScriptingFunction(&batchRenderer::texturePagePosition, "texturePagePosition");

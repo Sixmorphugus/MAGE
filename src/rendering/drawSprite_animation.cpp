@@ -8,7 +8,7 @@ drawSprite::animation::animation()
 	skipOnStop = true;
 }
 
-drawSprite::animation::animation(interval& ft, std::vector<unsigned int>& fl, bool fbf)
+drawSprite::animation::animation(const interval& ft, const std::vector<unsigned int>& fl, bool fbf)
 {
 	frames = fl;
 	fadeBetweenFrames = fbf;

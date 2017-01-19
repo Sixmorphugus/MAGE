@@ -6,12 +6,12 @@ drawBox::drawBox()
 {
 }
 
-drawBox::drawBox(pointF& position)
+drawBox::drawBox(const pointF& position)
 	: transformableBox(position)
 {
 }
 
-drawBox::drawBox(pointF & position, pointF & size)
+drawBox::drawBox(const pointF& position, const pointF& size)
 	: transformableBox(position, size)
 {
 }
@@ -41,7 +41,7 @@ renderRecipe drawBox::generateDrawRecipe()
 	return renderRecipe({ tri1, tri2 }, getRealPosition().z, states);
 }
 
-void drawBox::setFullTint(colour & t)
+void drawBox::setFullTint(const colour & t)
 {
 	tint1 = t;
 	tint2 = t;
@@ -55,7 +55,8 @@ MAGE_DeclareScriptingBaseClass(transformableBox, drawBox);
 MAGE_DeclareScriptingBaseClass(transformable, drawBox);
 MAGE_DeclareScriptingBaseClass(renderable, drawBox);
 MAGE_DeclareScriptingConstructor(drawBox(), "drawBox");
-MAGE_DeclareScriptingConstructor(drawBox(pointF&, pointF&), "drawBox");
+MAGE_DeclareScriptingConstructor(drawBox(const pointF&), "drawBox");
+MAGE_DeclareScriptingConstructor(drawBox(const pointF&, const pointF&), "drawBox");
 MAGE_DeclareScriptingFunction(&drawBox::setFullTint, "setFullTint");
 MAGE_DeclareScriptingFunction(&drawBox::tint1, "tint1");
 MAGE_DeclareScriptingFunction(&drawBox::tint2, "tint2");

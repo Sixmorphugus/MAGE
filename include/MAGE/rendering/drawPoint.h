@@ -18,7 +18,7 @@ namespace mage {
 class MAGEDLL drawPoint : public renderable, public transformable {
 public:
 	drawPoint();
-	drawPoint(pointF& point);
+	drawPoint(const pointF& point);
 
 public:
 	colour tint;

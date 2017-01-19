@@ -96,7 +96,7 @@ void scriptingEngine::bindMAGE()
 	chai->add_global(var(theGame()->states), "states");
 	chai->add_global(var(theGame()->states->current), "state"); // don't get these two mixed up
 	chai->add_global(var(theGame()->camera), "camera");
-	chai->add_global(var(theGame()->mainRenderer), "mainRenderer");
+	chai->add_global(var(theGame()->renderer), "renderer");
 
 	chai->add_global(var(theGame()), "theGame");
 

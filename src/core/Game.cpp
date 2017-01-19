@@ -11,7 +11,7 @@
 #include "mixer.h"
 #include "scriptingEngine.h"
 #include "schedules.h"
-#include "renderer.h"
+#include "batchRenderer.h"
 
 // MISC
 #include "helpers.h"
@@ -95,7 +95,7 @@ void Game::init()
 	prefabs = std::make_shared<prefabMngr>();
 
 	p::log("\tRenderer...");
-	mainRenderer = std::make_shared<renderer>();
+	renderer = std::make_shared<batchRenderer>();
 
 	p::log("\tCamera...");
 	camera = std::make_shared<view>();

@@ -2,8 +2,8 @@
 
 // mage::renderable
 // -------------
-// An object that can generate a drawRecipe and therefore be passed to the renderer.
-// Also has a property (visible) which can make the renderer ignore it.
+// An object that can generate a drawRecipe and therefore be passed to the batchRenderer.
+// Also has a property (visible) which can make the batchRenderer ignore it.
 // -------------
 // Category: Rendering
 // Has Hooks: Yes

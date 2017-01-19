@@ -1,11 +1,11 @@
 #pragma once
 
-// mage::renderer
+// mage::batchRenderer
 // -------------
 // It draws things.
-// The renderer will generally be given renderables (though can also take raw drawRecipes) to batch draw to the window.
+// The batchRenderer will generally be given renderables (though can also take raw drawRecipes) to batch draw to the window.
 // A view is optional for the drawing.
-// The renderer garentees that it will organize the chunks so that recipes with the same depth are drawn in roughly the order they were passed in.
+// The batchRenderer garentees that it will organize the chunks so that recipes with the same depth are drawn in roughly the order they were passed in.
 // -------------
 // Category: Rendering
 // Has Hooks: Yes
@@ -19,9 +19,9 @@ namespace mage {
 
 class view;
 
-class MAGEDLL renderer {
+class MAGEDLL batchRenderer {
 public:
-	renderer();
+	batchRenderer();
 
 	void renderSingleChunk(renderChunk& chunk, view& renderView);
 
@@ -38,7 +38,7 @@ public:
 	bool tryRecipePage(renderRecipe& toPage); // tries to make a recipe compatible with a chunk that uses the page by pasting its texture into said page.
 	// this fails if the page has no room or not enough.
 
-	bool textureFitsPage(std::shared_ptr<resourceTexture> res, bool swapCol = false); // unless you know how the renderer works you don't need swapCol.
+	bool textureFitsPage(std::shared_ptr<resourceTexture> res, bool swapCol = false); // unless you know how the batchRenderer works you don't need swapCol.
 	bool textureIsInPage(std::shared_ptr<resourceTexture> res);
 	point2U texturePagePosition(std::shared_ptr<resourceTexture> res);
 
@@ -49,6 +49,7 @@ public:
 
 	unsigned int getNumFrameChunks() const;
 
+private:
 	sf::RenderStates rendererSfState(renderStates& states); // does the same thing as renderStates::toSf with a small change.
 
 private:
@@ -56,7 +57,7 @@ private:
 
 	std::map<resourceTexture*, point2U> m_pagePositions;
 
-	std::map<float, std::vector<renderChunk>> m_frameChunks;
+	std::vector<renderChunk> m_frameChunks;
 
 	unsigned int m_nextPageTexturePos;
 	unsigned int m_nextPageTextureCol;

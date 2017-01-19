@@ -31,7 +31,7 @@ class resourceMngr;
 class scheduleMngr;
 class prefabMngr;
 class scriptingEngine;
-class renderer;
+class batchRenderer;
 class loadingScreen;
 class resourceTexture;
 class view;
@@ -106,7 +106,7 @@ public:
 	std::shared_ptr<gameState> state;
 
 	std::shared_ptr<view> camera;
-	std::shared_ptr<renderer> mainRenderer;
+	std::shared_ptr<batchRenderer> renderer;
 
 	hook<> onGameInitDone;
 	hook<> onGamePreUpdate;

@@ -169,7 +169,6 @@ typedef point2<unsigned int> point2U;
 MAGE_DeclareScriptingTypeNamed(mage::point<type>, name);\
 MAGE_DeclareScriptingConstructor(mage::point<type>(), name);\
 MAGE_DeclareScriptingConstructor(mage::point<type>(type), name);\
-MAGE_DeclareScriptingConstructor(mage::point<type>(type, type), name);\
 MAGE_DeclareScriptingConstructor(mage::point<type>(type, type, type), name);\
 MAGE_DeclareScriptingConstructor(mage::point<type>(mage::point<type>&), name);\
 MAGE_DeclareScriptingConstructor(mage::point<type>(std::string), name);\

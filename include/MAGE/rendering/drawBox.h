@@ -18,10 +18,10 @@ namespace mage {
 	class MAGEDLL drawBox : public renderable, public transformableBox {
 	public:
 		drawBox();
-		drawBox(pointF& position);
-		drawBox(pointF& position, pointF& size);
+		drawBox(const pointF& position);
+		drawBox(const pointF& position, const pointF& size);
 
-		void setFullTint(colour& t);
+		void setFullTint(const colour& t);
 
 	public:
 		colour tint1;

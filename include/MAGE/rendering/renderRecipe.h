@@ -2,7 +2,7 @@
 
 // mage::renderRecipe
 // -------------
-// A complex set of triangles and extra information that the renderer will batch together with others and attempt to draw as quickly as possible.
+// A complex set of triangles and extra information that the batchRenderer will batch together with others and attempt to draw as quickly as possible.
 // Consists of:
 // - Triangles.
 // - A shaderSet (optional)

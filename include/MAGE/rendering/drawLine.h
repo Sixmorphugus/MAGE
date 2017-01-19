@@ -18,7 +18,7 @@ namespace mage {
 	class MAGEDLL drawLine : public renderable, public transformableLine {
 	public: 
 		drawLine();
-		drawLine(pointF& position, point2F& endOffset);
+		drawLine(const pointF& position, const point2F& endOffset);
 
 	public:
 		colour tint1, tint2;

@@ -6,7 +6,7 @@ drawLine::drawLine()
 {
 }
 
-drawLine::drawLine(pointF& position, point2F& endOffset)
+drawLine::drawLine(const pointF& position, const point2F& endOffset)
 	: transformableLine(position, endOffset)
 {
 }
@@ -27,7 +27,7 @@ MAGE_DeclareScriptingBaseClass(transformable, drawLine);
 MAGE_DeclareScriptingBaseClass(transformableLine, drawLine);
 MAGE_DeclareScriptingBaseClass(renderable, drawLine);
 MAGE_DeclareScriptingConstructor(drawLine(), "drawLine");
-MAGE_DeclareScriptingConstructor(drawLine(pointF&, point2F&), "drawLine");
+MAGE_DeclareScriptingConstructor(drawLine(const pointF&, const point2F&), "drawLine");
 MAGE_DeclareScriptingFunction(&drawLine::tint1, "tint1");
 MAGE_DeclareScriptingFunction(&drawLine::tint2, "tint2");
 MAGE_DeclareScriptingFunction(&drawLine::states, "states");

@@ -2,12 +2,12 @@
 
 // mage::renderChunk
 // -------------
-// A chunk that always garentees the renderer can draw it with a single draw call.
-// Generally these are only used by the renderer - you can however create your own chunk and make the renderer draw it.
+// A chunk that always garentees the batchRenderer can draw it with a single draw call.
+// Generally these are only used by the batchRenderer - you can however create your own chunk and make the batchRenderer draw it.
 // These are different to drawRecipes because:
 // - The verteces are stored in SF format and do not need conversion.
 // - renderChunks group things by "depth" allowing multiple draw depths to be acheived in one chunk.
-// renderChunks are the basis of the renderer's batch drawing capability - the renderer creates chunks that use its "page" (combined texture) as theirs.
+// renderChunks are the basis of the batchRenderer's batch drawing capability - the batchRenderer creates chunks that use its "page" (combined texture) as theirs.
 // -------------
 // Category: Rendering
 // Has Hooks: No

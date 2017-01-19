@@ -2,11 +2,11 @@
 
 using namespace mage;
 
-mage::drawPoint::drawPoint()
+drawPoint::drawPoint()
 {
 }
 
-drawPoint::drawPoint(pointF & point)
+drawPoint::drawPoint(const pointF& point)
 	: transformable(point)
 {
 }

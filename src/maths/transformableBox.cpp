@@ -7,16 +7,16 @@ transformableBox::transformableBox()
 	m_size = pointF(1.f, 1.f);
 }
 
-transformableBox::transformableBox(pointF pos)
+transformableBox::transformableBox(const pointF& pos)
 	: transformable(pos)
 {
-	m_size = pointF(1.f, 1.f);
+	m_size = pointF(1.f, 1.f, 1.f);
 }
 
-transformableBox::transformableBox(pointF pos, pointF size)
+transformableBox::transformableBox(const pointF& pos, const pointF& size)
 	: transformable(pos)
 {
-	m_size = pointF(1.f, 1.f);
+	m_size = pointF(1.f, 1.f, 1.f);
 	setScale(size);
 }
 

@@ -23,7 +23,7 @@ public:
 	class MAGEDLL animation : public renamable {
 	public:
 		animation();
-		animation(interval& ft, std::vector<unsigned int>& frameList, bool fbf = false);
+		animation(const interval& ft, const std::vector<unsigned int>& frameList, bool fbf = false);
 
 		void play(bool dontLoop = false, unsigned int startFrame = 0);
 		bool isPlaying() const;
@@ -51,29 +51,29 @@ public:
 public:
 	drawSprite();
 	drawSprite(std::shared_ptr<resourceTexture> tex);
-	drawSprite(pointF& position, pointF& size, std::shared_ptr<resourceTexture> tex = nullptr);
+	drawSprite(const pointF& position, const pointF& size, std::shared_ptr<resourceTexture> tex = nullptr);
 
 	// texture management
 	void setTexture(std::shared_ptr<resourceTexture>& tex);
 	std::shared_ptr<resourceTexture> getTexture() const;
 
 	floatBox getSpriteTextureCoords();
-	void setSpriteTextureCoords(floatBox& box);
+	void setSpriteTextureCoords(const floatBox& box);
 
 	void sizeToTexture(std::shared_ptr<resourceTexture> tex);
 	void mapTextureCoordsToFullTexture(std::shared_ptr<resourceTexture> tex);
 
 	// frames
-	void regenerateFrames(point2U frameSize = point2U());
+	void regenerateFrames(const point2U& frameSize = point2U());
 	void setFrame(unsigned int frame, bool interrupt = true); // if interrupt is true and an animation is playing it'll be stopped.
-	int getFrameIndex(floatBox fr) const;
+	int getFrameIndex(const floatBox& fr) const;
 
 	floatBox getFrame(point2U position) const;
 	floatBox getFrame(unsigned int index) const;
 	unsigned int getNumFrames() const;
 
 	// animation
-	void continueAnimation(interval elapsed);
+	void continueAnimation(const interval& elapsed);
 
 	void stopAnimation(); // stop playing and reset animation position to 0.
 
