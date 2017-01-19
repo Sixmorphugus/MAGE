@@ -123,7 +123,7 @@ namespace mage {
 	template<typename T>
 	inline bool box<T>::contains(const point<T>& pointIn) const
 	{
-		if (pointIn > position && pointIn < getSecondCorner())
+		if (pointIn >= position && pointIn <= getSecondCorner())
 			return true;
 
 		return false;

@@ -195,7 +195,7 @@ namespace mage {
 	template<typename T>
 	inline bool point<T>::operator<(const point<T>& rhs) const
 	{
-		return (x < rhs.x && y < rhs.y);
+		return (x < rhs.x || y < rhs.y || z < rhs.z);
 	}
 
 	template<typename T>
@@ -207,7 +207,7 @@ namespace mage {
 	template<typename T>
 	inline bool point<T>::operator<=(const point<T>& rhs) const
 	{
-		return ((*this == rhs) || (*this < rhs));
+		return  (*this < rhs || *this == rhs);
 	}
 
 	template<typename T>
@@ -541,5 +541,16 @@ namespace mage {
 	inline point2<T> point<T>::to2() const
 	{
 		return point2<T>(x, y);
+	}
+
+	template<typename T>
+	inline T& point2<T>::chaiXMir()
+	{
+		return x;
+	}
+	template<typename T>
+	inline T& point2<T>::chaiYMir()
+	{
+		return y;
 	}
 }

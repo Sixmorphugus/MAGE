@@ -133,7 +133,10 @@ void scriptingEngine::bindMAGE()
 	chai->add(fun([&](Boxed_Value& input) { theGame()->scripting->whatIs(&input); }), "whatIs");
 	chai->add(fun([&](Boxed_Value& input) { return theGame()->scripting->trueForm(input); }), "trueForm");
 	chai->add(fun([&]() { theGame()->getRenderWindow().close(); }), "quit");
-	chai->add(fun([&]() { theGame()->init(); }), "restart");
+	chai->add(fun([&]() { theGame()->doRestart = true; }), "restart");
+	chai->add(fun([&]() { return theGame()->version(); }), "mageVersion");
+	chai->add(fun([&]() { return std::to_string(SFML_VERSION_MAJOR) + "." + std::to_string(SFML_VERSION_MINOR) + "." + std::to_string(SFML_VERSION_PATCH); }), "sfmlVersion");
+	chai->eval("def chaiVersion() { return version(); }");
 
 	chai->add(fun([&](int fpsl) { theGame()->setFramerateLimit(fpsl); }), "setFramerateLimit");
 	chai->add(fun([&](bool in) { theGame()->setFullscreen(in); }), "setFullscreen");

@@ -143,6 +143,9 @@ public:
 	point2<To> convertAxis() const;
 	point<T> to3() const;
 
+	T& chaiXMir();
+	T& chaiYMir();
+
 public:
 	using point<T>::x;
 	using point<T>::y;
@@ -180,6 +183,10 @@ MAGE_DeclareScriptingFunction(&mage::point<type>::getLength, "getLength");\
 MAGE_DeclareScriptingFunction(&mage::point<type>::getAngle2D, "getAngle2D");\
 MAGE_DeclareScriptingFunction(&mage::point<type>::getRotatedAround, "getRotatedAround");\
 MAGE_DeclareScriptingFunction(&mage::point<type>::getSum, "getSum");\
+MAGE_DeclareScriptingFunction(&mage::point<type>::x, "x");\
+MAGE_DeclareScriptingFunction(&mage::point<type>::y, "y");\
+MAGE_DeclareScriptingFunction(&mage::point<type>::z, "z");\
+MAGE_DeclareScriptingFunction(&mage::point<type>::to2, "to2");\
 MAGE_DeclareScriptingCopyOperator(mage::point<type>);\
 MAGE_DeclareScriptingFunction(&mage::point<type>::operator+, "+");\
 MAGE_DeclareScriptingFunction(&mage::point<type>::operator-, "-");\
@@ -215,6 +222,9 @@ MAGE_DeclareScriptingFunction(&mage::point2<type>::getLength, "getLength"); \
 MAGE_DeclareScriptingFunction(&mage::point2<type>::getAngle2D, "getAngle2D"); \
 MAGE_DeclareScriptingFunction(&mage::point2<type>::getRotatedAround, "getRotatedAround");\
 MAGE_DeclareScriptingFunction(&mage::point2<type>::getSum, "getSum");\
+MAGE_DeclareScriptingFunction(&mage::point2<type>::chaiXMir, "x");\
+MAGE_DeclareScriptingFunction(&mage::point2<type>::chaiYMir, "y");\
+MAGE_DeclareScriptingFunction(&mage::point2<type>::to3, "to3");\
 MAGE_DeclareScriptingCopyOperator(mage::point2<type>); \
 MAGE_DeclareScriptingFunction(&mage::point2<type>::operator+, "+"); \
 MAGE_DeclareScriptingFunction(&mage::point2<type>::operator-, "-"); \

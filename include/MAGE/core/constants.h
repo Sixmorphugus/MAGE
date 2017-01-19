@@ -12,7 +12,8 @@
 #define MAGE_PLATFORM_LOGINFOALLOWED true
 #define MAGE_CRASHWHENEVALFAILS false
 #define MAGE_ZOOMDEFAULT 0.5f
+#define MAGE_MAJORVERSION 2
 
 // dependent (do not edit)
-#define MAGE_BUILDSTRING std::to_string(MAGE_BUILD)
+#define MAGE_BUILDSTRING std::to_string(MAGE_MAJORVERSION) + "." + std::to_string(MAGE_BUILD)
 #define MAGE_TICKMS (1000 / MAGE_TICKRATE)

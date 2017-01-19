@@ -120,6 +120,7 @@ void Game::init()
 	worldObjectsFrozen = false;
 	conservativeMouse = true;
 	inMainUpdateLoop = false;
+	doRestart = false;
 	colBoxes = MAGE_SHOWCOLLISIONBOXES;
 	showFps = MAGE_SHOWFPS;
 	tickScale = 1.f;
@@ -316,6 +317,11 @@ int Game::run(bool tickByTick) {
 	try {
 		while (getRenderWindow().isOpen() && !stopLooping)
 		{
+			if (doRestart) {
+				p::warn("RESTARTING!");
+				init();
+			}
+
 			resources->update();
 			frameTimer.restart();
 
@@ -492,9 +498,9 @@ float Game::getDelta()
 	return tickClock.getElapsedTime().get(interval::MILLISECONDS) / MAGE_TICKMS;
 }
 
-int Game::version()
+std::string Game::version()
 {
-	return MAGE_BUILD;
+	return MAGE_BUILDSTRING;
 }
 
 // HELPER FUNCTIONS

@@ -54,8 +54,6 @@ public:
 	Game(int argc, char* argv[], sf::RenderWindow* wind);
 	~Game();
 
-	void init();
-
 	bool renderWindowExists();
 	void windowInit(sf::RenderWindow* window);
 
@@ -71,7 +69,7 @@ public:
 
 	virtual float getDelta(); // delta - progress through a frame from 0.0 to 1.0
 
-	int version();
+	std::string version();
 
 	// window settings
 	bool isFullscreen();
@@ -133,6 +131,8 @@ public:
 
 	float tickScale;
 
+	bool doRestart;
+
 protected:
 	void loadWindowSettings(point2U resolution = point2U(1280, 720), std::string title = "MAGE Game Engine", bool fullscreen = false, bool vsync = false, int maxFps = 60);
 	void loadAudioSettings(float masterVolume = 100.f, float sfxVolume = 100.f, float musicVolume = 100.f);
@@ -156,6 +156,7 @@ protected:
 	std::string windowTitle;
 
 private:
+	void init();
 	sf::RenderWindow* window;
 };
 

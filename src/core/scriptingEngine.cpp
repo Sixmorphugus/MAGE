@@ -135,7 +135,7 @@ void scriptingEngine::dump(chaiscript::Boxed_Value* in)
 
 	p::log("Registered functions and members:");
 	for (auto m = s.m_functions.begin(); m != s.m_functions.end(); m++) {
-		p::log(m->first + " (" + std::to_string((m->second.get()->size())) + " overloads)");
+		bool didDisplayThing = false;
 
 		for (auto o = m->second.get()->begin(); o != m->second.get()->end(); o++) {
 			auto f = o->get();
@@ -165,6 +165,11 @@ void scriptingEngine::dump(chaiscript::Boxed_Value* in)
 
 			if (!displayIt)
 				continue;
+
+			if (!didDisplayThing) {
+				p::log(m->first + " (" + std::to_string((m->second.get()->size())) + " overloads)");
+				didDisplayThing = true;
+			}
 
 			std::string name = f->get_param_types()[0].bare_name();
 			std::string n = "[C++] " + name;
