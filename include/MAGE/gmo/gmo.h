@@ -12,7 +12,7 @@
 
 #include "hookableLifetimeObject.h"
 #include "propertiesObject.h"
-#include "transformable.h"
+#include "transformableObject.h"
 #include "namable.h"
 
 namespace mage {
@@ -24,12 +24,12 @@ class interval;
 class gmo :
 	public renamable, // all game objects can have a name
 	public propertiesObject, // all game objects get registered properties
-	public virtual transformable, // all game objects are (basically) transformable
+	public transformableObject, // all game objects are (basically) transformable
 	public hookableLifetimeObject // onCreated + onDestroyed
 {
 public:
 	gmo();
-	gmo(const pointF& position);
+	gmo(const pointF& position, const pointF& size);
 	gmo(const gmo& cp);
 
 	void init();
@@ -79,5 +79,5 @@ MAGE_DeclareScriptingBaseClass(namable, type);\
 MAGE_DeclareScriptingBaseClass(renamable, type);\
 MAGE_DeclareScriptingBaseClass(serializable, type);\
 MAGE_DeclareScriptingBaseClass(propertiesObject, type);\
-MAGE_DeclareScriptingBaseClass(transformable, type);\
+MAGE_DeclareScriptingBaseClass(transformableObject, type);\
 MAGE_DeclareScriptingBaseClass(hookableLifetimeObject, type);

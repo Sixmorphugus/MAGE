@@ -16,7 +16,7 @@
 
 namespace mage {
 
-class MAGEDLL transformableObject : public virtual transformableBox {
+class MAGEDLL transformableObject : public transformableBox {
 public:
 	class MAGEDLL collisionBox {
 	public:

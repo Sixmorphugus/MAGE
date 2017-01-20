@@ -13,7 +13,7 @@
 #include "box.h"
 
 namespace mage {
-class MAGEDLL transformableBox : public virtual transformable {
+class MAGEDLL transformableBox : public transformable {
 public:
 	transformableBox();
 	transformableBox(const pointF& pos);
