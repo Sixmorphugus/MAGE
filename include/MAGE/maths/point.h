@@ -172,6 +172,7 @@ MAGE_DeclareScriptingConstructor(mage::point<type>(type), name);\
 MAGE_DeclareScriptingConstructor(mage::point<type>(type, type, type), name);\
 MAGE_DeclareScriptingConstructor(mage::point<type>(mage::point<type>&), name);\
 MAGE_DeclareScriptingConstructor(mage::point<type>(std::string), name);\
+MAGE_DeclareScriptingFunction([](type x, type y) { return mage::point<type>(x, y); }, name);\
 MAGE_DeclareScriptingFunction(&mage::point<type>::getFloor, "getFloor");\
 MAGE_DeclareScriptingFunction(&mage::point<type>::getCeil, "getCeil");\
 MAGE_DeclareScriptingFunction(&mage::point<type>::getAngle2DTo, "getAngle2DTo");\

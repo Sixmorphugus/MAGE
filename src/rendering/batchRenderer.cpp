@@ -222,7 +222,7 @@ void batchRenderer::pushFrameChunk(renderChunk & chunk, float depth)
 	m_frameChunks.push_back(chunk);
 }
 
-sf::RenderStates batchRenderer::rendererSfState(renderStates & states)
+sf::RenderStates mage::batchRenderer::rendererSfState(renderStates & states) // does the same thing as renderStates::toSf with a small change.
 {
 	auto sfState = states.toSf();
 
@@ -240,7 +240,6 @@ MAGE_DeclareScriptingFunction(&batchRenderer::clearFrameChunks, "clearFrameChunk
 MAGE_DeclareScriptingFunction(&batchRenderer::clearPage, "clearPage");
 MAGE_DeclareScriptingFunction(&batchRenderer::frameCleanup, "frameCleanup");
 MAGE_DeclareScriptingFunction(&batchRenderer::getNumFrameChunks, "getNumFrameChunks");
-MAGE_DeclareScriptingFunction(&batchRenderer::processFrameRecipe, "processFrameRecipe");
 MAGE_DeclareScriptingFunction(&batchRenderer::pushFrameChunk, "pushFrameChunk");
 MAGE_DeclareScriptingFunction(&batchRenderer::pushFrameRecipe, "pushFrameRecipe");
 MAGE_DeclareScriptingFunction(&batchRenderer::pushFrameRenderable, "pushFrameRenderable");
