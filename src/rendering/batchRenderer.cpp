@@ -231,7 +231,7 @@ void batchRenderer::pushFrameChunk(renderChunk& chunk)
 		// we can assume that the exclusive use of this function to add to the frame chunk list keeps it ordered
 
 		// first issue's easy:
-		if (m_frameChunks[i].getMinDepth() > chunk.getMinDepth()) {
+		if (m_frameChunks[i].getMinDepth() >= chunk.getMaxDepth()) {
 			// insert BEFORE this chunk.
 			m_frameChunks.insert(m_frameChunks.begin() + i, chunk);
 			return;
