@@ -174,6 +174,8 @@ MAGE_DeclareScriptingFunction(&inputMouse::getMiddlePressed, "getMiddlePressed")
 MAGE_DeclareScriptingFunction(&inputMouse::getMiddleReleased, "getMiddleReleased");
 MAGE_DeclareScriptingFunction(&inputMouse::justUsed, "justUsed");
 MAGE_DeclareScriptingFunction(&inputMouse::lpPosition, "lpPosition");
+MAGE_DeclareScriptingFunction(&inputMouse::lrPosition, "lrPosition");
+MAGE_DeclareScriptingFunction(&inputMouse::position, "position");
 MAGE_DeclareScriptingFunction(&inputMouse::mouseLeftTexture, "mouseLeftTexture");
 MAGE_DeclareScriptingFunction(&inputMouse::mouseMiddleTexture, "mouseMiddleTexture");
 MAGE_DeclareScriptingFunction(&inputMouse::mouseRightTexture, "mouseRightTexture");

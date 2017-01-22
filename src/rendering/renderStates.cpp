@@ -17,7 +17,7 @@ renderStates::renderStates()
 	usePage = false;
 }
 
-renderStates::renderStates(sf::RenderStates& states)
+renderStates::renderStates(const sf::RenderStates& states)
 {
 	// slow!
 	blend = states.blendMode;
@@ -42,7 +42,7 @@ renderStates::renderStates(sf::RenderStates& states)
 	}
 }
 
-renderStates::renderStates(std::shared_ptr<resourceTexture> tex, std::shared_ptr<resourceShader> sha, blendMode b)
+renderStates::renderStates(std::shared_ptr<resourceTexture> tex, std::shared_ptr<resourceShader> sha, const blendMode& b)
 {
 	texture = tex;
 	shader = sha;
@@ -65,7 +65,7 @@ sf::RenderStates renderStates::toSf()
 	return states;
 }
 
-bool renderStates::operator==(renderStates & rh)
+bool renderStates::operator==(const renderStates & rh)
 {
 	return (
 		blend == rh.blend &&
@@ -75,7 +75,7 @@ bool renderStates::operator==(renderStates & rh)
 	);
 }
 
-bool renderStates::operator!=(renderStates & rh)
+bool renderStates::operator!=(const renderStates & rh)
 {
 	return !(*this == rh);
 }

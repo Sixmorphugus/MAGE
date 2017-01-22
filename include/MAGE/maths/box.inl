@@ -215,9 +215,9 @@ namespace mage {
 	{
 		std::vector<line<T>> lines = {
 			line<T>(position, point2<T>(size.x, 0.f)),
-			line<T>(position + point<T>(0.f, size.y), point2<T>(size.x, size.y)),
+			line<T>(position + point<T>(0.f, size.y), point2<T>(size.x, 0.f)),
 			line<T>(position, point2<T>(0.f, size.y)),
-			line<T>(position + point<T>(size.x, 0.f), point2<T>(size.x, size.y))
+			line<T>(position + point<T>(size.x, 0.f), point2<T>(0.f, size.y))
 		};
 
 		return lines;

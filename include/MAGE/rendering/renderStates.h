@@ -23,13 +23,13 @@ namespace mage {
 	class MAGEDLL renderStates : public shadable {
 	public:
 		renderStates();
-		renderStates(sf::RenderStates& states); // WARNING: slow function - please don't do the conversion this way around in releases
-		renderStates(std::shared_ptr<resourceTexture> tex, std::shared_ptr<resourceShader> sha, blendMode b = blendDefault);
+		renderStates(const sf::RenderStates& states); // WARNING: slow function - please don't do the conversion this way around in releases
+		renderStates(std::shared_ptr<resourceTexture> tex, std::shared_ptr<resourceShader> sha, const blendMode& b = blendDefault);
 
 		sf::RenderStates toSf();
 
-		bool operator==(renderStates& rh);
-		bool operator!=(renderStates& rh);
+		bool operator==(const renderStates& rh);
+		bool operator!=(const renderStates& rh);
 		
 	public:
 		// renderStates in MAGE don't have a transform but do have everything else.

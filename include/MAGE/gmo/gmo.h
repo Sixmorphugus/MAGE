@@ -29,6 +29,7 @@ class gmo :
 {
 public:
 	gmo();
+	gmo(const pointF& position);
 	gmo(const pointF& position, const pointF& size);
 	gmo(const gmo& cp);
 

@@ -33,11 +33,11 @@ public:
 
 	view& operator=(const view& rhs);
 
-	virtual void render(sf::RenderTarget& target, colour bgCol = colour(sf::Color::Transparent));
+	virtual void render(sf::RenderTarget& target, const colour& bgCol = colour(sf::Color::Transparent));
 
 	sf::View toSf();
 
-	sf::RenderTarget* getTarget();
+	sf::RenderTarget* getCanvas();
 
 	floatBox getViewport() const;
 	void setViewport(floatBox vp);
@@ -52,7 +52,7 @@ private:
 
 protected:
 	sf::RenderTexture m_internalRT;
-	void resizeInternalRT(sf::Vector2u siz);
+	void resizeCanvas(point2U siz);
 
 public:
 	// things that affect rendering

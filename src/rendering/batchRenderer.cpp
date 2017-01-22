@@ -25,7 +25,7 @@ batchRenderer::batchRenderer()
 
 void batchRenderer::renderSingleChunk(renderChunk& chunk, view& renderView)
 {
-	sf::RenderTarget* window = renderView.getTarget();
+	sf::RenderTarget* window = renderView.getCanvas();
 
 	// use default view if there's none given
 	window->setView(renderView.toSf());
@@ -34,13 +34,8 @@ void batchRenderer::renderSingleChunk(renderChunk& chunk, view& renderView)
 	window->draw(&chunk.getSfVertexList()[0], chunk.getSfVertexList().size(), sf::Triangles, rendererSfState(chunk.states));
 }
 
-void batchRenderer::renderFrame(view& renderView)
+void batchRenderer::renderFrame(sf::RenderTarget& target)
 {
-	sf::RenderTarget* window = renderView.getTarget();
-
-	// use default view if there's none given
-	window->setView(renderView.toSf());
-
 	// draw each chunk quickly
 	for (unsigned int i = 0; i < m_frameChunks.size(); i++) {
 		auto vList = m_frameChunks[i].getSfVertexList();
@@ -57,36 +52,7 @@ void batchRenderer::renderFrame(view& renderView)
 		}
 
 		// do the draw
-		window->draw(&vList[0], vList.size(), sf::Triangles, rendererSfState(m_frameChunks[i].states));
-	}
-}
-
-void batchRenderer::processFrameRecipe(renderRecipe r)
-{
-	tryRecipePage(r); // try to make this recipe draw faster
-
-	// is the LAST chunk in this list compatible with our renderStates?
-	// if we tried others it would work but things would draw out of order.
-	// we're trying to preserve the order.
-	if (m_frameChunks.size() > 0) {
-		renderChunk& lastChunk = m_frameChunks[m_frameChunks.size() - 1];
-
-		if (lastChunk.states != r.states) {
-			// insert into new chunk.
-			m_frameChunks.push_back(renderChunk(r.states));
-			lastChunk = m_frameChunks[m_frameChunks.size() - 1];
-		}
-
-		for (unsigned int i = 0; i < r.triangles.size(); i++) {
-			lastChunk.pushTriangle(r.triangles[i]);
-		}
-	}
-	else {
-		m_frameChunks.push_back(renderChunk(r.states));
-
-		for (unsigned int i = 0; i < r.triangles.size(); i++) {
-			m_frameChunks[0].pushTriangle(r.triangles[i]);
-		}
+		target.draw(&vList[0], vList.size(), sf::Triangles, rendererSfState(m_frameChunks[i].states));
 	}
 }
 
@@ -208,7 +174,43 @@ unsigned int batchRenderer::getNumFrameChunks() const
 
 void batchRenderer::pushFrameRecipe(renderRecipe& r)
 {
-	processFrameRecipe(r);
+	tryRecipePage(r); // try to make this recipe draw faster
+
+	// is the LAST chunk in this list compatible with our renderStates?
+	// if we tried others it would work but things would draw out of order.
+	// we're trying to preserve the order.
+
+	if (m_frameChunks.size() > 0) {
+		renderChunk& lastChunk = m_frameChunks[m_frameChunks.size() - 1];
+
+		if (lastChunk.states != r.states) {
+			// insert into new chunk.
+			// things become slightly more complicated to keep depth.
+			// thankfully, that is now the pushFrameChunk function's problem.
+			renderChunk newChunk(r.states);
+
+			for (unsigned int i = 0; i < r.triangles.size(); i++) {
+				newChunk.pushTriangle(r.triangles[i]);
+			}
+
+			pushFrameChunk(newChunk);
+		}
+
+		for (unsigned int i = 0; i < r.triangles.size(); i++) {
+			// insert into existing chunk.
+			lastChunk.pushTriangle(r.triangles[i]);
+		}
+	}
+	else {
+		// create "chunk 1".
+		renderChunk newChunk(r.states);
+
+		for (unsigned int i = 0; i < r.triangles.size(); i++) {
+			newChunk.pushTriangle(r.triangles[i]);
+		}
+
+		pushFrameChunk(newChunk);
+	}
 }
 
 void batchRenderer::pushFrameRenderable(renderable& r)
@@ -217,12 +219,43 @@ void batchRenderer::pushFrameRenderable(renderable& r)
 		pushFrameRecipe(r.getDrawRecipe());
 }
 
-void batchRenderer::pushFrameChunk(renderChunk & chunk, float depth)
+void batchRenderer::pushFrameChunk(renderChunk& chunk)
 {
+	//m_frameChunks.push_back(chunk); (you wish)
+
+	for (unsigned int i = 0; i < m_frameChunks.size(); i++) {
+		// two things to deal with:
+		// - the issue of having chunks that need to be drawn AFTER the new one (minDepth higher than ours)
+		// - the issue of having chunks that need to be drawn AT THE SAME TIME as ours (overlapping)
+
+		// we can assume that the exclusive use of this function to add to the frame chunk list keeps it ordered
+
+		// first issue's easy:
+		if (m_frameChunks[i].getMinDepth() > chunk.getMinDepth()) {
+			// insert BEFORE this chunk.
+			m_frameChunks.insert(m_frameChunks.begin() + i, chunk);
+			return;
+		}
+
+		// second issue's more of a problem
+		if (chunk.overlaps(m_frameChunks[i])) {
+			auto sp = m_frameChunks[i].splice(chunk);
+
+			m_frameChunks.erase(m_frameChunks.begin() + i);
+			
+			for (unsigned int j = 0; j < sp.size(); j++) {
+				m_frameChunks.push_back(sp[j]);
+			}
+
+			return;
+		}
+	}
+
+	// end of the list
 	m_frameChunks.push_back(chunk);
 }
 
-sf::RenderStates mage::batchRenderer::rendererSfState(renderStates & states) // does the same thing as renderStates::toSf with a small change.
+sf::RenderStates batchRenderer::rendererSfState(renderStates & states) // does the same thing as renderStates::toSf with a small change.
 {
 	auto sfState = states.toSf();
 

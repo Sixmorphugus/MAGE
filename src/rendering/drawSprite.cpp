@@ -21,8 +21,6 @@ drawSprite::drawSprite(const pointF& position, const pointF& size, std::shared_p
 void drawSprite::setTexture(std::shared_ptr<resourceTexture>& tex)
 {
 	states.texture = tex;
-
-	sizeToTexture(tex);
 	mapTextureCoordsToFullTexture(tex);
 
 	regenerateFrames();
@@ -44,14 +42,8 @@ void drawSprite::setSpriteTextureCoords(const floatBox& box)
 	texCoord2 = point2F(box.position.x + box.size.x, box.position.y);
 	texCoord3 = point2F(box.position.x, box.position.y + box.size.y);
 	texCoord4 = point2F(box.position.x + box.size.x, box.position.y + box.size.y);
-}
 
-void drawSprite::sizeToTexture(std::shared_ptr<resourceTexture> tex)
-{
-	if (!tex)
-		return;
-
-	setScale(tex->getSize().convertAxis<float>().to3());
+	setBaseSize(box.size);
 }
 
 void drawSprite::mapTextureCoordsToFullTexture(std::shared_ptr<resourceTexture> tex)
@@ -283,8 +275,6 @@ MAGE_DeclareScriptingConstructor(drawSprite(std::shared_ptr<resourceTexture> tex
 MAGE_DeclareScriptingCopyOperator(drawSprite);
 MAGE_DeclareScriptingFunction(&drawSprite::getSpriteTextureCoords, "getSpriteTextureCoords");
 MAGE_DeclareScriptingFunction(&drawSprite::setSpriteTextureCoords, "setSpriteTextureCoords");
-MAGE_DeclareScriptingFunction(&drawSprite::sizeToTexture, "sizeToTexture");
-MAGE_DeclareScriptingFunction(&drawSprite::mapTextureCoordsToFullTexture, "mapTextureCoordsToFullTexture");
 MAGE_DeclareScriptingFunction(&drawSprite::addAnimation, "addAnimation");
 MAGE_DeclareScriptingFunction(&drawSprite::continueAnimation, "continueAnimation");
 MAGE_DeclareScriptingFunction(&drawSprite::getAnimationProgress, "getAnimationProgress");

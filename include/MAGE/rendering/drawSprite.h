@@ -60,9 +60,6 @@ public:
 	floatBox getSpriteTextureCoords();
 	void setSpriteTextureCoords(const floatBox& box);
 
-	void sizeToTexture(std::shared_ptr<resourceTexture> tex);
-	void mapTextureCoordsToFullTexture(std::shared_ptr<resourceTexture> tex);
-
 	// frames
 	void regenerateFrames(const point2U& frameSize = point2U());
 	void setFrame(unsigned int frame, bool interrupt = true); // if interrupt is true and an animation is playing it'll be stopped.
@@ -107,6 +104,8 @@ public:
 
 private:
 	void resetFrameEndTimer();
+
+	void mapTextureCoordsToFullTexture(std::shared_ptr<resourceTexture> tex);
 
 private:
 	std::vector<std::shared_ptr<animation>> m_animations;

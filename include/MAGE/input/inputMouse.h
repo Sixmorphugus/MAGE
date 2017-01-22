@@ -1,5 +1,6 @@
 #pragma once
 #include "inputs.h"
+#include "point.h"
 
 namespace mage {
 
@@ -38,10 +39,10 @@ public:
 	hook<inputMouse*> onRightReleased;
 	hook<inputMouse*> onMiddleReleased;
 
-	sf::Vector2f position;
+	point2F position;
 
-	sf::Vector2f lpPosition;
-	sf::Vector2f lrPosition;
+	point2F lpPosition;
+	point2F lrPosition;
 
 	std::string mouseLeftTexture, mouseRightTexture, mouseMiddleTexture;
 

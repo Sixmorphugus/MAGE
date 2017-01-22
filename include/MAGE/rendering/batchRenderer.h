@@ -25,11 +25,11 @@ public:
 
 	void renderSingleChunk(renderChunk& chunk, view& renderView);
 
-	void renderFrame(view& renderView);
+	void renderFrame(sf::RenderTarget& target);
 
 	void pushFrameRecipe(renderRecipe& r);
 	void pushFrameRenderable(renderable& r);
-	void pushFrameChunk(renderChunk& chunk, float depth); // messing around with a render in progress is not something you should be doing, but you do have the option.
+	void pushFrameChunk(renderChunk& chunk); // messing around with a render in progress is not something you should be doing, but you do have the option.
 
 	void frameCleanup();
 
@@ -48,8 +48,7 @@ public:
 	unsigned int getNumFrameChunks() const;
 
 private:
-	void processFrameRecipe(renderRecipe r);
-	sf::RenderStates rendererSfState(renderStates & states); // does the same thing as renderStates::toSf with a small change.
+	sf::RenderStates rendererSfState(renderStates& states); // does the same thing as renderStates::toSf with a small change.
 
 private:
 	sf::RenderTexture m_page;

@@ -29,6 +29,16 @@ public:
 	std::vector<vertex> getVertexList(); // don't use this in normal code, it's for debugging
 	std::vector<sf::Vertex> getSfVertexList();
 
+	float getMinDepth() const;
+	float getMaxDepth() const;
+
+	bool overlaps(const renderChunk& toCheck);
+
+	std::vector<float> getDepths() const;
+
+	std::vector<renderChunk> splitAtDepth(float split) const; // splits the render chunk in half at a specific depth point. Produces two renderChunks.
+	std::vector<renderChunk> splice(const renderChunk& toSplice); // will produce an ordered list with the least possible amount of chunks required to draw in the right order
+
 public:
 	renderStates states;
 

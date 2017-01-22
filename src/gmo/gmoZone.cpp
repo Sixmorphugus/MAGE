@@ -5,8 +5,13 @@
 
 using namespace mage;
 
-gmoZone::gmoZone(pointF pos, pointF size):
-	gmoResizable(pos, size)
+gmoZone::gmoZone()
+{
+	touchingCountsAsInside = false;
+}
+
+gmoZone::gmoZone(const pointF& pos, const pointF& size) :
+	gmo(pos, size)
 {
 	touchingCountsAsInside = false;
 }
@@ -52,24 +57,14 @@ void gmoZone::zoneTest(std::vector<std::shared_ptr<gmo>> objList, bool into)
 		if (indexInZone(obj))
 			continue;
 
-		// resizable objects count as inside if their box is insize the zone.
-		if (auto objC = std::dynamic_pointer_cast<gmoResizable>(obj)) {
-			if (touchingCountsAsInside) {
-				if (getBox().intersects(objC->getBox())) {
-					objectEnterZone(obj);
-				}
-			}
-			else {
-				if (getBox().contains(objC->getBox())) {
-					if (into)
-						objectEnterZone(obj);
-					else
-						objectLeaveZone(obj);
-				}
+		// resizable objects count as inside if their box is inside the zone.
+		if (touchingCountsAsInside) {
+			if (getBox().intersects(obj->getBox())) {
+				objectEnterZone(obj);
 			}
 		}
 		else {
-			if (getBox().contains(obj->getPosition())) {
+			if (getBox().contains(obj->getBox())) {
 				if (into)
 					objectEnterZone(obj);
 				else
@@ -78,3 +73,13 @@ void gmoZone::zoneTest(std::vector<std::shared_ptr<gmo>> objList, bool into)
 		}
 	}
 }
+
+#include "scriptingEngine.h"
+
+MAGE_DeclareScriptingGmoType(gmoZone);
+MAGE_DeclareScriptingConstructor(gmoZone(const pointF& position, const pointF& size), "gmoZone");
+MAGE_DeclareScriptingFunction(&gmoZone::indexInZone, "indexInZone");
+MAGE_DeclareScriptingFunction(&gmoZone::onObjectEnterZone, "onObjectEnterZone");
+MAGE_DeclareScriptingFunction(&gmoZone::onObjectLeaveZone, "onObjectLeaveZone");
+
+MAGE_DeclareScriptingHook("gmoZoneHook", gmoZone*, gmo*);

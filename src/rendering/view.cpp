@@ -21,7 +21,7 @@ view::view(const pointF& size, std::shared_ptr<scene> gr)
 	setDefaults();
 	viewScene = gr;
 
-	resizeInternalRT(sf::Vector2u((unsigned int)getScale().x, (unsigned int)getScale().y));
+	resizeCanvas(sf::Vector2u((unsigned int)getScale().x, (unsigned int)getScale().y));
 }
 
 view::view(const view & copy)
@@ -35,7 +35,7 @@ view& mage::view::operator=(const view & rhs)
 	return *this;
 }
 
-void view::render(sf::RenderTarget & target, colour bgCol)
+void view::render(sf::RenderTarget& target, const colour& bgCol)
 {
 	auto lScene = viewScene.lock();
 
@@ -73,16 +73,16 @@ void view::render(sf::RenderTarget & target, colour bgCol)
 		}
 	}
 
-	sf::View windowView = sf::View(floatBox(pointF(0, 0), pointF(target.getSize().x, target.getSize().y)).toSf());
-	target.setView(windowView);
-
-	resizeInternalRT(target.getSize());
+	resizeCanvas(target.getSize());
 
 	// we're drawing on the internal texture
-	m_internalRT.setView(windowView); // use this view
-	m_internalRT.clear(bgCol.toSf()); // this'll only actually happen in the viewport (i think...)
-	
-	onRender.notify(this);
+	//m_internalRT.setView(windowView); // use this view
+	m_internalRT.clear(sf::Color::Magenta); // this'll only actually happen in the viewport (i think...)
+
+	drawBox bTest;
+	bTest.setScale(sf::Vector2f(50.f, 50.f));
+
+	theGame()->renderer->pushFrameRenderable(bTest);
 
 	for (unsigned int i = 0; i < lScene->getNumObjects(); i++) {
 		auto renObj = lScene->getAs<renderable>(i);
@@ -92,13 +92,15 @@ void view::render(sf::RenderTarget & target, colour bgCol)
 		}
 	}
 
-	theGame()->renderer->renderFrame(*this);
+	onRender.notify(this);
+
+	theGame()->renderer->renderFrame(*getCanvas());
 	theGame()->renderer->frameCleanup(); // clean up after drawing our content
 
 	// draw the internal RT into the target
 	m_internalRT.display();
 	sf::Sprite drawSprite(m_internalRT.getTexture());
-
+	
 	target.draw(drawSprite, states.toSf());
 }
 
@@ -112,18 +114,18 @@ sf::View view::toSf()
 	return v;
 }
 
-void view::resizeInternalRT(sf::Vector2u siz)
+void view::resizeCanvas(point2U siz)
 {
-	if (m_internalRT.getSize() != siz) {
+	if (point2U(m_internalRT.getSize()) != siz) {
 		m_internalRT.create(siz.x, siz.y);
 	}
 
 	m_internalRT.clear(sf::Color::Transparent);
 }
 
-sf::RenderTarget* view::getTarget()
+sf::RenderTarget* view::getCanvas()
 {
-	return &m_internalRT;
+	return &theGame()->getRenderWindow();//&m_internalRT;
 }
 
 floatBox view::getViewport() const

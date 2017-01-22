@@ -238,6 +238,10 @@ void Game::loadResources() {
 
 void Game::draw() {
 	// GAME VIEW
+	getRenderWindow().clear(sf::Color::Black);
+
+	// test - draw a box
+
 	camera->render(getRenderWindow(), state->bgCol); // temp
 	onGameDraw.notify();
 

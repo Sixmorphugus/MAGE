@@ -1,19 +1,16 @@
 #pragma once
 
-#include "gmoResizable.h"
+#include "gmo.h"
 
 namespace mage {
 
 // zone object - keeps track of objects inside it, and can do stuff to them.
-class MAGEDLL gmoZone : public gmoResizable {
+class MAGEDLL gmoZone : public gmo {
 public:
-	gmoZone(pointF pos, pointF size);
+	gmoZone();
+	gmoZone(const pointF& pos, const pointF& size);
 
 	virtual void update(sf::Time elapsed);
-
-	virtual void objectEnterZone(std::shared_ptr<gmo> obj);
-	virtual void objectLeaveZone(std::shared_ptr<gmo> obj);
-
 	int indexInZone(std::shared_ptr<gmo> obj);
 
 public:
@@ -24,6 +21,8 @@ public:
 
 private:
 	void zoneTest(std::vector<std::shared_ptr<gmo>> objList, bool into);
+	virtual void objectEnterZone(std::shared_ptr<gmo> obj);
+	virtual void objectLeaveZone(std::shared_ptr<gmo> obj);
 
 private:
 	std::vector<std::shared_ptr<gmo>> m_objectsInZone;

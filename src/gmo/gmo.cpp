@@ -10,6 +10,12 @@ gmo::gmo()
 	init();
 }
 
+gmo::gmo(const pointF& position)
+	: transformableObject(position, pointF())
+{
+	init();
+}
+
 gmo::gmo(const pointF & position, const pointF& size)
 	: transformableObject(position, size)
 {
