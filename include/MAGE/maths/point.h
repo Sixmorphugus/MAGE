@@ -28,6 +28,7 @@ public:
 	point(const sf::Vector2<T>& in);
 	point(const sf::Vector3<T>& in);
 	point(std::string& in);
+	point(const point2<T>& in);
 
 	// the implicit copy operators and operator= are fine.
 
@@ -94,6 +95,7 @@ public:
 	point2(T x, T y);
 	point2(T angle2D);
 	point2(const sf::Vector2<T>& in);
+	point2(const point<T>& in);
 	point2(std::string& in);
 
 	// Arithmetic operators
@@ -170,7 +172,8 @@ MAGE_DeclareScriptingTypeNamed(mage::point<type>, name);\
 MAGE_DeclareScriptingConstructor(mage::point<type>(), name);\
 MAGE_DeclareScriptingConstructor(mage::point<type>(type), name);\
 MAGE_DeclareScriptingConstructor(mage::point<type>(type, type, type), name);\
-MAGE_DeclareScriptingConstructor(mage::point<type>(mage::point<type>&), name);\
+MAGE_DeclareScriptingConstructor(mage::point<type>(const mage::point<type>&), name);\
+MAGE_DeclareScriptingConstructor(mage::point<type>(const mage::point2<type>&), name);\
 MAGE_DeclareScriptingConstructor(mage::point<type>(std::string), name);\
 MAGE_DeclareScriptingFunction([](type x, type y) { return mage::point<type>(x, y); }, name);\
 MAGE_DeclareScriptingFunction(&mage::point<type>::getFloor, "getFloor");\
@@ -210,7 +213,8 @@ MAGE_DeclareScriptingFunction(&mage::point<type>::operator>, ">");\
 MAGE_DeclareScriptingConstructor(mage::point2<type>(), name2); \
 MAGE_DeclareScriptingConstructor(mage::point2<type>(type), name2); \
 MAGE_DeclareScriptingConstructor(mage::point2<type>(type, type), name2); \
-MAGE_DeclareScriptingConstructor(mage::point2<type>(mage::point2<type>&), name2); \
+MAGE_DeclareScriptingConstructor(mage::point2<type>(const mage::point2<type>&), name2); \
+MAGE_DeclareScriptingConstructor(mage::point2<type>(const mage::point<type>&), name2); \
 MAGE_DeclareScriptingConstructor(mage::point2<type>(std::string), name2); \
 MAGE_DeclareScriptingFunction(&mage::point2<type>::getFloor, "getFloor"); \
 MAGE_DeclareScriptingFunction(&mage::point2<type>::getCeil, "getCeil"); \

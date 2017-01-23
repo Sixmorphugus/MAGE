@@ -106,6 +106,12 @@ void Game::init()
 	p::log("\tScheduler...");
 	scheduler = std::make_shared<scheduleMngr>();
 
+	if (window) {
+		windowInit(window);
+	}
+
+	loadAudioSettings();
+
 	// state system is technically a subsystem but SHOWMANSHIP!
 	p::info("Creating game world.\n");
 	states = std::make_shared<gameStateMngr>();
@@ -127,14 +133,6 @@ void Game::init()
 	state = states->current; // this never changes at the moment so only needs to be set once
 
 	mouseMode = 0; // 0 is no mouse. Other numbers represent various sprite settings for the cursor.
-
-	p::info("Loading settings");
-
-	loadAudioSettings();
-
-	if (window) {
-		windowInit(window);
-	}
 
 	p::info("Loading keybinds");
 	setKeybinds();
@@ -488,11 +486,11 @@ void Game::setAudioSettings(float masterVolume, float sfxVolume, float musicVolu
 
 void Game::fixViews()
 {
-	auto wSize = sf::Vector2f(getRenderWindow().getSize().x, getRenderWindow().getSize().y);
+	auto wSize = pointF(getRenderWindow().getSize().x, getRenderWindow().getSize().y);
 
 	//p::info(std::to_string(wSize.x));
 
-	camera->setBaseSize(pointF(wSize));
+	camera->setBaseSize(wSize);
 	camera->setPosition(sf::Vector2f(0, 0));
 	camera->viewScene = state;
 }

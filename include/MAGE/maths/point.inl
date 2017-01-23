@@ -57,6 +57,12 @@ namespace mage {
 	}
 
 	template<typename T>
+	inline point<T>::point(const point2<T>& in)
+	{
+		*this = in.to3();
+	}
+
+	template<typename T>
 	inline point<T> & point<T>::operator+=(const point<T>& rhs)
 	{
 		x += rhs.x;
@@ -343,6 +349,11 @@ namespace mage {
 		z = 0;
 	}
 	template<typename T>
+	inline point2<T>::point2(const point<T>& in)
+	{
+		*this = in.to2();
+	}
+	template<typename T>
 	inline point2<T>::point2(std::string & in)
 	{
 		auto split = splitString(in);
@@ -524,6 +535,8 @@ namespace mage {
 		newPt.x = (To)x;
 		newPt.y = (To)y;
 		newPt.z = (To)z;
+
+		return newPt;
 	}
 
 	template<typename T>

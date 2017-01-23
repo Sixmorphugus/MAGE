@@ -42,9 +42,7 @@ public:
 	floatBox getViewport() const;
 	void setViewport(floatBox vp);
 
-	void setZoom(float zoomLevel);
-
-	void setBaseSize(pointF& bs);
+	void setBaseSize(const pointF& bs);
 
 private:
 	void setDefaults();
@@ -59,7 +57,6 @@ public:
 	std::weak_ptr<scene> viewScene;
 	renderStates states;
 
-	pointF zoomZero;
 	bool respectPixelGrid;
 	floatBox cameraLimits;
 

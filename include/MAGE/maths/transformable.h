@@ -32,13 +32,15 @@ public:
 
 	void setPosition(const pointF& position);
 	void setAnchor(const pointF& origin);
-	void setScale(const pointF& origin);
+	void setScale(const pointF& sc);
+	void setScale(float sc);
 	void setRotation(float rot);
 
 	void move(const pointF& offset);
 	void shiftAnchor(const pointF& offset);
 	void rotate(float rot);
 	void scale(const pointF& scalar);
+	void scale(float scalar);
 
 	// additional functions
 	pointF getRealPosition() const;

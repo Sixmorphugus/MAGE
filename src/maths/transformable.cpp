@@ -68,6 +68,14 @@ void transformable::setScale(const pointF & sc)
 	onScaled.notify(this);
 }
 
+void transformable::setScale(float sc)
+{
+	m_scale = pointF(sc, sc, sc);
+
+	doTransformUpdate();
+	onScaled.notify(this);
+}
+
 void transformable::setRotation(float rot)
 {
 	m_rotation = rot;
@@ -98,6 +106,12 @@ void transformable::scale(const pointF & scalar)
 {
 	auto cur = getScale();
 	setScale(cur + scalar);
+}
+
+void transformable::scale(float scalar)
+{
+	auto cur = getScale();
+	setScale(cur + pointF(scalar, scalar, scalar));
 }
 
 pointF transformable::getRealPosition() const
@@ -162,13 +176,15 @@ MAGE_DeclareScriptingFunction(&transformable::getRotation, "getRotation");
 MAGE_DeclareScriptingFunction(&transformable::getScale, "getScale");
 MAGE_DeclareScriptingFunction(&transformable::move, "move");
 MAGE_DeclareScriptingFunction(&transformable::rotate, "rotate");
-MAGE_DeclareScriptingFunction(&transformable::scale, "scale");
+MAGE_DeclareScriptingCustom(chaiscript::fun<void, transformable, const pointF&>(&transformable::scale), "scale");
+MAGE_DeclareScriptingCustom(chaiscript::fun<void, transformable, float>(&transformable::scale), "scale");
 MAGE_DeclareScriptingFunction(&transformable::shiftAnchor, "shiftAnchor");
 MAGE_DeclareScriptingFunction(&transformable::setAnchor, "setAnchor");
 MAGE_DeclareScriptingFunction(&transformable::setRealPosition, "setRealPosition");
 MAGE_DeclareScriptingFunction(&transformable::setPosition, "setPosition");
 MAGE_DeclareScriptingFunction(&transformable::setRotation, "setRotation");
-MAGE_DeclareScriptingFunction(&transformable::setScale, "setScale");
+MAGE_DeclareScriptingCustom(chaiscript::fun<void, transformable, const pointF&>(&transformable::setScale), "setScale");
+MAGE_DeclareScriptingCustom(chaiscript::fun<void, transformable, float>(&transformable::setScale), "setScale");
 MAGE_DeclareScriptingFunction(&transformable::onAnchored, "onAnchored");
 MAGE_DeclareScriptingFunction(&transformable::onMoved, "onMoved");
 MAGE_DeclareScriptingFunction(&transformable::onRotated, "onRotated");

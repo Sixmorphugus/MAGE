@@ -16,20 +16,21 @@ view::view()
 }
 
 view::view(const pointF& size, std::shared_ptr<scene> gr)
-	: transformableBox(pointF(0.f, 0.f), size)
 {
 	setDefaults();
+
+	setBaseSize(size);
 	viewScene = gr;
 
 	resizeCanvas(sf::Vector2u((unsigned int)getScale().x, (unsigned int)getScale().y));
 }
 
-view::view(const view & copy)
+view::view(const view& copy)
 {
 	copyFrom(copy);
 }
 
-view& mage::view::operator=(const view & rhs)
+view& view::operator=(const view& rhs)
 {
 	copyFrom(rhs);
 	return *this;
@@ -41,10 +42,7 @@ void view::render(sf::RenderTarget& target, const colour& bgCol)
 
 	// respect the pixel grid
 	if (respectPixelGrid) {
-		setPosition(pointF(floor(getPosition().x), floor(getPosition().y)));
-
-		// the size must be the same ratio as the viewport
-		// (todo)
+		pixelLock();
 	}
 
 	// respect the bounds rectangle unless the camera is too big for it
@@ -76,21 +74,22 @@ void view::render(sf::RenderTarget& target, const colour& bgCol)
 	resizeCanvas(target.getSize());
 
 	// we're drawing on the internal texture
-	//m_internalRT.setView(windowView); // use this view
-	m_internalRT.clear(sf::Color::Magenta); // this'll only actually happen in the viewport (i think...)
+	m_internalRT.setView(toSf()); // use this view
+	m_internalRT.clear(bgCol.toSf()); // this'll only actually happen in the viewport (i think...)
 
 	drawBox bTest;
 	bTest.setScale(sf::Vector2f(50.f, 50.f));
 
 	theGame()->renderer->pushFrameRenderable(bTest);
 
-	for (unsigned int i = 0; i < lScene->getNumObjects(); i++) {
-		auto renObj = lScene->getAs<renderable>(i);
+	if(lScene)
+		for (unsigned int i = 0; i < lScene->getNumObjects(); i++) {
+			auto renObj = lScene->getAs<renderable>(i);
 
-		if (renObj) {
-			theGame()->renderer->pushFrameRenderable(*renObj);
+			if (renObj) {
+				theGame()->renderer->pushFrameRenderable(*renObj);
+			}
 		}
-	}
 
 	onRender.notify(this);
 
@@ -107,6 +106,8 @@ void view::render(sf::RenderTarget& target, const colour& bgCol)
 sf::View view::toSf()
 {
 	auto v = sf::View(getBox().toSf());
+
+	p::log(std::to_string(getBox().size.x) + ", " + std::to_string(getBox().size.y));
 
 	v.setViewport(m_viewport.toSf());
 	v.setRotation(getRotation());
@@ -125,7 +126,7 @@ void view::resizeCanvas(point2U siz)
 
 sf::RenderTarget* view::getCanvas()
 {
-	return &theGame()->getRenderWindow();//&m_internalRT;
+	return &m_internalRT;
 }
 
 floatBox view::getViewport() const
@@ -139,34 +140,25 @@ void view::setViewport(floatBox vp)
 	onViewportResized.notify(this);
 }
 
-void view::setZoom(float zoomLevel)
-{
-	setScale(zoomZero * zoomLevel);
-}
-
-void view::setBaseSize(pointF& bs)
+void view::setBaseSize(const pointF& bs)
 {
 	transformableBox::setBaseSize(bs);
 }
 
 void view::setDefaults()
 {
-	zoomZero = getScale();
-
 	setPosition(pointF(0, 0));
+	setScale(MAGE_ZOOMDEFAULT);
 
-	states = renderStates();
 	respectPixelGrid = true;
-
-	setZoom(MAGE_ZOOMDEFAULT);
+	m_viewport = floatBox(pointF(0.f, 0.f), pointF(1.f, 1.f));
+	states = renderStates();
 }
 
 void view::copyFrom(const view & from)
 {
 	viewScene = from.viewScene;
 	states = from.states;
-	zoomZero = from.zoomZero;
-	respectPixelGrid = from.respectPixelGrid;
 	cameraLimits = from.cameraLimits;
 
 	m_viewport = from.m_viewport;
@@ -182,9 +174,8 @@ MAGE_DeclareScriptingConstructor(view(), "view");
 MAGE_DeclareScriptingConstructor(view(const pointF&, std::shared_ptr<scene>), "view");
 MAGE_DeclareScriptingConstructor(view(const view&), "view");
 MAGE_DeclareScriptingFunction(&view::render, "render");
-MAGE_DeclareScriptingFunction(&view::respectPixelGrid, "respectPixelGrid");
 MAGE_DeclareScriptingFunction(&view::viewScene, "viewScene");
-MAGE_DeclareScriptingFunction(&view::zoomZero, "zoomZero");
+MAGE_DeclareScriptingFunction(&view::respectPixelGrid, "respectPixelGrid");
 MAGE_DeclareScriptingFunction(&view::setViewport, "setViewport");
 MAGE_DeclareScriptingFunction(&view::getViewport, "getViewport");
 MAGE_DeclareScriptingFunction(&view::onRender, "onRender");
