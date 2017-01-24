@@ -92,13 +92,11 @@ public:
 	// SUBSYSTEMS
 	std::shared_ptr<inputMouse> mouse;
 	std::shared_ptr<inputKeyboard> keyboard;
-
 	std::shared_ptr<jukebox> music;
 	std::shared_ptr<mixer> sound;
-
 	std::shared_ptr<resourceMngr> resources;
 	std::shared_ptr<prefabMngr> prefabs;
-
+	std::shared_ptr<batchRenderer> renderer;
 	std::shared_ptr<scriptingEngine> scripting;
 	std::shared_ptr<scheduleMngr> scheduler;
 
@@ -106,7 +104,6 @@ public:
 	std::shared_ptr<gameState> state;
 
 	std::shared_ptr<view> camera;
-	std::shared_ptr<batchRenderer> renderer;
 
 	hook<> onGameInitDone;
 	hook<> onGamePreUpdate;

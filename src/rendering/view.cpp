@@ -1,6 +1,7 @@
 #include "view.h"
 
 #include "resourceScene.h"
+#include "resourceTexture.h"
 #include "helpers.h"
 #include "gameState.h"
 #include "gmo.h"
@@ -77,8 +78,7 @@ void view::render(sf::RenderTarget& target, const colour& bgCol)
 	m_internalRT.setView(toSf()); // use this view
 	m_internalRT.clear(bgCol.toSf()); // this'll only actually happen in the viewport (i think...)
 
-	drawBox bTest;
-	bTest.setScale(sf::Vector2f(50.f, 50.f));
+	drawSprite bTest(theGame()->resources->getAs<resourceTexture>("__splash"));
 
 	theGame()->renderer->pushFrameRenderable(bTest);
 
@@ -106,8 +106,6 @@ void view::render(sf::RenderTarget& target, const colour& bgCol)
 sf::View view::toSf()
 {
 	auto v = sf::View(getBox().toSf());
-
-	p::log(std::to_string(getBox().size.x) + ", " + std::to_string(getBox().size.y));
 
 	v.setViewport(m_viewport.toSf());
 	v.setRotation(getRotation());
@@ -179,6 +177,6 @@ MAGE_DeclareScriptingFunction(&view::respectPixelGrid, "respectPixelGrid");
 MAGE_DeclareScriptingFunction(&view::setViewport, "setViewport");
 MAGE_DeclareScriptingFunction(&view::getViewport, "getViewport");
 MAGE_DeclareScriptingFunction(&view::onRender, "onRender");
-MAGE_DeclareScriptingFunction(&view::onViewportResized, "onRender");
+MAGE_DeclareScriptingFunction(&view::onViewportResized, "onViewportResized");
 
 MAGE_DeclareScriptingHook("viewHook", view*);

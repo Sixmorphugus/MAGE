@@ -44,6 +44,7 @@ void batchRenderer::renderFrame(sf::RenderTarget& target)
 		for (unsigned int v = 0; v < vList.size(); v++) {
 			p::info(std::to_string(vList[v].position.x) + "," + std::to_string(vList[v].position.y));
 		}
+		p::info("");
 		*/
 
 		// sanity
@@ -174,7 +175,7 @@ unsigned int batchRenderer::getNumFrameChunks() const
 
 void batchRenderer::pushFrameRecipe(renderRecipe& r)
 {
-	tryRecipePage(r); // try to make this recipe draw faster
+	//tryRecipePage(r); // try to make this recipe draw faster
 
 	// is the LAST chunk in this list compatible with our renderStates?
 	// if we tried others it would work but things would draw out of order.
