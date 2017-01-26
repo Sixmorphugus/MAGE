@@ -50,7 +50,7 @@ renderStates::renderStates(std::shared_ptr<resourceTexture> tex, std::shared_ptr
 	usePage = false;
 }
 
-sf::RenderStates renderStates::toSf()
+sf::RenderStates renderStates::toSf() const
 {
 	sf::RenderStates states;
 

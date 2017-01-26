@@ -17,6 +17,7 @@
 
 #include "triangle.h"
 #include "renderStates.h"
+#include "box.h"
 
 namespace mage {
 
@@ -28,6 +29,8 @@ class MAGEDLL renderRecipe
 public:
 	renderRecipe();
 	renderRecipe(std::vector<triangle> tris, unsigned int depth = 0, renderStates& states = renderStates());
+
+	bool fitsInBounds(const floatBox& renderBounds);
 
 public:
 	std::vector<triangle> triangles;

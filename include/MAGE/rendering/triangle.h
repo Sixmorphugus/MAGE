@@ -30,5 +30,6 @@ private:
 	std::vector<sf::Vertex> m_verts;
 
 	friend class renderChunk;
+	friend class renderRecipe;
 };
 }

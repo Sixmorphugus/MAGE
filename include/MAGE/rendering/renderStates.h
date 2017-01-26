@@ -26,7 +26,7 @@ namespace mage {
 		renderStates(const sf::RenderStates& states); // WARNING: slow function - please don't do the conversion this way around in releases
 		renderStates(std::shared_ptr<resourceTexture> tex, std::shared_ptr<resourceShader> sha, const blendMode& b = blendDefault);
 
-		sf::RenderStates toSf();
+		sf::RenderStates toSf() const;
 
 		bool operator==(const renderStates& rh);
 		bool operator!=(const renderStates& rh);

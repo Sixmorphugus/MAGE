@@ -102,7 +102,7 @@ void view::render(sf::RenderTarget& target, const colour& bgCol)
 			auto renObj = lScene->getAs<renderable>(i);
 
 			if (renObj) {
-				theGame()->renderer->pushFrameRenderable(*renObj);
+				theGame()->renderer->pushFrameRenderable(*renObj, getBox());
 			}
 		}
 

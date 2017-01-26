@@ -17,6 +17,18 @@ renderRecipe::renderRecipe(std::vector<triangle> tris, unsigned int d, renderSta
 	states = s;
 }
 
+bool renderRecipe::fitsInBounds(const floatBox& renderBounds)
+{
+	for (unsigned int i = 0; i < triangles.size(); i++) {
+		for (unsigned int j = 0; j < triangles[i].m_verts.size(); j++) {
+			if (renderBounds.contains(triangles[i].m_verts[j].position))
+				return false;
+		}
+	}
+
+	return true;
+}
+
 // SE
 #include "scriptingEngine.h"
 
