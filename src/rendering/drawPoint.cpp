@@ -11,6 +11,12 @@ drawPoint::drawPoint(const pointF& point)
 {
 }
 
+void drawPoint::doTransformUpdate()
+{
+	makeDirty();
+	transformable::doTransformUpdate();
+}
+
 renderRecipe drawPoint::generateDrawRecipe()
 {
 	states.shaderUpdate();

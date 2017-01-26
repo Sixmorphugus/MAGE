@@ -21,9 +21,9 @@ namespace mage {
 class MAGEDLL renderChunk {
 public:
 	renderChunk();
-	renderChunk(renderStates& st);
+	renderChunk(const renderStates& st);
 
-	void pushTriangle(triangle& tri, float depth = 0.f);
+	void pushTriangle(const triangle& tri, float depth = 0.f);
 	void clearVerts();
 
 	std::vector<vertex> getVertexList(); // don't use this in normal code, it's for debugging
@@ -32,7 +32,7 @@ public:
 	float getMinDepth() const;
 	float getMaxDepth() const;
 
-	bool overlaps(const renderChunk& toCheck);
+	bool overlaps(const renderChunk& toCheck) const;
 
 	std::vector<float> getDepths() const;
 

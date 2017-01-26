@@ -5,14 +5,19 @@ using namespace mage;
 renderable::renderable()
 {
 	m_visible = true;
+	m_dirty = true;
 }
 
-renderRecipe renderable::getDrawRecipe()
+renderRecipe* renderable::getDrawRecipe()
 {
 	onRendered.notify(this);
 
-	auto r = generateDrawRecipe();
-	return r;
+	if (m_dirty) {
+		m_cachedDrawRecipe = generateDrawRecipe();
+		m_dirty = false;
+	}
+
+	return &m_cachedDrawRecipe;
 }
 
 renderRecipe renderable::generateDrawRecipe()
@@ -23,6 +28,11 @@ renderRecipe renderable::generateDrawRecipe()
 void renderable::setIsVisible(bool visible)
 {
 	m_visible = visible;
+}
+
+void mage::renderable::makeDirty()
+{
+	m_dirty = true;
 }
 
 bool renderable::getIsVisible() const

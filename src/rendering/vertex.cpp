@@ -21,13 +21,11 @@ vertex::vertex(const point2F& sc, const point2F& tc, const colour& t)
 
 sf::Vertex vertex::toSf()
 {
-	sf::Vertex vert;
+	m_rvert.color = tint.toSf();
+	m_rvert.position = position.toSf2();
+	m_rvert.texCoords = texCoords.toSf2();
 
-	vert.color = tint.toSf();
-	vert.position = position.toSf2();
-	vert.texCoords = texCoords.toSf2();
-
-	return vert;
+	return m_rvert;
 }
 
 // SE

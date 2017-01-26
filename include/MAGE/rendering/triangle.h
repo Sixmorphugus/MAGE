@@ -14,6 +14,8 @@
 #include "vertex.h"
 
 namespace mage {
+class renderChunk;
+
 class MAGEDLL triangle {
 public:
 	triangle(); // default
@@ -21,7 +23,12 @@ public:
 	triangle(vertex& v1, vertex& v2); // line
 	triangle(vertex& v1, vertex& v2, vertex& v3); // triangle
 
-public:
-	vertex vA, vB, vC;
+	void shiftTexCoords(const point2F& shiftAmnt);
+	std::vector<vertex> getVerteces();
+
+private:
+	std::vector<sf::Vertex> m_verts;
+
+	friend class renderChunk;
 };
 }

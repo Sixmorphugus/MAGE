@@ -12,8 +12,8 @@ drawSprite::drawSprite(std::shared_ptr<resourceTexture> tex)
 	setTexture(tex);
 }
 
-drawSprite::drawSprite(const pointF& position, const pointF& size, std::shared_ptr<resourceTexture> tex)
-	: drawBox(position, size)
+drawSprite::drawSprite(const pointF& position, std::shared_ptr<resourceTexture> tex)
+	: drawBox(position)
 {
 	setTexture(tex);
 }
@@ -48,8 +48,10 @@ void drawSprite::setSpriteTextureCoords(const floatBox& box)
 
 void drawSprite::mapTextureCoordsToFullTexture(std::shared_ptr<resourceTexture> tex)
 {
-	if (!tex)
+	if (!tex) {
+		setBaseSize(pointF(1.f, 1.f, 1.f));
 		return;
+	}
 
 	setSpriteTextureCoords(floatBox(pointF(0.f, 0.f), tex->getSize().convertAxis<float>().to3()));
 }
@@ -270,7 +272,7 @@ MAGE_DeclareScriptingBaseClass(drawBox, drawSprite);
 MAGE_DeclareScriptingBaseClass(transformableBox, drawSprite);
 MAGE_DeclareScriptingBaseClass(transformable, drawSprite);
 MAGE_DeclareScriptingConstructor(drawSprite(), "drawSprite");
-MAGE_DeclareScriptingConstructor(drawSprite(pointF& position, pointF& size, std::shared_ptr<resourceTexture> tex), "drawSprite");
+MAGE_DeclareScriptingConstructor(drawSprite(pointF& position, std::shared_ptr<resourceTexture> tex), "drawSprite");
 MAGE_DeclareScriptingConstructor(drawSprite(std::shared_ptr<resourceTexture> tex), "drawSprite");
 MAGE_DeclareScriptingCopyOperator(drawSprite);
 MAGE_DeclareScriptingFunction(&drawSprite::getSpriteTextureCoords, "getSpriteTextureCoords");

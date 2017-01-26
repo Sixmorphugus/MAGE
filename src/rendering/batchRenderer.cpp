@@ -23,37 +23,26 @@ batchRenderer::batchRenderer()
 	m_nextPageTextureCol = 0;
 }
 
-void batchRenderer::renderSingleChunk(renderChunk& chunk, view& renderView)
+void batchRenderer::renderSingleChunk(sf::RenderTarget& target, renderChunk& chunk)
 {
-	sf::RenderTarget* window = renderView.getCanvas();
-
-	// use default view if there's none given
-	window->setView(renderView.toSf());
-
 	// do the draw
-	window->draw(&chunk.getSfVertexList()[0], chunk.getSfVertexList().size(), sf::Triangles, rendererSfState(chunk.states));
+	auto vList = chunk.getSfVertexList();
+
+	// sanity
+	if (vList.size() == 0) {
+		return;
+	}
+
+	target.draw(&vList[0], vList.size(), sf::Triangles, rendererSfState(chunk.states));
 }
 
 void batchRenderer::renderFrame(sf::RenderTarget& target)
 {
+	m_page.display();
+
 	// draw each chunk quickly
 	for (unsigned int i = 0; i < m_frameChunks.size(); i++) {
-		auto vList = m_frameChunks[i].getSfVertexList();
-
-		/*
-		for (unsigned int v = 0; v < vList.size(); v++) {
-			p::info(std::to_string(vList[v].position.x) + "," + std::to_string(vList[v].position.y));
-		}
-		p::info("");
-		*/
-
-		// sanity
-		if (vList.size() == 0) {
-			continue;
-		}
-
-		// do the draw
-		target.draw(&vList[0], vList.size(), sf::Triangles, rendererSfState(m_frameChunks[i].states));
+		renderSingleChunk(target, m_frameChunks[i]);
 	}
 }
 
@@ -63,17 +52,18 @@ void batchRenderer::frameCleanup()
 	clearPage();
 }
 
-bool batchRenderer::tryRecipePage(renderRecipe & toPage)
+bool batchRenderer::tryRecipePage(renderRecipe& toPage)
 {
 	// we have been given a draw recipe that:
 	// a) has a texture.
 	// b) doesn't already use the page.
-
+	
 	// confirm that to be true.
-	auto tex = toPage.states.texture.lock();
-
-	if (!tex)
+	if (toPage.states.texture.expired()) {
 		return false; // we know that if a recipe hasn't got a texture it either CAN'T use the page or already is
+	}
+
+	auto tex = toPage.states.texture.lock();
 
 	// is this texture already in the page?
 	if (!textureIsInPage(tex)) {
@@ -87,6 +77,9 @@ bool batchRenderer::tryRecipePage(renderRecipe & toPage)
 	// we're now good to convert this recipe.
 	point2U pagePos = texturePagePosition(tex);
 
+	if (pagePos == m_page.getSize())
+		return false;
+
 	// make the state a "page state"
 	toPage.states.texture.reset();
 	toPage.states.usePage = true;
@@ -95,7 +88,7 @@ bool batchRenderer::tryRecipePage(renderRecipe & toPage)
 	std::vector<triangle>& triangles = toPage.triangles;
 
 	for (unsigned int i = 0; i < triangles.size(); i++) {
-		triangles[i].vA.texCoords += pagePos.convertAxis<float>();
+		triangles[i].shiftTexCoords(pagePos.convertAxis<float>());
 	}
 
 	// return true.
@@ -132,17 +125,21 @@ bool batchRenderer::textureIsInPage(std::shared_ptr<resourceTexture> res)
 
 point2U batchRenderer::texturePagePosition(std::shared_ptr<resourceTexture> res)
 {
-	if(!textureIsInPage(res))
-		return point2U(m_page.getSize());
+	if (!textureIsInPage(res)) {
+		return m_page.getSize();
+	}
 
 	return m_pagePositions[res.get()];
 }
 
 bool batchRenderer::pushPageTexture(std::shared_ptr<resourceTexture> res)
 {
-	if (textureIsInPage(res) || !textureFitsPage(res, true))
+	if (!textureFitsPage(res, true))
 		return false;
 
+	if (textureIsInPage(res)) 
+		return true;
+	
 	// paste the texture into the batchRenderer's page
 	point2U nextPasteLocation(m_currentPageTextureCol, m_nextPageTexturePos);
 
@@ -152,6 +149,10 @@ bool batchRenderer::pushPageTexture(std::shared_ptr<resourceTexture> res)
 	sfSprite.setPosition(nextPasteLocation.convertAxis<float>().toSf2());
 	m_page.draw(sfSprite);
 
+	m_pagePositions[res.get()] = nextPasteLocation;
+
+	m_nextPageTexturePos += nextPasteLocation.y;
+
 	return true;
 }
 
@@ -160,6 +161,8 @@ void batchRenderer::clearPage()
 	m_currentPageTextureCol = 0;
 	m_nextPageTexturePos = 0;
 	m_nextPageTextureCol = 0;
+
+	m_pagePositions.clear();
 }
 
 void batchRenderer::clearFrameChunks()
@@ -175,7 +178,7 @@ unsigned int batchRenderer::getNumFrameChunks() const
 
 void batchRenderer::pushFrameRecipe(renderRecipe& r)
 {
-	//tryRecipePage(r); // try to make this recipe draw faster
+	tryRecipePage(r); // try to make this recipe draw faster
 
 	// is the LAST chunk in this list compatible with our renderStates?
 	// if we tried others it would work but things would draw out of order.
@@ -217,7 +220,7 @@ void batchRenderer::pushFrameRecipe(renderRecipe& r)
 void batchRenderer::pushFrameRenderable(renderable& r)
 {
 	if(r.getIsVisible())
-		pushFrameRecipe(r.getDrawRecipe());
+		pushFrameRecipe(*r.getDrawRecipe());
 }
 
 void batchRenderer::pushFrameChunk(renderChunk& chunk)

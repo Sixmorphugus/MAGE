@@ -16,13 +16,21 @@ drawBox::drawBox(const pointF& position, const pointF& size)
 {
 }
 
+void drawBox::doTransformUpdate()
+{
+	transformableBox::doTransformUpdate();
+	makeDirty();
+}
+
 renderRecipe drawBox::generateDrawRecipe()
 {
+	auto coords = getTransformedPoints();
+
 	// calculate coords
-	auto coord1 = getTransformedPoints()[0];
-	auto coord2 = getTransformedPoints()[1];
-	auto coord3 = getTransformedPoints()[2];
-	auto coord4 = getTransformedPoints()[3];
+	auto coord1 = coords[0];
+	auto coord2 = coords[1];
+	auto coord3 = coords[2];
+	auto coord4 = coords[3];
 
 	// calculate triangles
 	triangle tri1(

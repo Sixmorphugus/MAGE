@@ -25,6 +25,7 @@ public:
 	renderStates states;
 
 protected:
+	virtual void doTransformUpdate();
 	virtual renderRecipe generateDrawRecipe();
 };
 

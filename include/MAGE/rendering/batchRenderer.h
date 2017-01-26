@@ -23,7 +23,7 @@ class MAGEDLL batchRenderer {
 public:
 	batchRenderer();
 
-	void renderSingleChunk(renderChunk& chunk, view& renderView);
+	void renderSingleChunk(sf::RenderTarget& target, renderChunk& chunk);
 
 	void renderFrame(sf::RenderTarget& target);
 

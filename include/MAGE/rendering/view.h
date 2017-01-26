@@ -25,6 +25,8 @@
 
 namespace mage {
 
+class renderable;
+
 class MAGEDLL view : public transformableBox {
 public:
 	view();
@@ -65,6 +67,7 @@ public:
 
 private:
 	floatBox m_viewport;
+	std::vector<std::shared_ptr<renderable>> t_drawTests;
 };
 
 } // namespace mage

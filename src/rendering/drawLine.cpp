@@ -11,6 +11,12 @@ drawLine::drawLine(const pointF& position, const point2F& endOffset)
 {
 }
 
+void drawLine::doTransformUpdate()
+{
+	transformableLine::doTransformUpdate();
+	makeDirty();
+}
+
 renderRecipe drawLine::generateDrawRecipe()
 {
 	states.shaderUpdate();

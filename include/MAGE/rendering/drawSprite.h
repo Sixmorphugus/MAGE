@@ -51,7 +51,7 @@ public:
 public:
 	drawSprite();
 	drawSprite(std::shared_ptr<resourceTexture> tex);
-	drawSprite(const pointF& position, const pointF& size, std::shared_ptr<resourceTexture> tex = nullptr);
+	drawSprite(const pointF& position, std::shared_ptr<resourceTexture> tex = nullptr);
 
 	// texture management
 	void setTexture(std::shared_ptr<resourceTexture>& tex);

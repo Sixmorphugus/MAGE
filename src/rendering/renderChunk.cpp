@@ -7,21 +7,19 @@ renderChunk::renderChunk()
 {
 }
 
-renderChunk::renderChunk(renderStates& st)
+renderChunk::renderChunk(const renderStates& st)
 {
 	states = st;
 }
 
-void renderChunk::pushTriangle(triangle & tri, float depth)
+void renderChunk::pushTriangle(const triangle& tri, float depth)
 {
 	if (!m_verteces.count(depth)) {
 		m_verteces[depth] = std::vector<sf::Vertex>();
 	}
 
 	// do insertion
-	m_verteces[depth].push_back(tri.vA.toSf());
-	m_verteces[depth].push_back(tri.vB.toSf());
-	m_verteces[depth].push_back(tri.vC.toSf());
+	m_verteces[depth].insert(m_verteces[depth].end(), tri.m_verts.begin(), tri.m_verts.end());
 }
 
 void renderChunk::clearVerts()
@@ -62,14 +60,14 @@ float renderChunk::getMaxDepth() const
 	return m_verteces.rbegin()->first;
 }
 
-bool renderChunk::overlaps(const renderChunk & toCheck)
+bool renderChunk::overlaps(const renderChunk & toCheck) const
 {
 	// if either min depth or max depth lines are inside the other chunk it overlaps
 	return (getMinDepth() > toCheck.getMinDepth() && getMinDepth() < toCheck.getMaxDepth()) || 
 		(getMaxDepth() > toCheck.getMaxDepth() && getMaxDepth() < toCheck.getMaxDepth());
 }
 
-std::vector<float> mage::renderChunk::getDepths() const
+std::vector<float> renderChunk::getDepths() const
 {
 	std::vector<float> ds;
 

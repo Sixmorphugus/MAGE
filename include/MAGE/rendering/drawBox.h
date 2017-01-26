@@ -37,6 +37,7 @@ namespace mage {
 		point2F texCoord4;
 
 	protected:
+		virtual void doTransformUpdate();
 		virtual renderRecipe generateDrawRecipe();
 	};
 

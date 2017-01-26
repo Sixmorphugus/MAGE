@@ -27,6 +27,9 @@ public:
 	point2F position;
 	point2F texCoords;
 	colour tint;
+
+private:
+	sf::Vertex m_rvert; // preallocated return vertex
 };
 
 }

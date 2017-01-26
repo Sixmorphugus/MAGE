@@ -5,12 +5,13 @@ using namespace mage;
 transformable::transformable()
 {
 	m_rotation = 0.f;
-	doTransformUpdate();
+	setScale(pointF(1.f, 1.f, 1.f));
 }
 
 transformable::transformable(const pointF & position)
 {
 	m_rotation = 0.f;
+	m_scale = pointF(1.f, 1.f, 1.f);
 	setPosition(position);
 }
 

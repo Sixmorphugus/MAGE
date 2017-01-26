@@ -25,6 +25,7 @@ namespace mage {
 		renderStates states;
 
 	protected:
+		virtual void doTransformUpdate();
 		virtual renderRecipe generateDrawRecipe();
 	};
 

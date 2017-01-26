@@ -20,10 +20,12 @@ class renderable {
 public:
 	renderable();
 
-	renderRecipe getDrawRecipe();
+	renderRecipe* getDrawRecipe();
 
 	bool getIsVisible() const;
 	void setIsVisible(bool visible);
+
+	void makeDirty();
 
 public:
 	hook<renderable*> onRendered;
@@ -33,6 +35,9 @@ protected:
 
 private:
 	bool m_visible;
+	bool m_dirty;
+
+	renderRecipe m_cachedDrawRecipe;
 };
 
 }
