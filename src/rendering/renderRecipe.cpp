@@ -2,20 +2,28 @@
 
 #include "resourceTexture.h"
 #include "resourceShader.h"
+#include "renderChunk.h"
 
 using namespace mage;
 
 renderRecipe::renderRecipe()
 {
 	depth = 0;
+	m_chunk = nullptr;
 }
 
 renderRecipe::renderRecipe(std::vector<triangle> tris, unsigned int d, renderStates & s)
 {
 	triangles = tris;
 	states = s;
-
+	m_chunk = nullptr;
 	depth = d;
+}
+
+renderRecipe::~renderRecipe()
+{
+	if(m_chunk)
+		m_chunk->dropRecipeTris(*this);
 }
 
 bool renderRecipe::fitsInBounds(const floatBox& renderBounds)
@@ -37,6 +45,11 @@ void renderRecipe::shiftTextureVerts(const point2F& shift)
 			triangles[t].m_verts[i].texCoords += shift.toSf2();
 		}
 	}
+}
+
+renderChunk* mage::renderRecipe::getChunk()
+{
+	return m_chunk;
 }
 
 // SE

@@ -46,11 +46,6 @@ void batchRenderer::renderFrame(sf::RenderTarget& target)
 	}
 }
 
-void batchRenderer::frameCleanup()
-{
-	clearFrameChunks();
-}
-
 bool batchRenderer::textureFitsPage(std::shared_ptr<resourceTexture> res, bool swapCol)
 {
 	point2U nextPasteLocation(m_currentPageTextureCol, m_nextPageTexturePos);
@@ -159,18 +154,13 @@ void batchRenderer::pushFrameRecipe(renderRecipe& r)
 			pushFrameChunk(newChunk);
 		}
 
-		for (unsigned int i = 0; i < r.triangles.size(); i++) {
-			// insert into existing chunk.
-			lastChunk.pushTriangle(r.triangles[i]);
-		}
+		lastChunk.pushRecipe(r);
 	}
 	else {
 		// create "chunk 1".
 		renderChunk newChunk(r.states);
 
-		for (unsigned int i = 0; i < r.triangles.size(); i++) {
-			newChunk.pushTriangle(r.triangles[i]);
-		}
+		newChunk.pushRecipe(r);
 
 		pushFrameChunk(newChunk);
 	}
@@ -224,7 +214,6 @@ MAGE_DeclareScriptingUnlistableType(batchRenderer);
 MAGE_DeclareScriptingConstructor(batchRenderer(), "batchRenderer");
 MAGE_DeclareScriptingFunction(&batchRenderer::clearFrameChunks, "clearFrameChunks");
 MAGE_DeclareScriptingFunction(&batchRenderer::clearPage, "clearPage");
-MAGE_DeclareScriptingFunction(&batchRenderer::frameCleanup, "frameCleanup");
 MAGE_DeclareScriptingFunction(&batchRenderer::getNumFrameChunks, "getNumFrameChunks");
 MAGE_DeclareScriptingFunction(&batchRenderer::pushFrameChunk, "pushFrameChunk");
 MAGE_DeclareScriptingFunction(&batchRenderer::pushFrameRecipe, "pushFrameRecipe");

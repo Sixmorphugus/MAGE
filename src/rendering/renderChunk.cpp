@@ -1,5 +1,6 @@
 #include "renderChunk.h"
 #include "helpers.h"
+#include "renderRecipe.h"
 
 using namespace mage;
 
@@ -12,14 +13,38 @@ renderChunk::renderChunk(const renderStates& st)
 	states = st;
 }
 
-void renderChunk::pushTriangle(const triangle& tri, float depth)
+renderChunk::~renderChunk()
 {
-	if (!m_verteces.count(depth)) {
-		m_verteces[depth] = std::vector<sf::Vertex>();
+	// if this somehow happens we should probably notify all the renderRecipes that will need redrawing.
+
+}
+
+void renderChunk::pushRecipe(renderRecipe& r)
+{
+	if (r.states != states) {
+		p::warn("Recipe/Chunk incompatibility detected, ignoring insertion attempt");
+		return;
 	}
 
-	// do insertion
-	m_verteces[depth].insert(m_verteces[depth].end(), tri.m_verts.begin(), tri.m_verts.end());
+	r.m_chunk = this;
+
+	// decide where to insert.
+	auto insertionIterator = m_vertecesInfo.begin();
+	auto insertionIterator2 = m_verteces.begin();
+
+	while (insertionIterator->depth <= r.depth) {
+		insertionIterator++;
+		insertionIterator2++;
+	}
+
+	vertexInfo vi;
+	vi.depth = r.depth;
+	vi.recipe = &r;
+
+	auto viv = { vi, vi, vi }; // probably don't need 3 of them...
+
+	m_verteces.insert(insertionIterator2, r.triangles.begin(), r.triangles.end()); // wait fuck nvm fix later
+	m_vertecesInfo.insert(insertionIterator, viv.begin(), viv.end());
 }
 
 void renderChunk::clearVerts()
@@ -41,23 +66,17 @@ std::vector<vertex> renderChunk::getVertexList()
 
 std::vector<sf::Vertex> renderChunk::getSfVertexList()
 {
-	return collapseVectorMap<float, sf::Vertex>(m_verteces);
+	return m_verteces;
 }
 
 float renderChunk::getMinDepth() const
 {
-	if(m_verteces.size() == 0)
-		return 0.f;
-
-	return m_verteces.begin()->first;
+	return m_vertecesInfo.begin()->depth;
 }
 
 float renderChunk::getMaxDepth() const
 {
-	if (m_verteces.size() == 0)
-		return 0.f;
-
-	return m_verteces.rbegin()->first;
+	return m_vertecesInfo.rbegin()->depth;
 }
 
 bool renderChunk::overlaps(const renderChunk & toCheck) const

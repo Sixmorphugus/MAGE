@@ -28,8 +28,8 @@ namespace mage {
 
 		sf::RenderStates toSf() const;
 
-		bool operator==(const renderStates& rh);
-		bool operator!=(const renderStates& rh);
+		bool operator==(const renderStates& rh) const;
+		bool operator!=(const renderStates& rh) const;
 		
 	public:
 		// renderStates in MAGE don't have a transform but do have everything else.

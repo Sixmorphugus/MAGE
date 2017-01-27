@@ -18,12 +18,23 @@
 #include "triangle.h"
 
 namespace mage {
+class renderRecipe;
+
 class MAGEDLL renderChunk {
+private:
+	struct vertexInfo {
+		float depth;
+		renderRecipe* recipe;
+	};
+
 public:
 	renderChunk();
 	renderChunk(const renderStates& st);
 
-	void pushTriangle(const triangle& tri, float depth = 0.f);
+	~renderChunk();
+
+	void pushRecipe(renderRecipe& r);
+	void dropRecipeTris(const renderRecipe& r);
 	void clearVerts();
 
 	std::vector<vertex> getVertexList(); // don't use this in normal code, it's for debugging
@@ -43,6 +54,7 @@ public:
 	renderStates states;
 
 private:
-	std::map< float, std::vector<sf::Vertex> > m_verteces; // we store the verteces as SF so we don't have to convert during render time
+	std::vector<vertexInfo> m_vertecesInfo; 
+	std::vector<sf::Vertex> m_verteces; // we store the verteces as SF so we don't have to convert during render time
 };
 }

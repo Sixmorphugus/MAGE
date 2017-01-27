@@ -31,8 +31,6 @@ public:
 	void pushFrameRenderable(renderable& r);
 	void pushFrameChunk(renderChunk& chunk); // messing around with a render in progress is not something you should be doing, but you do have the option.
 
-	void frameCleanup();
-
 	bool textureFitsPage(std::shared_ptr<resourceTexture> res, bool swapCol = false); // unless you know how the batchRenderer works you don't need swapCol.
 	bool textureIsInPage(std::shared_ptr<resourceTexture> res);
 	point2F texturePagePosition(std::shared_ptr<resourceTexture> res);

@@ -18,6 +18,7 @@
 #include "triangle.h"
 #include "renderStates.h"
 #include "box.h"
+#include "renderChunk.h"
 
 namespace mage {
 
@@ -30,14 +31,23 @@ public:
 	renderRecipe();
 	renderRecipe(std::vector<triangle> tris, unsigned int depth = 0, renderStates& states = renderStates());
 
+	~renderRecipe();
+
 	bool fitsInBounds(const floatBox& renderBounds);
 	void shiftTextureVerts(const point2F& shift);
+
+	renderChunk* getChunk();
 
 public:
 	std::vector<triangle> triangles;
 	renderStates states;
 
 	unsigned int depth;
+
+private:
+	renderChunk* m_chunk;
+
+	friend class renderChunk;
 };
 
 }

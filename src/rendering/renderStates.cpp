@@ -69,7 +69,7 @@ sf::RenderStates renderStates::toSf() const
 	return states;
 }
 
-bool renderStates::operator==(const renderStates & rh)
+bool renderStates::operator==(const renderStates & rh) const
 {
 	// if a texture uses the page we don't care about what its texture resource is.
 
@@ -88,7 +88,7 @@ bool renderStates::operator==(const renderStates & rh)
 			);
 }
 
-bool renderStates::operator!=(const renderStates & rh)
+bool renderStates::operator!=(const renderStates & rh) const
 {
 	return !(*this == rh);
 }
