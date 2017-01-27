@@ -13,8 +13,9 @@ renderRecipe::renderRecipe()
 renderRecipe::renderRecipe(std::vector<triangle> tris, unsigned int d, renderStates & s)
 {
 	triangles = tris;
-	depth = d;
 	states = s;
+
+	depth = d;
 }
 
 bool renderRecipe::fitsInBounds(const floatBox& renderBounds)
@@ -27,6 +28,15 @@ bool renderRecipe::fitsInBounds(const floatBox& renderBounds)
 	}
 
 	return true;
+}
+
+void renderRecipe::shiftTextureVerts(const point2F& shift)
+{
+	for (unsigned int t = 0; t < triangles.size(); t++) {
+		for (unsigned int i = 0; i < triangles[t].m_verts.size(); i++) {
+			triangles[t].m_verts[i].texCoords += shift.toSf2();
+		}
+	}
 }
 
 // SE

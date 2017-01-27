@@ -31,6 +31,7 @@ public:
 	renderRecipe(std::vector<triangle> tris, unsigned int depth = 0, renderStates& states = renderStates());
 
 	bool fitsInBounds(const floatBox& renderBounds);
+	void shiftTextureVerts(const point2F& shift);
 
 public:
 	std::vector<triangle> triangles;

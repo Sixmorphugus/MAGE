@@ -1,6 +1,7 @@
 #include "renderStates.h"
 
 #include "Game.h"
+#include "batchRenderer.h"
 #include "resources.h"
 #include "resourceShader.h"
 #include "resourceTexture.h"
@@ -59,20 +60,32 @@ sf::RenderStates renderStates::toSf() const
 	if(!shader.expired())
 		states.shader = shader.lock()->get();
 
-	if (!texture.expired())
+	if (!texture.expired() && !usePage)
 		states.texture = texture.lock()->get();
+
+	if (usePage)
+		states.texture = &theGame()->renderer->getPageSfTexture();
 
 	return states;
 }
 
 bool renderStates::operator==(const renderStates & rh)
 {
-	return (
-		blend == rh.blend &&
-		usePage == rh.usePage &&
-		texture.lock() == rh.texture.lock() &&
-		shader.lock() == rh.shader.lock()
-	);
+	// if a texture uses the page we don't care about what its texture resource is.
+
+	if(usePage)
+		return (
+			blend == rh.blend &&
+			usePage == rh.usePage &&
+			shader.lock() == rh.shader.lock()
+			);
+	else
+		return (
+			blend == rh.blend &&
+			usePage == rh.usePage &&
+			texture.lock() == rh.texture.lock() &&
+			shader.lock() == rh.shader.lock()
+			);
 }
 
 bool renderStates::operator!=(const renderStates & rh)

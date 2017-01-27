@@ -31,6 +31,7 @@ public:
 	hook<renderable*> onRendered;
 
 protected:
+	renderRecipe generateOptimizedDrawRecipe();
 	virtual renderRecipe generateDrawRecipe();
 
 private:

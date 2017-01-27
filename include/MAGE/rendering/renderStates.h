@@ -35,8 +35,7 @@ namespace mage {
 		// renderStates in MAGE don't have a transform but do have everything else.
 		blendMode blend;
 
-		bool usePage;
-
 		std::weak_ptr<resourceTexture> texture;
+		bool usePage;
 	};
 }

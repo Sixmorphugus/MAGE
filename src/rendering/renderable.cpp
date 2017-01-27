@@ -1,4 +1,6 @@
 #include "renderable.h"
+#include "Game.h"
+#include "batchRenderer.h"
 
 using namespace mage;
 
@@ -13,11 +15,27 @@ renderRecipe* renderable::getDrawRecipe()
 	onRendered.notify(this);
 
 	if (m_dirty) {
-		m_cachedDrawRecipe = generateDrawRecipe();
+		m_cachedDrawRecipe = generateOptimizedDrawRecipe();
 		m_dirty = false;
 	}
 
 	return &m_cachedDrawRecipe;
+}
+
+renderRecipe renderable::generateOptimizedDrawRecipe()
+{
+	auto r = generateDrawRecipe(); // our base draw recipe. Renderer can draw it, but it will be from its own texture.
+
+	// this only works if we can get the renderer to "page" the object's texture.
+	auto t = r.states.texture.lock();
+
+	if (t && theGame()->renderer->pushPageTexture(t)) {
+		r.shiftTextureVerts(theGame()->renderer->texturePagePosition(t));
+		
+		r.states.usePage = true;
+	}
+
+	return r;
 }
 
 renderRecipe renderable::generateDrawRecipe()

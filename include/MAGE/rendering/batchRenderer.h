@@ -27,26 +27,24 @@ public:
 
 	void renderFrame(sf::RenderTarget& target);
 
-	void pushFrameRecipe(renderRecipe& r, const floatBox& renderBounds = floatBox());
-	void pushFrameRenderable(renderable& r, const floatBox& renderBounds = floatBox());
+	void pushFrameRecipe(renderRecipe& r);
+	void pushFrameRenderable(renderable& r);
 	void pushFrameChunk(renderChunk& chunk); // messing around with a render in progress is not something you should be doing, but you do have the option.
 
 	void frameCleanup();
 
 	bool textureFitsPage(std::shared_ptr<resourceTexture> res, bool swapCol = false); // unless you know how the batchRenderer works you don't need swapCol.
 	bool textureIsInPage(std::shared_ptr<resourceTexture> res);
-	point2U texturePagePosition(std::shared_ptr<resourceTexture> res);
+	point2F texturePagePosition(std::shared_ptr<resourceTexture> res);
 
 	bool pushPageTexture(std::shared_ptr<resourceTexture> res);
+
+	const sf::Texture& getPageSfTexture() const;
 
 	void clearPage();
 	void clearFrameChunks();
 
 	unsigned int getNumFrameChunks() const;
-
-private:
-	sf::RenderStates rendererSfState(const renderStates& states); // does the same thing as renderStates::toSf with a small change.
-	renderRecipe adjustedRecipe(const renderRecipe& toPage); // tries to make a recipe compatible with a chunk that uses the page by pasting its texture into said page.
 
 private:
 	sf::RenderTexture m_page;

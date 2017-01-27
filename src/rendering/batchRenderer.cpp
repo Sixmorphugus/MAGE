@@ -33,7 +33,7 @@ void batchRenderer::renderSingleChunk(sf::RenderTarget& target, renderChunk& chu
 		return;
 	}
 
-	target.draw(&vList[0], vList.size(), sf::Triangles, rendererSfState(chunk.states));
+	target.draw(&vList[0], vList.size(), sf::Triangles, chunk.states.toSf());
 }
 
 void batchRenderer::renderFrame(sf::RenderTarget& target)
@@ -49,52 +49,6 @@ void batchRenderer::renderFrame(sf::RenderTarget& target)
 void batchRenderer::frameCleanup()
 {
 	clearFrameChunks();
-	clearPage();
-}
-
-renderRecipe batchRenderer::adjustedRecipe(const renderRecipe& toPage)
-{
-	// we have been given a draw recipe that:
-	// a) has a texture.
-	// b) doesn't already use the page.
-	
-	// confirm that to be true.
-	if (toPage.states.texture.expired()) {
-		return toPage; // we know that if a recipe hasn't got a texture it either CAN'T use the page or already is
-	}
-
-	auto tex = toPage.states.texture.lock();
-
-	// is this texture already in the page?
-	if (!textureIsInPage(tex)) {
-		// we need to take the texture that this object uses and try to paste it into the page in its entirety
-		// will it fit?
-		if (!pushPageTexture(tex)) {
-			return toPage; // we can't page something that won't fit.
-		}
-	}
-
-	// we're now good to convert this recipe.
-	point2U pagePos = texturePagePosition(tex);
-
-	if (pagePos == m_page.getSize())
-		return toPage;
-
-	// make the state a "page state"
-	renderRecipe newToPage = toPage;
-
-	newToPage.states.texture.reset();
-	newToPage.states.usePage = true;
-
-	// move the texCoords to their page position.
-	std::vector<triangle>& triangles = newToPage.triangles;
-
-	for (unsigned int i = 0; i < triangles.size(); i++) {
-		triangles[i].shiftTexCoords(pagePos.convertAxis<float>());
-	}
-
-	// return true.
-	return newToPage;
 }
 
 bool batchRenderer::textureFitsPage(std::shared_ptr<resourceTexture> res, bool swapCol)
@@ -125,13 +79,13 @@ bool batchRenderer::textureIsInPage(std::shared_ptr<resourceTexture> res)
 	return m_pagePositions.count(res.get());
 }
 
-point2U batchRenderer::texturePagePosition(std::shared_ptr<resourceTexture> res)
+point2F batchRenderer::texturePagePosition(std::shared_ptr<resourceTexture> res)
 {
 	if (!textureIsInPage(res)) {
-		return m_page.getSize();
+		return point2U(m_page.getSize()).convertAxis<float>();
 	}
 
-	return m_pagePositions[res.get()];
+	return m_pagePositions[res.get()].convertAxis<float>();
 }
 
 bool batchRenderer::pushPageTexture(std::shared_ptr<resourceTexture> res)
@@ -158,6 +112,11 @@ bool batchRenderer::pushPageTexture(std::shared_ptr<resourceTexture> res)
 	return true;
 }
 
+const sf::Texture& mage::batchRenderer::getPageSfTexture() const
+{
+	return m_page.getTexture();
+}
+
 void batchRenderer::clearPage()
 {
 	m_currentPageTextureCol = 0;
@@ -178,14 +137,8 @@ unsigned int batchRenderer::getNumFrameChunks() const
 	return m_frameChunks.size();
 }
 
-void batchRenderer::pushFrameRecipe(renderRecipe& r, const floatBox& renderBounds)
+void batchRenderer::pushFrameRecipe(renderRecipe& r)
 {
-	r = adjustedRecipe(r); // try to make this recipe draw faster
-
-	if (r.fitsInBounds(renderBounds)) {
-		return;
-	}
-
 	// is the LAST chunk in this list compatible with our renderStates?
 	// if we tried others it would work but things would draw out of order.
 	// we're trying to preserve the order.
@@ -223,10 +176,10 @@ void batchRenderer::pushFrameRecipe(renderRecipe& r, const floatBox& renderBound
 	}
 }
 
-void batchRenderer::pushFrameRenderable(renderable& r, const floatBox& renderBounds)
+void batchRenderer::pushFrameRenderable(renderable& r)
 {
 	if(r.getIsVisible())
-		pushFrameRecipe(*r.getDrawRecipe(), renderBounds);
+		pushFrameRecipe(*r.getDrawRecipe());
 }
 
 void batchRenderer::pushFrameChunk(renderChunk& chunk)
@@ -263,16 +216,6 @@ void batchRenderer::pushFrameChunk(renderChunk& chunk)
 
 	// end of the list
 	m_frameChunks.push_back(chunk);
-}
-
-sf::RenderStates batchRenderer::rendererSfState(const renderStates& states) // does the same thing as renderStates::toSf with a small change.
-{
-	auto sfState = states.toSf();
-
-	if (!sfState.texture && states.usePage)
-		sfState.texture = &m_page.getTexture();
-
-	return sfState;
 }
 
 // SE

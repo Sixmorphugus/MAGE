@@ -80,21 +80,29 @@ void view::render(sf::RenderTarget& target, const colour& bgCol)
 
 	timer t1;
 
-	// sfml: 53fps
+	// sfml: 60fps
 	// our system: 30fps
 	// close enough lol
 
 	if (t_drawTests.size() == 0) {
-		for (unsigned int i = 0; i < 100000; i++) {
-			auto ds = std::make_shared<drawSprite>(pointF((float)i, (float)i), theGame()->resources->getAs<resourceTexture>("ui_input_keyQ"));
+		float j = 0.f;
 
+		for (unsigned int i = 0; i < 100000; i++) {
+			auto dp = pointF((float)(i % 500), (float)(i / 500));
+
+			auto ds = std::make_shared<drawSprite>(dp, theGame()->resources->getAs<resourceTexture>("ui_input_keyQ"));
 			t_drawTests.push_back(ds);
+
+			auto s = sf::Sprite(*theGame()->resources->getAs<resourceTexture>("ui_input_keyQ")->get());
+			s.setPosition(dp.toSf2());
+			t_drawTestsLegacy.push_back(s);
 		}
 	}
 
 	// test draws
 	for (unsigned int i = 0; i < t_drawTests.size(); i++) {
 		theGame()->renderer->pushFrameRenderable(*t_drawTests[i]);
+		//m_internalRT.draw(t_drawTestsLegacy[i]);
 	}
 
 	if(lScene)
@@ -102,7 +110,7 @@ void view::render(sf::RenderTarget& target, const colour& bgCol)
 			auto renObj = lScene->getAs<renderable>(i);
 
 			if (renObj) {
-				theGame()->renderer->pushFrameRenderable(*renObj, getBox());
+				theGame()->renderer->pushFrameRenderable(*renObj);
 			}
 		}
 
