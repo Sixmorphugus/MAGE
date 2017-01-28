@@ -44,6 +44,7 @@ public:
 	float getMaxDepth() const;
 
 	bool overlaps(const renderChunk& toCheck) const;
+	bool isEmpty() const;
 
 	std::vector<float> getDepths() const;
 

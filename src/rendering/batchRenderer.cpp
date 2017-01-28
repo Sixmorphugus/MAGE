@@ -23,7 +23,7 @@ batchRenderer::batchRenderer()
 	m_nextPageTextureCol = 0;
 }
 
-void batchRenderer::renderSingleChunk(sf::RenderTarget& target, renderChunk& chunk)
+void batchRenderer::renderSingleChunk(sf::RenderTarget& target, renderChunk& chunk) const
 {
 	// do the draw
 	auto vList = chunk.getSfVertexList();
@@ -43,6 +43,13 @@ void batchRenderer::renderFrame(sf::RenderTarget& target)
 	// draw each chunk quickly
 	for (unsigned int i = 0; i < m_frameChunks.size(); i++) {
 		renderSingleChunk(target, m_frameChunks[i]);
+	}
+
+	// housekeeping
+	for (int i = 0; i < (int)m_frameChunks.size(); i++) {
+		if (m_frameChunks[i].isEmpty()) {
+			m_frameChunks.erase(m_frameChunks.begin() + i);
+		}
 	}
 }
 
@@ -138,6 +145,9 @@ void batchRenderer::pushFrameRecipe(renderRecipe& r)
 	// if we tried others it would work but things would draw out of order.
 	// we're trying to preserve the order.
 
+	if (r.getChunk())
+		return; // already being rendered by one of the chunks.
+
 	if (m_frameChunks.size() > 0) {
 		renderChunk& lastChunk = m_frameChunks[m_frameChunks.size() - 1];
 
@@ -148,7 +158,7 @@ void batchRenderer::pushFrameRecipe(renderRecipe& r)
 			renderChunk newChunk(r.states);
 
 			for (unsigned int i = 0; i < r.triangles.size(); i++) {
-				newChunk.pushTriangle(r.triangles[i]);
+				newChunk.pushRecipe(r);
 			}
 
 			pushFrameChunk(newChunk);

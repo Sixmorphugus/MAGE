@@ -87,7 +87,7 @@ void view::render(sf::RenderTarget& target, const colour& bgCol)
 	if (t_drawTests.size() == 0) {
 		float j = 0.f;
 
-		for (unsigned int i = 0; i < 100000; i++) {
+		for (unsigned int i = 0; i < 10000; i++) {
 			auto dp = pointF((float)(i % 500), (float)(i / 500));
 
 			auto ds = std::make_shared<drawSprite>(dp, theGame()->resources->getAs<resourceTexture>("ui_input_keyQ"));
@@ -117,7 +117,6 @@ void view::render(sf::RenderTarget& target, const colour& bgCol)
 	onRender.notify(this);
 
 	theGame()->renderer->renderFrame(*getCanvas());
-	theGame()->renderer->frameCleanup(); // clean up after drawing our content
 
 	// draw the internal RT into the target
 	m_internalRT.display();

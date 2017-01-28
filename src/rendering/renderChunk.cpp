@@ -15,8 +15,14 @@ renderChunk::renderChunk(const renderStates& st)
 
 renderChunk::~renderChunk()
 {
-	// if this somehow happens we should probably notify all the renderRecipes that will need redrawing.
+	// if this somehow happens we should probably notify all the renderRecipes that will need redrawing by the renderer.
+	std::vector<float> ds;
 
+	if (m_vertecesInfo.size() == 0)
+		return;
+
+	for (unsigned int i = 0; i < m_vertecesInfo.size(); i++)
+		m_vertecesInfo[i].recipe->m_chunk = nullptr; // yes i'm aware this is a bit spammed THANK YOU
 }
 
 void renderChunk::pushRecipe(renderRecipe& r)
@@ -26,25 +32,50 @@ void renderChunk::pushRecipe(renderRecipe& r)
 		return;
 	}
 
-	r.m_chunk = this;
-
-	// decide where to insert.
-	auto insertionIterator = m_vertecesInfo.begin();
-	auto insertionIterator2 = m_verteces.begin();
-
-	while (insertionIterator->depth <= r.depth) {
-		insertionIterator++;
-		insertionIterator2++;
+	if (r.m_chunk) {
+		r.m_chunk->dropRecipeTris(r);
 	}
+
+	r.m_chunk = this;
 
 	vertexInfo vi;
 	vi.depth = r.depth;
 	vi.recipe = &r;
 
-	auto viv = { vi, vi, vi }; // probably don't need 3 of them...
+	auto viv = { vi, vi, vi };
 
-	m_verteces.insert(insertionIterator2, r.triangles.begin(), r.triangles.end()); // wait fuck nvm fix later
-	m_vertecesInfo.insert(insertionIterator, viv.begin(), viv.end());
+	if (m_verteces.size() > 0) {
+		// decide where to insert.
+		unsigned int j = 0;
+
+		while (m_vertecesInfo[j].depth < r.depth) {
+			j++;
+		}
+
+		for (unsigned int i = 0; i < r.triangles.size(); i++) {
+			m_verteces.insert(m_verteces.begin() + j, r.triangles[i].m_verts.begin(), r.triangles[i].m_verts.end()); // wait fuck nvm fix later
+			m_vertecesInfo.insert(m_vertecesInfo.begin() + j, viv.begin(), viv.end());
+		}
+	}
+	else {
+		// insert at beginning.
+		for (unsigned int i = 0; i < r.triangles.size(); i++) {
+			m_verteces.insert(m_verteces.begin(), r.triangles[i].m_verts.begin(), r.triangles[i].m_verts.end()); // wait fuck nvm fix later
+			m_vertecesInfo.insert(m_vertecesInfo.begin(), viv.begin(), viv.end());
+		}
+	}
+}
+
+void renderChunk::dropRecipeTris(const renderRecipe & r)
+{
+	for (int i = 0; i < (int)m_vertecesInfo.size(); i++) {
+		if (m_vertecesInfo[i].recipe == &r) {
+			m_verteces.erase(m_verteces.begin() + i);
+			m_vertecesInfo.erase(m_vertecesInfo.begin() + i);
+
+			i--;
+		}
+	}
 }
 
 void renderChunk::clearVerts()
@@ -86,12 +117,25 @@ bool renderChunk::overlaps(const renderChunk & toCheck) const
 		(getMaxDepth() > toCheck.getMaxDepth() && getMaxDepth() < toCheck.getMaxDepth());
 }
 
+bool mage::renderChunk::isEmpty() const
+{
+	return m_vertecesInfo.size() == 0;
+}
+
 std::vector<float> renderChunk::getDepths() const
 {
 	std::vector<float> ds;
 
-	for (auto i = m_verteces.begin(); i != m_verteces.end(); i++) {
-		ds.push_back(i->first);
+	if (m_vertecesInfo.size() == 0)
+		return ds;
+
+	float at = m_vertecesInfo[0].depth;
+
+	for (unsigned int i = 0; i < m_vertecesInfo.size(); i++) {
+		if (m_vertecesInfo[i].depth > at) {
+			at = m_vertecesInfo[i].depth;
+			ds.push_back(m_vertecesInfo[i].depth);
+		}
 	}
 
 	return ds;
@@ -105,16 +149,27 @@ std::vector<renderChunk> renderChunk::splitAtDepth(float split) const
 	twoChunkList[0].states = states;
 	twoChunkList[1].states = states;
 
+	std::set<renderRecipe*> pushSet1;
+	std::set<renderRecipe*> pushSet2;
+
 	// let's arbitrarily decide now that the depth we're splitting "on" (if it even exists in the chunk) will end up on the "top" half of the split.
-	for (auto i = m_verteces.begin(); i != m_verteces.end(); i++) {
-		if (i->first <= split) {
+	for (unsigned int i = 0; i < m_verteces.size(); i++) {
+		if (m_vertecesInfo[i].depth <= split) {
 			// verteces are added to the "top half"
-			twoChunkList[0].m_verteces[i->first] = i->second;
+			pushSet1.insert(m_vertecesInfo[i].recipe);
 		}
 		else {
 			// verteces are added to the "bottom half"
-			twoChunkList[1].m_verteces[i->first] = i->second;
+			pushSet2.insert(m_vertecesInfo[i].recipe);
 		}
+	}
+
+	for (auto i = pushSet1.begin(); i != pushSet1.end(); i++) {
+		twoChunkList[0].pushRecipe(**i);
+	}
+
+	for (auto i = pushSet2.begin(); i != pushSet2.end(); i++) {
+		twoChunkList[1].pushRecipe(**i);
 	}
 
 	return twoChunkList;
@@ -154,5 +209,5 @@ MAGE_DeclareScriptingConstructor(renderChunk(), "renderChunk");
 MAGE_DeclareScriptingConstructor(renderChunk(renderStates&), "renderChunk");
 MAGE_DeclareScriptingFunction(&renderChunk::clearVerts, "clearVerts");
 MAGE_DeclareScriptingFunction(&renderChunk::getVertexList, "getVertexList");
-MAGE_DeclareScriptingFunction(&renderChunk::pushTriangle, "pushTriangle");
+MAGE_DeclareScriptingFunction(&renderChunk::pushRecipe, "pushTriangle");
 MAGE_DeclareScriptingFunction(&renderChunk::states, "states");
