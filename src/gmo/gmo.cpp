@@ -99,6 +99,11 @@ void gmo::setRespectsPixelGrid(bool yes)
 	m_respectPixelGrid = yes;
 }
 
+renderRecipe gmo::generateDrawRecipe()
+{
+	auto r = renderRecipe();
+}
+
 void gmo::copyFrom(const gmo & cp)
 {
 	m_prefabSource = cp.m_prefabSource;

@@ -179,7 +179,7 @@ namespace mage {
 	}
 
 	template<typename T>
-	inline std::string prop<T>::instPropStringGet(propertiesObject& inst)
+	inline std::string prop<T>::instPropStringGet(const propertiesObject& inst)
 	{
 		// a hack to get a property as a string on a specific instance.
 		auto oldThis = m_whatIsThis;

@@ -148,6 +148,11 @@ void batchRenderer::pushFrameRecipe(renderRecipe& r)
 	if (r.getChunk())
 		return; // already being rendered by one of the chunks.
 
+	// push children first
+	for (unsigned int i = 0; i < r.children.size(); i++) {
+		pushFrameRecipe(r.children[i]);
+	}
+
 	if (m_frameChunks.size() > 0) {
 		renderChunk& lastChunk = m_frameChunks[m_frameChunks.size() - 1];
 

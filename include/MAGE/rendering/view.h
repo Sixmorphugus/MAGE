@@ -67,8 +67,6 @@ public:
 
 private:
 	floatBox m_viewport;
-	std::vector<std::shared_ptr<renderable>> t_drawTests;
-	std::vector<sf::Sprite> t_drawTestsLegacy;
 };
 
 } // namespace mage

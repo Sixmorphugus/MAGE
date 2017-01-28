@@ -22,7 +22,7 @@ class MAGEDLL serializable {
 public:
 	serializable();
 
-	virtual std::string serialize();
+	virtual std::string serialize() const;
 	virtual bool deserialize(std::string data);
 
 	virtual void saveToFile(std::string file);

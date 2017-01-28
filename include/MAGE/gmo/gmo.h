@@ -14,18 +14,22 @@
 #include "propertiesObject.h"
 #include "transformableObject.h"
 #include "namable.h"
+#include "renderable.h"
+#include "scene.h"
 
 namespace mage {
 
 class scene;
 class prefab;
 class interval;
+class resourceSoundBuffer;
 
 class gmo :
 	public renamable, // all game objects can have a name
 	public propertiesObject, // all game objects get registered properties
 	public transformableObject, // all game objects are (basically) transformable
-	public hookableLifetimeObject // onCreated + onDestroyed
+	public hookableLifetimeObject, // onCreated + onDestroyed
+	public renderable // produces a drawRecipe
 {
 public:
 	gmo();
@@ -49,11 +53,16 @@ public:
 	bool getRespectsPixelGrid() const;
 	void setRespectsPixelGrid(bool yes = true);
 
+	void playSound(std::shared_ptr<resourceSoundBuffer> snd);
+	void moveWithCollision(pointF movement);
 public:
 	hook<gmo*, interval> onPreUpdate;
 	hook<gmo*, interval> onUpdate;
 
 	bool test;
+
+protected:
+	virtual renderRecipe generateDrawRecipe();
 
 private:
 	void copyFrom(const gmo& cp);
@@ -81,4 +90,6 @@ MAGE_DeclareScriptingBaseClass(renamable, type);\
 MAGE_DeclareScriptingBaseClass(serializable, type);\
 MAGE_DeclareScriptingBaseClass(propertiesObject, type);\
 MAGE_DeclareScriptingBaseClass(transformableObject, type);\
+MAGE_DeclareScriptingBaseClass(renderable, type);\
+MAGE_DeclareScriptingBaseClass(scene, type);\
 MAGE_DeclareScriptingBaseClass(hookableLifetimeObject, type);

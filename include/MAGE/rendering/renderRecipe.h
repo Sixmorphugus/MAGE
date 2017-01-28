@@ -44,6 +44,8 @@ public:
 
 	unsigned int depth;
 
+	std::vector<renderRecipe> children;
+
 private:
 	renderChunk* m_chunk;
 

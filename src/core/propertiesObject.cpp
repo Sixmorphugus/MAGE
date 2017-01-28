@@ -96,7 +96,7 @@ std::vector<std::string> propertiesObject::getPropertyList() const
 	return propNames;
 }
 
-std::string propertiesObject::serialize()
+std::string propertiesObject::serialize() const
 {
 	std::stringstream saveFile;
 

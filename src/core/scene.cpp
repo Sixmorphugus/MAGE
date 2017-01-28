@@ -58,7 +58,7 @@ std::string scene::serialize() const
 		auto obj = get(i);
 
 		if (obj->getPrefabSource() != nullptr) {
-			saveFile << "OBJECT " << theGame()->prefabs->nameOf(obj->getPrefabSource()) << ";";
+			saveFile << theGame()->prefabs->nameOf(obj->getPrefabSource()) << ";";
 			saveFile << obj->serialize();
 			saveFile << "@\n";
 		}
@@ -72,51 +72,19 @@ std::string scene::serialize() const
 
 bool scene::deserialize(std::string saveString)
 {
-	auto things = splitString(saveString, '@', '#');
+	auto sss = splitString(saveString, '@');
 
-	unsigned int lines = things.size();
+	// that should have given us a list of all the object sections in our level.
+	// now we just deserialize those as GMOs.
+	for (unsigned int i = 0; i < sss.size(); i++) {
+		auto serializedGmo = splitStringAtFirst(sss[i], ';');
 
-	for (unsigned int line = 0; line < lines; line++)
-	{
-		std::string sLine = things[line];
+		auto p = theGame()->prefabs->newInstance(serializedGmo[0], this);
 
-		// there is an initial word in save file line.
-		// this defines why the line is there.
-		auto spaceSplit = splitStringAtFirst(sLine);
-
-		if (spaceSplit.size() < 2) {
-			// skip this line
-			p::info("Ignoring wrong space format/blank section at line " + std::to_string(line));
-			continue;
-		}
-
-		std::string type = spaceSplit[0];
-		std::string sData = spaceSplit[1];
-
-		if (type == "OBJECT") {
-			// format:
-			// OBJECT [prefab];[property1]=[value1],[property2]=[value2],...
-
-			auto data2 = splitStringAtFirst(sData, ';', '"');
-
-			if (data2.size() < 2) {
-				p::info("Ignoring invalid object data at line " + std::to_string(line));
-				continue;
-			}
-
-			std::string pre = data2[0];
-			std::string values = data2[1];
-
-			std::shared_ptr<gmo> n = theGame()->prefabs->newInstance(pre);
-			if (!n) {
-				p::info("Unable to add prefab to scene: " + pre);
-				continue;
-			}
-
-			attach(n);
-
-			n->deserialize(values);
-		}
+		if (p)
+			p->deserialize(serializedGmo[1]);
+		else
+			p::warn("No such prefab as " + serializedGmo[0]);
 	}
 
 	return true;

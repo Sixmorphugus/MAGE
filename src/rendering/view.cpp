@@ -78,40 +78,9 @@ void view::render(sf::RenderTarget& target, const colour& bgCol)
 	m_internalRT.setView(toSf()); // use this view
 	m_internalRT.clear(bgCol.toSf()); // this'll only actually happen in the viewport (i think...)
 
-	timer t1;
-
-	// sfml: 60fps
-	// our system: 30fps
-	// close enough lol
-
-	if (t_drawTests.size() == 0) {
-		float j = 0.f;
-
-		for (unsigned int i = 0; i < 10000; i++) {
-			auto dp = pointF((float)(i % 500), (float)(i / 500));
-
-			auto ds = std::make_shared<drawSprite>(dp, theGame()->resources->getAs<resourceTexture>("ui_input_keyQ"));
-			t_drawTests.push_back(ds);
-
-			auto s = sf::Sprite(*theGame()->resources->getAs<resourceTexture>("ui_input_keyQ")->get());
-			s.setPosition(dp.toSf2());
-			t_drawTestsLegacy.push_back(s);
-		}
-	}
-
-	// test draws
-	for (unsigned int i = 0; i < t_drawTests.size(); i++) {
-		theGame()->renderer->pushFrameRenderable(*t_drawTests[i]);
-		//m_internalRT.draw(t_drawTestsLegacy[i]);
-	}
-
 	if(lScene)
 		for (unsigned int i = 0; i < lScene->getNumObjects(); i++) {
-			auto renObj = lScene->getAs<renderable>(i);
-
-			if (renObj) {
-				theGame()->renderer->pushFrameRenderable(*renObj);
-			}
+			theGame()->renderer->pushFrameRenderable(*lScene->get(i));
 		}
 
 	onRender.notify(this);
@@ -123,8 +92,6 @@ void view::render(sf::RenderTarget& target, const colour& bgCol)
 	sf::Sprite drawSprite(m_internalRT.getTexture());
 	
 	target.draw(drawSprite, states.toSf());
-
-	p::info(std::to_string(1.f / t1.getElapsedTime().get()));
 }
 
 sf::View view::toSf()

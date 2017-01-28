@@ -35,8 +35,9 @@ public:
 	virtual bool isReadOnly() const = 0;
 	virtual const std::type_info& getTypeInfo() const = 0;
 
-	virtual std::string instPropStringGet(propertiesObject& inst) = 0;
+	virtual std::string instPropStringGet(const propertiesObject& inst) = 0;
 	virtual void instPropStringSet(propertiesObject& inst, std::string val) = 0;
+
 public:
 	hook<propBase*> onSetHidden;
 
@@ -73,7 +74,7 @@ public:
 	std::function<T(std::string&)> getStringFromConverter() const;
 	std::function<std::string(T&)> getStringToConverter() const;
 
-	std::string instPropStringGet(propertiesObject& inst);
+	std::string instPropStringGet(const propertiesObject& inst);
 	void instPropStringSet(propertiesObject& inst, std::string val);
 
 public:
@@ -108,7 +109,7 @@ public:
 	std::vector<std::string> getPropertyList() const;
 
 	// serialization
-	virtual std::string serialize();
+	virtual std::string serialize() const;
 	virtual bool deserialize(std::string data);
 
 protected:
