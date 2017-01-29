@@ -23,6 +23,7 @@ class scene;
 class prefab;
 class interval;
 class resourceSoundBuffer;
+class gmoComponent;
 
 class gmo :
 	public renamable, // all game objects can have a name
@@ -53,8 +54,15 @@ public:
 	bool getRespectsPixelGrid() const;
 	void setRespectsPixelGrid(bool yes = true);
 
-	void playSound(std::shared_ptr<resourceSoundBuffer> snd);
+	// helpers
 	void moveWithCollision(pointF movement);
+
+	// components
+	unsigned int addComponent(std::shared_ptr<gmoComponent> newComp);
+	void removeComponent(unsigned int id);
+	unsigned int indexOfComponent(std::shared_ptr<gmoComponent> newComp) const;
+	std::shared_ptr<gmoComponent> getComponent(unsigned int id);
+	unsigned int getNumComponents() const;
 public:
 	hook<gmo*, interval> onPreUpdate;
 	hook<gmo*, interval> onUpdate;
