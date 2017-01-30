@@ -362,11 +362,4 @@ namespace mage {
 	}
 }
 
-MAGE_DeclareScriptingListable(int);
-MAGE_DeclareScriptingListable(unsigned int);
-MAGE_DeclareScriptingListable(float);
-MAGE_DeclareScriptingListable(bool);
-
-MAGE_DeclareScriptingListable(sf::IntRect);
-MAGE_DeclareScriptingListable(sf::FloatRect);
-MAGE_DeclareScriptingListable(std::string);
+MAGE_DeclareScriptingSerializable(std::string);
