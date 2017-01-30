@@ -1,4 +1,5 @@
 #include "point.h"
+#include "propertiesObject.h"
 
 namespace mage {
 	template<typename T> class point;
@@ -240,5 +241,11 @@ namespace mage {
 		}
 
 		return nullptr;
+	}
+
+	template<class Archive>
+	void propertiesObject::serialize(Archive& archive) const
+	{
+		// no custom properties yet - this does nothing.
 	}
 }

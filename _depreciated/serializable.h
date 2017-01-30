@@ -27,8 +27,6 @@ public:
 
 	virtual void saveToFile(std::string file);
 	virtual bool loadFromFile(std::string file);
-	virtual std::string saveToString(std::string file);
-	virtual bool loadFromString(std::string file);
 };
 
 } // namespace mage

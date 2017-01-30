@@ -16,7 +16,6 @@
 // Script-Accessable: Mostly (see comments)
 // -------------
 
-#include "serializable.h"
 #include "hook.h"
 
 #include "namable.h"
@@ -89,7 +88,7 @@ private:
 };
 
 // Virtual inheritance means that this can be combined with other things that derive serializable.
-class MAGEDLL propertiesObject : public serializable {
+class MAGEDLL propertiesObject {
 public:
 	propertiesObject(); // not a constructor-centric object.
 	~propertiesObject(); // the safety list check goes here.
@@ -109,8 +108,8 @@ public:
 	std::vector<std::string> getPropertyList() const;
 
 	// serialization
-	virtual std::string serialize() const;
-	virtual bool deserialize(std::string data);
+	template<class Archive>
+	void serialize(Archive & archive);
 
 protected:
 	// management of properties

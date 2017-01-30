@@ -19,6 +19,8 @@
 #include "stringHelpers.h"
 #include "hook.h"
 
+#include "serialization.h"
+
 namespace mage {
 
 class Game;
@@ -114,17 +116,17 @@ MAGE_DeclareScriptingCustom(chaiscript::vector_conversion<std::vector<std::share
 #define MAGE_DeclareScriptingEnum(container, enumValue) MAGE_DeclareScriptingGlobalConst(container::enumValue, STRING(enumValue));
 #define MAGE_DeclareScriptingCastingFunction(name, inp, out) MAGE_DeclareScriptingCustom(chaiscript::fun([](inp* o1) { return dynamic_cast<out*>(o1); }), name)
 
-// Listables now exist automatically
-/*
-#define MAGE_DeclareScriptingListableNamed(type, name) MAGE_DeclareScriptingCustom(chaiscript::bootstrap::standard_library::vector_type<std::vector<type>>(name)); \
-MAGE_DeclareScriptingCustom(chaiscript::vector_conversion<std::vector<type>>());
-
-#define MAGE_DeclareScriptingListableShared(type, name) MAGE_DeclareScriptingListableNamed(std::shared_ptr<type>, name);
-#define MAGE_DeclareScriptingListable(type) MAGE_DeclareScriptingListableNamed(type, mage::fixChaiName(STRING(type)) + "Vector")
-*/
-
 #define MAGE_DeclareScriptingListableNamed(type, name) // removed
 #define MAGE_DeclareScriptingListableShared(type, name) // removed
 #define MAGE_DeclareScriptingListable(type) // removed
+
+#define MAGE_DeclareScriptingSerializable(type)\
+MAGE_DeclareScriptingFunction(&mage::s::saveBinaryFile<type>, "saveBinaryFile");\
+MAGE_DeclareScriptingFunction(&mage::s::saveXmlFile<type>, "saveXmlFile");\
+MAGE_DeclareScriptingFunction(&mage::s::saveJsonFile<type>, "saveJsonFile");\
+MAGE_DeclareScriptingFunction(&mage::s::loadBinaryFile<type>, "loadBinaryFile");\
+MAGE_DeclareScriptingFunction(&mage::s::loadXmlFile<type>, "loadXmlFile");\
+MAGE_DeclareScriptingFunction(&mage::s::loadJsonFile<type>, "loadJsonFile");\
+CEREAL_REGISTER_TYPE(type)
 
 #define BIND_COPY_OPERATOR(obj) chai->add(fun([&](obj &o1, obj o2) { o1 = o2; }), "="); // internal legacy system use only

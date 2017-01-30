@@ -32,7 +32,7 @@ add_subdirectory(extlibs) # find all externals
 # options for externals - use all sfml libs but network
 set(MAGE_SFML_LIB sfml-main sfml-system sfml-window sfml-graphics sfml-audio)
 set(MAGE_SFML_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/extlibs/SFML/include)
-
+set(MAGE_CEREAL_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/extlibs/cereal)
 set(MAGE_CHAI_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/extlibs/chaiscript)
 
 ######################
@@ -54,7 +54,7 @@ endif()
 # Link libraries - include required files
 target_link_libraries(MAGE ${MAGE_SFML_LIB})
 include_directories(${MAGE_SFML_INCLUDE})
-
+include_directories(${MAGE_CEREAL_INCLUDE}) # chai is header only
 include_directories(${MAGE_CHAI_INCLUDE}) # chai is header only
 
 # On any UNIX os, MAGE needs libdl
