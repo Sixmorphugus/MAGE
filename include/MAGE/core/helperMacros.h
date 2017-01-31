@@ -15,8 +15,7 @@
 
 #define STRING(s) #s
 
-#define ImposeShadowScope do {
-#define CloseShadowScope } while (0)
+#define MAGE_StringMap(type) std::map<std::string, type>
 
 // This is some crazy magic that helps produce __BASE__247
 // Vanilla interpolation of __BASE__##__LINE__ would produce __BASE____LINE__

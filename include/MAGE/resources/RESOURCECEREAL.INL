@@ -21,7 +21,7 @@ inline void resourceCereal<T, LoaderArchive>::unload()
 template<class T, class LoaderArchive>
 inline T * resourceCereal<T, LoaderArchive>::get()
 {
-	return data;
+	return &data;
 }
 template<class T, class LoaderArchive>
 inline bool resourceCereal<T, LoaderArchive>::isNeeded()

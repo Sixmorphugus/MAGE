@@ -36,11 +36,9 @@ private:
 
 #include "resourceCereal.inl"
 
-#define MAGE_DeclareScriptingSerializedResource(type, name)\
-MAGE_DeclareScriptingTypeNamed(type, name);\
-MAGE_DeclareScriptingConstructor(type(), name);\
-MAGE_DeclareScriptingConstructor(type(std::string), name);\
-MAGE_DeclareScriptingFunction(&type::load, "load");\
-MAGE_DeclareScriptingFunction(&type::unload, "unload");\
-MAGE_DeclareScriptingFunction(&type::get, "get");\
-MAGE_DeclareScriptingFunction(&type::isNeeded, "isNeeded");
+#define MAGE_DeclareScriptingSerializedResource(type, inputArchive, name)\
+MAGE_DeclareScriptingCustom(chaiscript::user_type<mage::resourceCereal<type, inputArchive>>(), name);\
+MAGE_DeclareScriptingCustom(chaiscript::constructor<mage::resourceCereal<type, inputArchive>()>(), name);\
+MAGE_DeclareScriptingCustom(chaiscript::constructor<mage::resourceCereal<type, inputArchive>(std::string)>(), name);\
+MAGE_DeclareScriptingCustom(chaiscript::constructor<mage::resourceCereal<type, inputArchive>(const mage::resourceCereal<type, inputArchive>&)>(), name);\
+MAGE_DeclareScriptingCustom(chaiscript::fun(&mage::resourceCereal<type, inputArchive>::get), "get");

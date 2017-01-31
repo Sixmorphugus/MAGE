@@ -188,7 +188,7 @@ MAGE_DeclareScriptingConstructor(mage::point<type>(type, type, type), name);\
 MAGE_DeclareScriptingConstructor(mage::point<type>(const mage::point<type>&), name);\
 MAGE_DeclareScriptingConstructor(mage::point<type>(const mage::point2<type>&), name);\
 MAGE_DeclareScriptingConstructor(mage::point<type>(std::string), name);\
-MAGE_DeclareScriptingSerializable(mage::point<type>, cereal::JSONInputArchive);\
+MAGE_DeclareScriptingSerializableNamed(mage::point<type>, name, cereal::JSONInputArchive);\
 MAGE_DeclareScriptingFunction([](type x, type y) { return mage::point<type>(x, y); }, name);\
 MAGE_DeclareScriptingFunction(&mage::point<type>::getFloor, "getFloor");\
 MAGE_DeclareScriptingFunction(&mage::point<type>::getCeil, "getCeil");\
@@ -230,7 +230,7 @@ MAGE_DeclareScriptingConstructor(mage::point2<type>(type, type), name2); \
 MAGE_DeclareScriptingConstructor(mage::point2<type>(const mage::point2<type>&), name2); \
 MAGE_DeclareScriptingConstructor(mage::point2<type>(const mage::point<type>&), name2); \
 MAGE_DeclareScriptingConstructor(mage::point2<type>(std::string), name2); \
-MAGE_DeclareScriptingSerializable(mage::point2<type>, cereal::JSONInputArchive);\
+MAGE_DeclareScriptingSerializableNamed(mage::point2<type>, name2, cereal::JSONInputArchive);\
 MAGE_DeclareScriptingFunction(&mage::point2<type>::getFloor, "getFloor"); \
 MAGE_DeclareScriptingFunction(&mage::point2<type>::getCeil, "getCeil"); \
 MAGE_DeclareScriptingFunction(&mage::point2<type>::getAngle2DTo, "getAngle2DTo"); \

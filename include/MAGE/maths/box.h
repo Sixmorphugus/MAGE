@@ -93,7 +93,7 @@ typedef box<int> intBox;
 MAGE_DeclareScriptingConstructor(mage::box<type>(), name);\
 MAGE_DeclareScriptingConstructor(mage::box<type>(sf::Rect<type> sfRect), name);\
 MAGE_DeclareScriptingConstructor(mage::box<type>(mage::point<type>, mage::point<type>, mage::shapeInit), name);\
-MAGE_DeclareScriptingSerializable(mage::box<type>, cereal::JSONInputArchive);\
+MAGE_DeclareScriptingSerializableNamed(mage::box<type>, name, cereal::JSONInputArchive);\
 MAGE_DeclareScriptingCustom(chaiscript::fun([](mage::point<type> pos, mage::point<type> size) { return mage::box<type>(pos, size); }), name);\
 MAGE_DeclareScriptingFunction(&mage::box<type>::setCorner1, "setCorner1");\
 MAGE_DeclareScriptingFunction(&mage::box<type>::setCorner2, "setCorner2");\

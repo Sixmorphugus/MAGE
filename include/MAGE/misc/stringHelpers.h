@@ -18,5 +18,6 @@ MAGEDLL std::string containerDir(std::string path);
 MAGEDLL std::string fileName(std::string path);
 MAGEDLL std::string removeWhitespace(std::string in);
 MAGEDLL std::string fixChaiName(std::string in);
+MAGEDLL std::string capitalise(std::string in);
 
 } //namespace mage

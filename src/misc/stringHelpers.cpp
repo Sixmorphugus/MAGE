@@ -156,7 +156,30 @@ std::string removeWhitespace(std::string in)
 
 MAGEDLL std::string fixChaiName(std::string in)
 {
-	return strFilter(strReplace(in, " ", "_"), ":");
+	auto spList = splitString(in, ':');
+
+	std::string out;
+
+	for (unsigned int i = 0; i < spList.size(); i++) {
+		std::string str = spList[i];
+
+		if (i > 0) {
+			str = capitalise(str);
+		}
+
+		out += str;
+	}
+
+	return strReplace(out, " ", "_");
+}
+
+MAGEDLL std::string capitalise(std::string in)
+{
+	if (in.size() < 1)
+		return in;
+
+	in[0] = std::toupper(in[0], std::locale());
+	return in;
 }
 
 }
@@ -173,3 +196,8 @@ MAGE_DeclareScriptingCustom(fun(&strReplace), "strReplace");
 MAGE_DeclareScriptingCustom(fun(&strFilter), "strFilter");
 MAGE_DeclareScriptingCustom(fun(&strSub), "strSub");
 MAGE_DeclareScriptingCustom(fun(&fileExtension), "fileExtension");
+MAGE_DeclareScriptingCustom(fun(&capitalise), "capitalise");
+MAGE_DeclareScriptingCustom(fun(&removeWhitespace), "removeWhitespace");
+MAGE_DeclareScriptingCustom(fun(&fileName), "fileName");
+MAGE_DeclareScriptingCustom(fun(&containerDir), "containerDir");
+MAGE_DeclareScriptingCustom(fun(&fixChaiName), "fixIdentifier");

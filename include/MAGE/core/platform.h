@@ -34,8 +34,8 @@ namespace platform {
 	MAGEDLL void clearConsoleInput(bool eraseCompletely = true);
 	MAGEDLL std::string getLastLogged();
 
-	MAGEDLL void loadTextFile(std::string & fileData, const std::string& fileName);
-	MAGEDLL void saveTextFile(const std::string & fileData, const std::string & fileName);
+	MAGEDLL bool loadTextFile(std::string & fileData, const std::string& fileName);
+	MAGEDLL bool saveTextFile(const std::string & fileData, const std::string & fileName);
 
 // macros
 #define prints_v(string, nl) diagnostic_log(string, nl);

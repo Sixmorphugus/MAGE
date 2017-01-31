@@ -101,10 +101,14 @@ MAGE_DeclareScriptingCustom(chaiscript::user_type<arg>(), mage::fixChaiName(STRI
 
 #define MAGE_DeclareScriptingType(arg) \
 MAGE_DeclareScriptingUnlistableType(arg)\
-MAGE_DeclareScriptingCustom(chaiscript::bootstrap::standard_library::vector_type<std::vector<arg>>(mage::fixChaiName(STRING(arg) "List"))); \
+MAGE_DeclareScriptingCustom(chaiscript::bootstrap::standard_library::vector_type<std::vector<arg>>(mage::fixChaiName(STRING(arg) "Vector"))); \
 MAGE_DeclareScriptingCustom(chaiscript::vector_conversion<std::vector<arg>>()); \
-MAGE_DeclareScriptingCustom(chaiscript::bootstrap::standard_library::vector_type<std::vector<std::shared_ptr<arg>>>(mage::fixChaiName(STRING(arg) "ShpList"))); \
-MAGE_DeclareScriptingCustom(chaiscript::vector_conversion<std::vector<std::shared_ptr<arg>>>());
+MAGE_DeclareScriptingCustom(chaiscript::bootstrap::standard_library::vector_type<std::vector<std::shared_ptr<arg>>>(mage::fixChaiName(STRING(arg) "ShpVector"))); \
+MAGE_DeclareScriptingCustom(chaiscript::vector_conversion<std::vector<std::shared_ptr<arg>>>());\
+MAGE_DeclareScriptingCustom(chaiscript::bootstrap::standard_library::map_type<std::map<std::string, arg>>(mage::fixChaiName(STRING(arg) "Map"))); \
+MAGE_DeclareScriptingCustom(chaiscript::map_conversion<std::map<std::string, arg>>()); \
+MAGE_DeclareScriptingCustom(chaiscript::bootstrap::standard_library::map_type<std::map<std::string, std::shared_ptr<arg>>>(mage::fixChaiName(STRING(arg) "ShpMap"))); \
+MAGE_DeclareScriptingCustom(chaiscript::map_conversion<std::map<std::string, std::shared_ptr<arg>>>());
 
 #define MAGE_DeclareScriptingCopyOperator(obj) MAGE_DeclareScriptingCustom(chaiscript::fun([](obj &o1, obj o2) { o1 = o2; }), "=");
 #define MAGE_DeclareScriptingNamed(arg, name) MAGE_DeclareScriptingCustom(arg, name);
@@ -114,14 +118,13 @@ MAGE_DeclareScriptingCustom(chaiscript::vector_conversion<std::vector<std::share
 #define MAGE_DeclareScriptingConstructor(arg, name) MAGE_DeclareScriptingCustom(chaiscript::constructor<arg>(), name);
 #define MAGE_DeclareScriptingGlobalConst(arg, name) MAGE_DeclareScriptingCustom(chaiscript::const_var(arg), name);
 #define MAGE_DeclareScriptingEnum(container, enumValue) MAGE_DeclareScriptingGlobalConst(container::enumValue, STRING(enumValue));
-#define MAGE_DeclareScriptingCastingFunction(name, inp, out) MAGE_DeclareScriptingCustom(chaiscript::fun([](inp* o1) { return dynamic_cast<out*>(o1); }), name)
+#define MAGE_DeclareScriptingCastingFunction(name, inp, out) MAGE_DeclareScriptingCustom(chaiscript::fun([](inp* o1) { return dynamic_cast<out*>(o1); }), name);
 
 #define MAGE_DeclareScriptingListableNamed(type, name) // removed
 #define MAGE_DeclareScriptingListableShared(type, name) // removed
 #define MAGE_DeclareScriptingListable(type) // removed
 
-#define MAGE_DeclareScriptingSerializable(type, resourceSerializer)\
-MAGE_DeclareScriptingSerializedResource(&mage::resourceCereal<type, resourceSerializer>, STRING(type) "resource");\
+#define MAGE_DeclareScriptingSerializableNamed(type, name, resourceSerializer)\
 MAGE_DeclareScriptingFunction(&mage::s::saveBinaryFile<type>, "saveBinaryFile");\
 MAGE_DeclareScriptingFunction(&mage::s::saveXmlFile<type>, "saveXmlFile");\
 MAGE_DeclareScriptingFunction(&mage::s::saveJsonFile<type>, "saveJsonFile");\
@@ -131,6 +134,9 @@ MAGE_DeclareScriptingFunction(&mage::s::loadJsonFile<type>, "loadJsonFile");\
 MAGE_DeclareScriptingFunction(&mage::s::getXml<type>, "getXml");\
 MAGE_DeclareScriptingFunction(&mage::s::getJson<type>, "getJson");\
 MAGE_DeclareScriptingFunction(&mage::p::loadTextFile, "loadTextFile");\
-MAGE_DeclareScriptingFunction(&mage::p::saveTextFile, "saveTextFile");
+MAGE_DeclareScriptingFunction(&mage::p::saveTextFile, "saveTextFile");\
+MAGE_DeclareScriptingSerializedResource(type, resourceSerializer, "resource" + mage::capitalise(mage::fixChaiName(name)));
+
+#define MAGE_DeclareScriptingSerializable(type, resourceSerializer) MAGE_DeclareScriptingSerializableNamed(type, STRING(type), resourceSerializer);
 
 #define BIND_COPY_OPERATOR(obj) chai->add(fun([&](obj &o1, obj o2) { o1 = o2; }), "="); // internal legacy system use only

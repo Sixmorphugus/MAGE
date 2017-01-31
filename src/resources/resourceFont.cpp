@@ -14,9 +14,7 @@ bool resourceFont::load()
 {
 	auto t = resourceFilepath::load();
 
-	data = std::make_shared<sf::Font>();
-
-	bool success = data->loadFromFile(getFilepath());
+	bool success = data.loadFromFile(getFilepath());
 
 	if (success) {
 		return t;
