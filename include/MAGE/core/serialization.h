@@ -16,6 +16,7 @@
 namespace mage {
 
 namespace serialization {
+
 	template<class Archive, class T>
 	void serializeFile(const std::string& filePath, const T& toSave) {
 		std::ofstream writeOut(filePath);
@@ -83,6 +84,51 @@ namespace serialization {
 	void loadXmlFile(T& toLoad, const std::string& filePath) {
 		deserializeFile<cereal::XMLInputArchive>(filePath, toLoad);
 	}
+
+	template<class T>
+	std::string getXml(const T& toConvert) {
+		std::ostringstream str;
+		
+		{
+			cereal::XMLOutputArchive a(str);
+			a(toConvert);
+		}
+		
+		return str.str();
+	}
+
+	template<class T>
+	void setFromXml(T& toConvert, std::string input) {
+		std::istringstream str(input);
+
+		{
+			cereal::XMLInputArchive a(str);
+			a(toConvert);
+		}
+	}
+
+	template<class T>
+	std::string getJson(const T& toConvert) {
+		std::ostringstream str;
+
+		{
+			cereal::JSONOutputArchive a(str);
+			a(toConvert);
+		}
+
+		return str.str();
+	}
+	
+	template<class T>
+	void setFromJson(T& toConvert, std::string input) {
+		std::istringstream str;
+
+		{
+			cereal::JSONInputArchive a(str);
+			a(toConvert);
+		}
+	}
+
 }
 
 namespace s = serialization;

@@ -9,6 +9,24 @@ std::string platform::getLastLogged() {
 	return lastLogged;
 }
 
+MAGEDLL void platform::loadTextFile(std::string & fileData, const std::string& fileName)
+{
+	std::ifstream is(fileName);
+
+	std::string str((std::istreambuf_iterator<char>(is)), std::istreambuf_iterator<char>());
+	is.close();
+
+	fileData = str;
+}
+
+MAGEDLL void platform::saveTextFile(const std::string & fileData, const std::string & fileName)
+{
+	std::ofstream os(fileName);
+
+	os << fileData;
+	os.close();
+}
+
 void platform::log(std::string info, bool nl)
 {
 	// Message
