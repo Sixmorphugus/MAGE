@@ -141,7 +141,7 @@ void gameState::setVarDefaults()
 MAGE_DeclareScriptingType(gameState);
 MAGE_DeclareScriptingBaseClass(scene, gameState);
 MAGE_DeclareScriptingBaseClass(taggable, gameState);
-MAGE_DeclareScriptingSerializable(gameState);
+MAGE_DeclareScriptingSerializable(gameState, cereal::JSONInputArchive);
 MAGE_DeclareScriptingConstructor(gameState(), "gameState");
 MAGE_DeclareScriptingConstructor(gameState(const gameState&), "gameState");
 MAGE_DeclareScriptingFunction(&gameState::bgCol, "bgCol");

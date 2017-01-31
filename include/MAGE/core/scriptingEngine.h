@@ -19,7 +19,7 @@
 #include "stringHelpers.h"
 #include "hook.h"
 
-#include "serialization.h"
+#include "resourceCereal.h"
 
 namespace mage {
 
@@ -120,7 +120,8 @@ MAGE_DeclareScriptingCustom(chaiscript::vector_conversion<std::vector<std::share
 #define MAGE_DeclareScriptingListableShared(type, name) // removed
 #define MAGE_DeclareScriptingListable(type) // removed
 
-#define MAGE_DeclareScriptingSerializable(type)\
+#define MAGE_DeclareScriptingSerializable(type, resourceSerializer)\
+MAGE_DeclareScriptingSerializedResource(&mage::resourceCereal<type, resourceSerializer>, STRING(type) "resource");\
 MAGE_DeclareScriptingFunction(&mage::s::saveBinaryFile<type>, "saveBinaryFile");\
 MAGE_DeclareScriptingFunction(&mage::s::saveXmlFile<type>, "saveXmlFile");\
 MAGE_DeclareScriptingFunction(&mage::s::saveJsonFile<type>, "saveJsonFile");\

@@ -1,5 +1,5 @@
 #pragma once
-#include "resourceFilePath.h"
+#include "resourceFilepath.h"
 
 namespace mage {
 
@@ -13,10 +13,10 @@ namespace mage {
 		bool load();
 		void unload();
 
-		std::shared_ptr<sf::Font> get();
+		sf::Font* get();
 
 	private:
-		std::shared_ptr<sf::Font> data;
+		sf::Font data;
 	};
 
 } //namespace mage

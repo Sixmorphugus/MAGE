@@ -132,7 +132,7 @@ MAGE_DeclareScriptingBaseClass(transformableBox, type);\
 MAGE_DeclareScriptingBaseClass(transformableObject, type);\
 MAGE_DeclareScriptingBaseClass(renderable, type);\
 MAGE_DeclareScriptingBaseClass(hookableLifetimeObject, type);\
-MAGE_DeclareScriptingSerializable(type);
+MAGE_DeclareScriptingSerializable(type, cereal::JSONInputArchive);
 
 #define MAGE_DeclareScriptingGmoType(type)\
 MAGE_DeclareScriptingGmoTypeG(type)\

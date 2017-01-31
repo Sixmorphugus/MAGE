@@ -4,7 +4,7 @@
 #include "platform.h"
 #include "maths.h"
 
-#include "resourceFilePath.h"
+#include "resourceFilepath.h"
 
 using namespace mage;
 

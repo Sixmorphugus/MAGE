@@ -27,13 +27,13 @@ bool resourceFont::load()
 
 void resourceFont::unload()
 {
-	data = std::shared_ptr<sf::Font>();
+	data = sf::Font();
 	resourceFilepath::unload();
 }
 
-std::shared_ptr<sf::Font> resourceFont::get()
+sf::Font* resourceFont::get()
 {
-	return data;
+	return &data;
 }
 
 // sfFontResource

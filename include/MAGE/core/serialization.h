@@ -32,8 +32,6 @@ namespace serialization {
 		}
 			
 		writeOut.close();
-
-		p::info("Saved " + filePath);
 	}
 
 	template<class Archive, class T>
@@ -51,8 +49,6 @@ namespace serialization {
 		}
 
 		writeOut.close();
-
-		p::info("Loaded " + filePath);
 	}
 
 	template<class T>

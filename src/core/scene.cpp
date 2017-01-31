@@ -197,7 +197,7 @@ MAGE_DeclareScriptingType(scene);
 MAGE_DeclareScriptingConstructor(scene(), "scene");
 MAGE_DeclareScriptingConstructor(scene(const scene&), "scene");
 MAGE_DeclareScriptingCopyOperator(scene);
-MAGE_DeclareScriptingSerializable(scene);
+MAGE_DeclareScriptingSerializable(scene, cereal::JSONInputArchive);
 MAGE_DeclareScriptingFunction(&scene::bringToFront, "bringToFront");
 MAGE_DeclareScriptingCustom(fun<void, scene, unsigned int>(&scene::detach), "detach");
 MAGE_DeclareScriptingCustom(fun<void, scene, gmo*>(&scene::detach), "detach");

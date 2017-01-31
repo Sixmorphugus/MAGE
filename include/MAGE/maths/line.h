@@ -59,7 +59,7 @@ MAGE_DeclareScriptingConstructor(mage::line<T>(const mage::point<T>& p1, const m
 MAGE_DeclareScriptingConstructor(mage::line<T>(const mage::point<T>& p1, const mage::point2<T>& p2, mage::shapeInit), name);\
 MAGE_DeclareScriptingConstructor(mage::line<T>(const mage::point2<T>& zeroPoint), name);\
 MAGE_DeclareScriptingConstructor(mage::line<T>(T zeroAngle), name);\
-MAGE_DeclareScriptingSerializable(mage::line<T>);\
+MAGE_DeclareScriptingSerializable(mage::line<T>, cereal::JSONInputArchive);\
 MAGE_DeclareScriptingCopyOperator(mage::line<T>);\
 MAGE_DeclareScriptingFunction(&mage::line<T>::endOffset, "endOffset");\
 MAGE_DeclareScriptingFunction(&mage::line<T>::start, "start");\

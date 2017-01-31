@@ -362,7 +362,7 @@ namespace mage {
 	}
 }
 
-MAGE_DeclareScriptingSerializable(std::string);
-MAGE_DeclareScriptingSerializable(unsigned int);
-MAGE_DeclareScriptingSerializable(int);
-MAGE_DeclareScriptingSerializable(float);
+MAGE_DeclareScriptingSerializable(std::string, cereal::PortableBinaryInputArchive);
+MAGE_DeclareScriptingSerializable(unsigned int, cereal::PortableBinaryInputArchive);
+MAGE_DeclareScriptingSerializable(int, cereal::PortableBinaryInputArchive);
+MAGE_DeclareScriptingSerializable(float, cereal::PortableBinaryInputArchive);
