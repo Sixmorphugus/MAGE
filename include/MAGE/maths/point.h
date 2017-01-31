@@ -16,6 +16,8 @@
 
 #include "stringHelpers.h"
 
+#include "serialization.h"
+
 namespace mage {
 
 template<typename T> class point2;
@@ -87,6 +89,12 @@ public:
 
 public:
 	T x, y, z;
+
+	MAGE_DeclareSerializationList(
+		MAGE_SerializedN(x), 
+		MAGE_SerializedN(y), 
+		MAGE_SerializedN(z)
+	);
 };
 
 template<typename T> class point2 : private point<T> {
@@ -151,6 +159,11 @@ public:
 public:
 	using point<T>::x;
 	using point<T>::y;
+
+	MAGE_DeclareSerializationList(
+		MAGE_SerializedN(x), 
+		MAGE_SerializedN(y)
+	);
 };
 
 typedef point<float> pointF;
@@ -175,6 +188,7 @@ MAGE_DeclareScriptingConstructor(mage::point<type>(type, type, type), name);\
 MAGE_DeclareScriptingConstructor(mage::point<type>(const mage::point<type>&), name);\
 MAGE_DeclareScriptingConstructor(mage::point<type>(const mage::point2<type>&), name);\
 MAGE_DeclareScriptingConstructor(mage::point<type>(std::string), name);\
+MAGE_DeclareScriptingSerializable(mage::point<type>);\
 MAGE_DeclareScriptingFunction([](type x, type y) { return mage::point<type>(x, y); }, name);\
 MAGE_DeclareScriptingFunction(&mage::point<type>::getFloor, "getFloor");\
 MAGE_DeclareScriptingFunction(&mage::point<type>::getCeil, "getCeil");\
@@ -216,6 +230,7 @@ MAGE_DeclareScriptingConstructor(mage::point2<type>(type, type), name2); \
 MAGE_DeclareScriptingConstructor(mage::point2<type>(const mage::point2<type>&), name2); \
 MAGE_DeclareScriptingConstructor(mage::point2<type>(const mage::point<type>&), name2); \
 MAGE_DeclareScriptingConstructor(mage::point2<type>(std::string), name2); \
+MAGE_DeclareScriptingSerializable(mage::point2<type>);\
 MAGE_DeclareScriptingFunction(&mage::point2<type>::getFloor, "getFloor"); \
 MAGE_DeclareScriptingFunction(&mage::point2<type>::getCeil, "getCeil"); \
 MAGE_DeclareScriptingFunction(&mage::point2<type>::getAngle2DTo, "getAngle2DTo"); \

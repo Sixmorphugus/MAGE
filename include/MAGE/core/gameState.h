@@ -7,7 +7,6 @@
 
 namespace mage {
 
-class resourceScene;
 class resourceMusic;
 class interval;
 
@@ -26,10 +25,6 @@ class MAGEDLL gameState : public scene, public taggable
 public:
 	gameState(); // creates empty state
 	gameState(const gameState& gr); // creates state with a group as the main objects (copying them out immediately)
-	gameState(std::shared_ptr<resourceScene> gr);
-
-	virtual std::string serialize();
-	virtual bool deserialize(std::string serialized);
 
 	virtual void preUpdateObjects(interval elapsed);
 	virtual void updateObjects(interval elapsed);
@@ -50,6 +45,15 @@ public:
 
 private:
 	timer stateClock;
+
+public:
+	MAGE_DeclareSerializationList(
+		MAGE_SerializedBase(scene), 
+		MAGE_SerializedBase(taggable), 
+		MAGE_SerializedN(bgCol), 
+		MAGE_SerializedN(mapBounds),
+		MAGE_SerializedN(lightingAmb)
+	);
 };
 
 // The statemanager will track not only the current master state but the current COMBINATION of states that are being used.

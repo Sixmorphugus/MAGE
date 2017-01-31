@@ -34,5 +34,11 @@ public:
 
 private:
 	point2F m_endOffset;
+
+public:
+	MAGE_DeclareSerializationList(
+		MAGE_SerializedBase(transformable), 
+		MAGE_SerializedNVP("endOffset", m_endOffset)
+	);
 };
 }

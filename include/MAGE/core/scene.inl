@@ -50,11 +50,7 @@ inline void scene::incorporate(const scene* gIn)
 	std::vector<std::shared_ptr<Filter>> oList = gIn->list<Filter>();
 
 	for (unsigned int i = 0; i < oList.size(); i++) {
-		if (!oList[i]->isCloneable())
-			p::fatal("Object was not cloneable");
-
-		auto clone = oList[i]->clone();
-		attach(clone); // the template will not compile if the Filter isn't a compatible type so this is fine
+		attach(std::make_shared<gmo>(*oList[i])); // the template will not compile if the Filter isn't a compatible type so this is fine
 	}
 }
 

@@ -13,6 +13,7 @@
 #include "box.h"
 
 namespace mage {
+
 class MAGEDLL transformableBox : public transformable {
 public:
 	transformableBox();
@@ -40,5 +41,13 @@ public:
 
 private:
 	pointF m_size;
+
+public:
+	// serialization
+	MAGE_DeclareSerializationList(
+		MAGE_SerializedBase(transformable),
+		MAGE_SerializedNVP("size", m_size)
+	);
 };
+
 }

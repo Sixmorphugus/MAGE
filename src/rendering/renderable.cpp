@@ -1,6 +1,6 @@
-#include "renderable.h"
 #include "Game.h"
 #include "batchRenderer.h"
+#include "renderable.h"
 
 using namespace mage;
 
@@ -12,12 +12,12 @@ renderable::renderable()
 
 renderRecipe* renderable::getDrawRecipe()
 {
-	onRendered.notify(this);
-
 	if (m_dirty) {
 		m_cachedDrawRecipe = generateOptimizedDrawRecipe();
 		m_dirty = false;
 	}
+
+	onRendered.notify(this);
 
 	return &m_cachedDrawRecipe;
 }
@@ -64,6 +64,7 @@ bool renderable::getIsVisible() const
 
 MAGE_DeclareScriptingType(renderable);
 MAGE_DeclareScriptingConstructor(renderable(), "renderable");
+MAGE_DeclareScriptingSerializable(renderable);
 MAGE_DeclareScriptingCopyOperator(renderable);
 MAGE_DeclareScriptingFunction(&renderable::setIsVisible, "setIsVisible");
 MAGE_DeclareScriptingFunction(&renderable::getIsVisible, "getIsVisible");

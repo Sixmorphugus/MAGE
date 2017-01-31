@@ -69,6 +69,15 @@ private:
 	float m_rotation; // objects in MAGE can only be rotated on one axis because we're still rendering sprites - 3D stuff simply isn't doable here
 
 	pointF m_position, m_scale, m_anchor;
+
+public:
+	// serialization
+	MAGE_DeclareSerializationList(
+		MAGE_SerializedNVP("rotation", m_rotation),
+		MAGE_SerializedNVP("position", m_position),
+		MAGE_SerializedNVP("scale", m_scale),
+		MAGE_SerializedNVP("anchor", m_anchor)
+	);
 };
 
 }

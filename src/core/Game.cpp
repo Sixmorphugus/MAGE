@@ -71,13 +71,15 @@ void Game::init()
 	// actual boot stuff
 	debug = false;
 
-	p::log("\nMAGE GAME ENGINE r" + MAGE_BUILDSTRING + " for " + MAGE_PLATFORM_STRING + "\nCopyright Deadhand 2016.\n", true);
+	p::log("\nMAGE GAME ENGINE r" + MAGE_BUILDSTRING + " for " + MAGE_PLATFORM_STRING + "\nCopyright Deadhand 2016.\n");
 
-	p::log("SFML v" + std::to_string(SFML_VERSION_MAJOR) + "." + std::to_string(SFML_VERSION_MINOR) + "." + std::to_string(SFML_VERSION_PATCH), true);
-	p::log("CHAISCRIPT v" + std::to_string(chaiscript::version_major) + "." + std::to_string(chaiscript::version_minor) + "." + std::to_string(chaiscript::version_patch) + "\n", true);
+	p::info("Checking libraries");
+	p::log("\tSFML v" + std::to_string(SFML_VERSION_MAJOR) + "." + std::to_string(SFML_VERSION_MINOR) + "." + std::to_string(SFML_VERSION_PATCH));
+	p::log("\tCHAISCRIPT v" + std::to_string(chaiscript::version_major) + "." + std::to_string(chaiscript::version_minor) + "." + std::to_string(chaiscript::version_patch));
+	p::log("\tCEREAL v1.2.1\n");
 
-	p::log("INITIALIZING", true);
-	p::log("------------------------------------------", true);
+	p::log("INITIALIZING");
+	p::log("------------------------------------------");
 
 	// CREATE SUBSYSTEMS
 	p::info("STARTING SUBSYSTEMS");

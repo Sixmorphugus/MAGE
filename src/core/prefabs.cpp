@@ -22,7 +22,7 @@ std::map<size_t, prefabDefault> prefabDefaultsHC;
 
 prefab::prefab()
 {
-	templateObject = nullptr;
+	m_templateObject = nullptr;
 }
 
 prefab::prefab(std::shared_ptr<gmo> clonable, std::vector<std::string> t)
@@ -33,12 +33,12 @@ prefab::prefab(std::shared_ptr<gmo> clonable, std::vector<std::string> t)
 
 prefab::prefab(const prefab & p)
 {
-	setTemplate(p.templateObject);
+	setTemplate(p.m_templateObject);
 	tags = p.tags;
 }
 
 prefab& prefab::operator=(const prefab& p) {
-	setTemplate(p.templateObject);
+	setTemplate(p.m_templateObject);
 	tags = p.tags;
 
 	return *this;
@@ -46,18 +46,13 @@ prefab& prefab::operator=(const prefab& p) {
 
 void prefab::setTemplate(std::shared_ptr<gmo> clonable)
 {
-	templateObject = clonable;
+	m_templateObject = clonable;
 }
 
 std::shared_ptr<gmo> prefab::copyTemplate()
 {
-	if (templateObject) {
-		if (templateObject->isCloneable())
-			return templateObject->clone();
-		else {
-			p::warn("newInstance was not clonable!")
-			return nullptr;
-		}
+	if (m_templateObject) {
+		return std::make_shared<gmo>(*m_templateObject);
 	}
 	else {
 		p::warn("newInstance was called on a prefab that is uninitialized!");
@@ -65,9 +60,9 @@ std::shared_ptr<gmo> prefab::copyTemplate()
 	}
 }
 
-std::string prefab::name()
+std::string mage::prefab::getName()
 {
-	return knownName;
+	return m_name;
 }
 
 // prefab manager
@@ -95,7 +90,7 @@ void prefabMngr::add(std::string name, std::shared_ptr<prefab> input)
 	}
 
 	prefabMap[name] = input;
-	prefabMap[name]->knownName = name;
+	prefabMap[name]->m_name = name;
 
 	p::info("Registered prefab \"" + name + "\"");
 }
@@ -205,13 +200,12 @@ using namespace chaiscript;
 // for prefab
 MAGE_DeclareScriptingType(prefab);
 MAGE_DeclareScriptingBaseClass(taggable, prefab);
-MAGE_DeclareScriptingBaseClass(serializable, prefab);
 MAGE_DeclareScriptingConstructor(prefab(std::shared_ptr<gmo> refersTo, std::vector<std::string> strList), "prefab");
 MAGE_DeclareScriptingCustom(fun([](std::shared_ptr<gmo> refersTo) { return prefab(refersTo); }), "prefab"); // simplified constructor
 MAGE_DeclareScriptingConstructor(prefab(), "prefab"); // very simplified constructor
 MAGE_DeclareScriptingFunction(&prefab::copyTemplate, "copyTemplate");
 MAGE_DeclareScriptingFunction(&prefab::setTemplate, "setTemplate");
-MAGE_DeclareScriptingFunction(&prefab::name, "name");
+MAGE_DeclareScriptingFunction(&prefab::getName, "getName");
 
 // for prefabMngr
 MAGE_DeclareScriptingType(prefabMngr);

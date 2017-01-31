@@ -126,7 +126,6 @@ MAGE_DeclareScriptingFunction(&mage::s::saveXmlFile<type>, "saveXmlFile");\
 MAGE_DeclareScriptingFunction(&mage::s::saveJsonFile<type>, "saveJsonFile");\
 MAGE_DeclareScriptingFunction(&mage::s::loadBinaryFile<type>, "loadBinaryFile");\
 MAGE_DeclareScriptingFunction(&mage::s::loadXmlFile<type>, "loadXmlFile");\
-MAGE_DeclareScriptingFunction(&mage::s::loadJsonFile<type>, "loadJsonFile");\
-CEREAL_REGISTER_TYPE(type)
+MAGE_DeclareScriptingFunction(&mage::s::loadJsonFile<type>, "loadJsonFile");
 
 #define BIND_COPY_OPERATOR(obj) chai->add(fun([&](obj &o1, obj o2) { o1 = o2; }), "="); // internal legacy system use only

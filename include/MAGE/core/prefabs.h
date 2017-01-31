@@ -1,11 +1,14 @@
 #pragma once
 #include "gmo.h"
+#include "namable.h"
 #include "taggable.h"
 
 namespace mage {
 
+class prefabMngr;
+
 // class for managing a single saved gmo which is used as a template.
-class MAGEDLL prefab : public taggable, public serializable {
+class MAGEDLL prefab : public taggable {
 public:
 	prefab(std::shared_ptr<gmo> clonable, std::vector<std::string> tags = {});
 
@@ -19,13 +22,20 @@ public:
 	std::shared_ptr<gmo> copyTemplate();
 	template<typename T> bool castsTo();
 
-	std::string name();
-
-public:
-	std::string knownName;
+	std::string getName();
 
 private:
-	std::shared_ptr<gmo> templateObject;
+	std::shared_ptr<gmo> m_templateObject;
+	std::string m_name;
+
+	friend class prefabMngr;
+
+public:
+	MAGE_DeclareSerializationList(
+		MAGE_SerializedBase(taggable),
+		MAGE_SerializedNVP("name", m_name),
+		MAGE_SerializedNVP("templateObject", m_templateObject)
+	);
 };
 
 // class for managing all the saved gmo template objects.

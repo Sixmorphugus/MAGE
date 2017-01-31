@@ -11,7 +11,7 @@
 // Script-Accessable: Yes
 // -------------
 
-#include "StdAfx.h"
+#include "serialization.h"
 #include "SfmlAfx.h"
 
 namespace mage {
@@ -61,5 +61,13 @@ public:
 	float b;
 
 	float a;
+
+public:
+	MAGE_DeclareSerializationList(
+		MAGE_SerializedN(r), 
+		MAGE_SerializedN(g), 
+		MAGE_SerializedN(b), 
+		MAGE_SerializedN(a)
+	);
 };
 }

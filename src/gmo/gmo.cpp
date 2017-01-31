@@ -5,6 +5,8 @@
 
 using namespace mage;
 
+
+// GMO
 gmo::gmo()
 {
 	init();
@@ -32,19 +34,6 @@ void gmo::init()
 	m_scene = nullptr;
 	m_prefabSource = nullptr;
 	m_respectPixelGrid = false;
-	test = false;
-
-	// editor properties.
-	/*
-	addProperty(std::make_shared<prop<std::string>>("name", MAGE_PropLambdasFromMethods(std::string, gmo, setName, getName)));
-	addProperty(std::make_shared<prop<pointF>>("position", MAGE_PropLambdasFromMethods(pointF, gmo, setPosition, getPosition)));
-	addProperty(std::make_shared<prop<pointF>>("anchor", MAGE_PropLambdasFromMethods(pointF, gmo, setAnchor, getAnchor)));
-	addProperty(std::make_shared<prop<pointF>>("scale", MAGE_PropLambdasFromMethods(pointF, gmo, setScale, getScale)));
-	addProperty(std::make_shared<prop<float>>("rotation", MAGE_PropLambdasFromMethods(float, gmo, setRotation, getRotation)));
-	addProperty(std::make_shared<prop<bool>>("respect pixel grid", MAGE_PropLambdasFromMethods(bool, gmo, setRespectsPixelGrid, getRespectsPixelGrid)));
-
-	addProperty(std::make_shared<prop<bool>>("test", MAGE_PropLambdasFromMember(bool, gmo, test))); // test
-	*/
 }
 
 gmo & gmo::operator=(const gmo & cp)
@@ -91,9 +80,75 @@ void gmo::setRespectsPixelGrid(bool yes)
 	m_respectPixelGrid = yes;
 }
 
+void gmo::moveWithCollision(pointF movement)
+{
+	move(movement); // temporary
+}
+
+unsigned int gmo::addComponent(std::shared_ptr<gmoComponent> newComp)
+{
+	if (newComp->m_gmo)
+		newComp->m_gmo->removeComponent(newComp);
+
+	m_components.push_back(newComp);
+	newComp->m_gmo = this;
+
+	return m_components.size() - 1;
+}
+
+void gmo::removeComponent(std::shared_ptr<gmoComponent> rComp)
+{
+	int c = indexOfComponent((rComp));
+
+	if(c >= 0)
+		removeComponent((unsigned int)c);
+}
+
+void gmo::removeComponent(unsigned int id)
+{
+	if (id > m_components.size())
+		return;
+
+	auto comp = m_components[id];
+	comp->m_gmo = nullptr;
+
+	m_components.erase(m_components.begin() + id);
+}
+
+int mage::gmo::indexOfComponent(std::shared_ptr<gmoComponent> newComp) const
+{
+	for (unsigned int i = 0; i < m_components.size(); i++) {
+		if (m_components[i] == newComp)
+			return i;
+	}
+
+	return -1;
+}
+
+std::shared_ptr<gmoComponent> mage::gmo::getComponent(unsigned int id)
+{
+	if (id > m_components.size())
+		return nullptr;
+
+	return m_components[id];
+}
+
+unsigned int mage::gmo::getNumComponents() const
+{
+	return m_components.size();
+}
+
 renderRecipe gmo::generateDrawRecipe()
 {
 	auto r = renderRecipe();
+	return r;
+}
+
+void gmo::ownChildren()
+{
+	for (unsigned int i = 0; i < m_components.size(); i++) {
+		m_components[i]->m_gmo = this;
+	}
 }
 
 void gmo::copyFrom(const gmo & cp)
@@ -105,7 +160,9 @@ void gmo::copyFrom(const gmo & cp)
 
 #include "scriptingEngine.h"
 
-MAGE_DeclareScriptingGmoType(gmo);
+using namespace chaiscript;
+
+MAGE_DeclareScriptingGmoTypeG(gmo);
 MAGE_DeclareScriptingConstructor(gmo(), "gmo");
 MAGE_DeclareScriptingConstructor(gmo(const gmo&), "gmo");
 MAGE_DeclareScriptingConstructor(gmo(const pointF&), "gmo");
@@ -116,4 +173,49 @@ MAGE_DeclareScriptingFunction(&gmo::getScene, "getScene");
 MAGE_DeclareScriptingFunction(&gmo::getPrefabSource, "getPrefabSource");
 MAGE_DeclareScriptingFunction(&gmo::getRespectsPixelGrid, "getRespectsPixelGrid");
 MAGE_DeclareScriptingFunction(&gmo::setRespectsPixelGrid, "setRespectsPixelGrid");
-MAGE_DeclareScriptingSerializable(gmo);
+MAGE_DeclareScriptingFunction(&gmo::getNumComponents, "getNumComponents");
+MAGE_DeclareScriptingFunction(&gmo::addComponent, "addComponent");
+MAGE_DeclareScriptingFunction(&gmo::getComponent, "getComponent");
+MAGE_DeclareScriptingFunction(&gmo::getNumComponents, "getNumComponents");
+MAGE_DeclareScriptingFunction(&gmo::indexOfComponent, "indexOfComponent");
+MAGE_DeclareScriptingCustom(fun<void, gmo, unsigned int>(&gmo::removeComponent), "removeComponent");
+MAGE_DeclareScriptingCustom(fun<void, gmo, std::shared_ptr<gmoComponent>>(&gmo::removeComponent), "removeComponent");
+
+MAGE_DeclareSerializationBase(gmo);
+
+// GMO COMPONENT
+gmoComponent::gmoComponent()
+{
+	m_gmo = nullptr;
+}
+
+void gmoComponent::preUpdate(interval elapsedSinceLastUpdate)
+{
+	onPreUpdate.notify(this, elapsedSinceLastUpdate);
+}
+
+void gmoComponent::update(interval elapsedSinceLastUpdate)
+{
+	onUpdate.notify(this, elapsedSinceLastUpdate);
+}
+
+gmo * mage::gmoComponent::getParent()
+{
+	return m_gmo;
+}
+
+renderRecipe gmoComponent::generateDrawRecipe()
+{
+	return renderRecipe();
+}
+
+MAGE_DeclareScriptingType(gmoComponent);
+MAGE_DeclareScriptingBaseClass(renderable, gmoComponent);
+MAGE_DeclareScriptingConstructor(gmoComponent(), "gmoComponent");
+MAGE_DeclareScriptingConstructor(gmoComponent(const gmoComponent&), "gmoComponent");
+MAGE_DeclareScriptingCopyOperator(gmoComponent);
+MAGE_DeclareScriptingFunction(&gmoComponent::preUpdate, "preUpdate");
+MAGE_DeclareScriptingFunction(&gmoComponent::update, "update");
+MAGE_DeclareScriptingFunction(&gmoComponent::getParent, "getParent");
+
+MAGE_DeclareSerializationBase(gmoComponent);

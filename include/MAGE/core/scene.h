@@ -15,9 +15,7 @@
 #include "SfmlAfx.h"
 
 #include "hook.h"
-
-#include "serializable.h"
-#include "shaders.h"
+#include "serialization.h"
 
 namespace mage {
 
@@ -25,13 +23,10 @@ class resourceScene;
 class gmo;
 class interval;
 
-class MAGEDLL scene : public serializable
+class MAGEDLL scene
 {
 public:
 	scene();
-	scene(std::shared_ptr<resourceScene> gr); // creates scene with saved objects (grabbing them from the resource when asked to and then forgetting the resource that was attached)
-											  // you can of course create a group from another group
-
 	scene(std::vector<std::shared_ptr<gmo>> initialObjects);
 
 	// replace the copy constructor and assignment operator with set
@@ -39,9 +34,6 @@ public:
 	// fortunately this isn't an operation where speed is an issue; we can afford not reusing memory
 	scene(const scene &gr);
 	scene& operator=(const scene &gr);
-
-	virtual std::string serialize() const;
-	virtual bool deserialize(std::string map);
 
 	virtual void preUpdateObjects(interval elapsed);
 	virtual void updateObjects(interval elapsed);
@@ -97,6 +89,10 @@ public:
 	hook<const scene*, const scene*> onCombined;
 	hook<const scene*, const scene*> onSet;
 	hook<const scene*, const scene*> onIncorporated;
+
+	MAGE_DeclareSerializationList(
+		MAGE_SerializedNVP("objectList", m_objectList)
+	);
 };
 
 } // namespace mage

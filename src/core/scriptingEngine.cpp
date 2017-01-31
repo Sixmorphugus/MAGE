@@ -363,3 +363,6 @@ namespace mage {
 }
 
 MAGE_DeclareScriptingSerializable(std::string);
+MAGE_DeclareScriptingSerializable(unsigned int);
+MAGE_DeclareScriptingSerializable(int);
+MAGE_DeclareScriptingSerializable(float);

@@ -93,3 +93,5 @@ MAGE_DeclareScriptingConstructor(transformableBox(const transformableBox&), "tra
 MAGE_DeclareScriptingConstructor(transformableBox(pointF, pointF), "transformableBox");
 MAGE_DeclareScriptingCopyOperator(transformableBox);
 MAGE_DeclareScriptingFunction(&transformableBox::getBox, "getBox");
+
+MAGE_DeclareSerializationBase(transformableBox);

@@ -100,3 +100,5 @@ MAGE_DeclareScriptingFunction(&transformableObject::getBoundingBox, "getBounding
 
 MAGE_DeclareScriptingHook("transformableObjectCollisionHook", transformableObject*, unsigned int);
 MAGE_DeclareScriptingHook("transformableObjectHook", transformableObject*);
+
+MAGE_DeclareSerializationBase(transformableObject);

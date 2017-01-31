@@ -11,6 +11,7 @@
 // -------------
 
 #include "hook.h"
+#include "serialization.h"
 
 namespace mage {
 
@@ -21,12 +22,17 @@ public:
 
 protected:
 	std::string m_name;
+
+public:
+	MAGE_DeclareSerializationList(m_name);
 };
 
 class MAGEDLL renamable : public namable {
 public:
 	renamable(std::string name = "");
 	void setName(std::string name);
+
+	MAGE_DeclareSerializationList(MAGE_SerializedBase(namable));
 
 public:
 	hook<renamable*> onRenamed;

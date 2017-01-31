@@ -36,6 +36,12 @@ public:
 
 		transformableObject* m_owner;
 		friend class transformableObject;
+
+	public:
+		// serialization
+		MAGE_DeclareSerializationList(
+			m_base
+		);
 	};
 
 public:
@@ -64,6 +70,13 @@ private:
 	void copyTransformableObject(const transformableObject& from);
 
 	std::vector<std::shared_ptr<collisionBox>> m_collisionBoxes;
+
+public:
+	// serialization
+	MAGE_DeclareSerializationList(
+		MAGE_SerializedBase(transformableBox),
+		MAGE_SerializedNVP("collisionBox", m_collisionBoxes)
+	);
 };
 
 }

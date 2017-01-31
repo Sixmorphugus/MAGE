@@ -3,7 +3,7 @@
 // mage::gmo (gameObject)
 // -------------
 // Represents an object in a scene.
-// This object is updated each and every frame.
+// This object is updated each and every tick.
 // -------------
 // Category: Core
 // Has Hooks: Yes
@@ -33,20 +33,23 @@ public:
 	virtual void preUpdate(interval elapsedSinceLastUpdate);
 	virtual void update(interval elapsedSinceLastUpdate);
 
-	// serialization
-	template<class Archive>
-	void serialize(Archive& archive);
+	gmo* getParent();
+
 protected:
 	virtual renderRecipe generateDrawRecipe();
 
 public:
-	hook<gmo*, interval> onPreUpdate;
-	hook<gmo*, interval> onUpdate;
+	hook<gmoComponent*, interval> onPreUpdate;
+	hook<gmoComponent*, interval> onUpdate;
 
 private:
 	gmo* m_gmo;
-
 	friend class gmo;
+
+public:
+	MAGE_DeclareSerializationList(
+		MAGE_SerializedBase(renderable)
+	);
 };
 
 class MAGEDLL gmo final:
@@ -79,22 +82,18 @@ public:
 
 	// components
 	unsigned int addComponent(std::shared_ptr<gmoComponent> newComp);
+	void removeComponent(std::shared_ptr<gmoComponent> rComp);
 	void removeComponent(unsigned int id);
-	unsigned int indexOfComponent(std::shared_ptr<gmoComponent> newComp) const;
+	int indexOfComponent(std::shared_ptr<gmoComponent> newComp) const;
 	std::shared_ptr<gmoComponent> getComponent(unsigned int id);
 	unsigned int getNumComponents() const;
-
-	// serialization
-	template<class Archive>
-	void serialize(Archive& archive);
 public:
 	hook<gmo*, interval> onPreUpdate;
 	hook<gmo*, interval> onUpdate;
 
-	bool test;
-
 protected:
 	virtual renderRecipe generateDrawRecipe();
+	void ownChildren();
 
 private:
 	void copyFrom(const gmo& cp);
@@ -106,30 +105,35 @@ private:
 
 	friend class scene;
 	friend class prefabMngr;
+
+public:
+	template<class Archive>
+	void serialize(Archive& archive) {
+		archive(
+			MAGE_SerializedBase(renderable),
+			MAGE_SerializedBase(renamable),
+			MAGE_SerializedBase(transformableObject),
+			MAGE_SerializedNVP("components", m_components),
+			MAGE_SerializedNVP("respectPixelGrid", m_respectPixelGrid)
+		);
+
+		ownChildren();
+	}
 };
 
-template<class Archive>
-inline void gmo::serialize(Archive& archive)
-{
-	archive(cereal::base_class<renderable>(this), 
-		cereal::base_class<renamable>(this), 
-		cereal::base_class<transformableObject>(this), 
-		m_components);
 }
 
-template<class Archive>
-inline void gmoComponent::serialize(Archive & archive)
-{
-	archive(cereal::base_class<renderable>(this));
-}
-
-}
-
-#define MAGE_DeclareScriptingGmoType(type)\
+#define MAGE_DeclareScriptingGmoTypeG(type)\
 MAGE_DeclareScriptingType(type);\
 MAGE_DeclareScriptingBaseClass(namable, type);\
 MAGE_DeclareScriptingBaseClass(renamable, type);\
+MAGE_DeclareScriptingBaseClass(transformable, type);\
+MAGE_DeclareScriptingBaseClass(transformableBox, type);\
 MAGE_DeclareScriptingBaseClass(transformableObject, type);\
 MAGE_DeclareScriptingBaseClass(renderable, type);\
-MAGE_DeclareScriptingBaseClass(scene, type);\
-MAGE_DeclareScriptingBaseClass(hookableLifetimeObject, type);
+MAGE_DeclareScriptingBaseClass(hookableLifetimeObject, type);\
+MAGE_DeclareScriptingSerializable(type);
+
+#define MAGE_DeclareScriptingGmoType(type)\
+MAGE_DeclareScriptingGmoTypeG(type)\
+MAGE_DeclareScriptingBaseClass(gmo, type);

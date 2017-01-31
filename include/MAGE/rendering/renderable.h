@@ -27,18 +27,21 @@ public:
 
 	void makeDirty();
 
+protected:
+	renderRecipe generateOptimizedDrawRecipe();
+	virtual renderRecipe generateDrawRecipe();
+
 public:
 	hook<renderable*> onRendered;
-
-protected:
-	renderRecipe generateOptimizedDrawRecipes();
-	virtual renderRecipe generateDrawRecipes();
 
 private:
 	bool m_visible;
 	bool m_dirty;
 
 	renderRecipe m_cachedDrawRecipe;
+
+public:
+	MAGE_DeclareSerializationList(m_visible);
 };
 
 }

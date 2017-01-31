@@ -77,3 +77,5 @@ MAGE_DeclareScriptingFunction(&transformableLine::getEndOffset, "getEndOffset");
 MAGE_DeclareScriptingFunction(&transformableLine::onEndMoved, "onEndMoved");
 
 MAGE_DeclareScriptingHook("transformableLineHook", transformableLine*);
+
+MAGE_DeclareSerializationBase(transformableLine);

@@ -1,6 +1,5 @@
 #include "view.h"
 
-#include "resourceScene.h"
 #include "resourceTexture.h"
 #include "helpers.h"
 #include "gameState.h"

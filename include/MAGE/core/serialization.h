@@ -2,7 +2,8 @@
 
 // Serialization
 // -------------
-// Helper functions for serializing things.
+// Helper functions and Macros for serializing things.
+// Mainly just pipe over cereal's functionality.
 // -------------
 // Category: Core
 // Has Hooks: Yes
@@ -10,13 +11,13 @@
 // -------------
 
 #include "CerealAfx.h"
-#include "StdAfx.h"
+#include "platform.h"
 
 namespace mage {
 
 namespace serialization {
 	template<class Archive, class T>
-	serializeFile(const std::string& filePath, const T& toSave) {
+	void serializeFile(const std::string& filePath, const T& toSave) {
 		std::ofstream writeOut(filePath);
 
 		if (writeOut.bad()) {
@@ -34,37 +35,68 @@ namespace serialization {
 		p::info("Saved " + filePath);
 	}
 
+	template<class Archive, class T>
+	void deserializeFile(const std::string& filePath, T& toLoad) {
+		std::ifstream writeOut(filePath);
+
+		if (writeOut.bad()) {
+			p::warn("Deserialization failed, bad file.");
+			return;
+		}
+
+		{
+			Archive arch(writeOut);
+			arch(toLoad);
+		}
+
+		writeOut.close();
+
+		p::info("Loaded " + filePath);
+	}
+
 	template<class T>
-	saveBinaryFile(const std::string& filePath, const T& toSave) {
+	void saveBinaryFile(const T& toSave, const std::string& filePath) {
 		serializeFile<cereal::PortableBinaryOutputArchive>(filePath, toSave);
 	}
 
 	template<class T>
-	saveJsonFile(const std::string& filePath, const T& toSave) {
+	void saveJsonFile(const T& toSave, const std::string& filePath) {
 		serializeFile<cereal::JSONOutputArchive>(filePath, toSave);
 	}
 
 	template<class T>
-	saveXmlFile(const std::string& filePath, const T& toSave) {
+	void saveXmlFile(const T& toSave, const std::string& filePath) {
 		serializeFile<cereal::XMLOutputArchive>(filePath, toSave);
 	}
 
 	template<class T>
-	loadBinaryFile(const std::string& filePath, const T& toLoad) {
-		serializeFile<cereal::PortableBinaryInputArchive>(filePath, toLoad);
+	void loadBinaryFile(T& toLoad, const std::string& filePath) {
+		deserializeFile<cereal::PortableBinaryInputArchive>(filePath, toLoad);
 	}
 
 	template<class T>
-	loadJsonFile(const std::string& filePath, const T& toLoad) {
-		serializeFile<cereal::JSONInputArchive>(filePath, toLoad);
+	void loadJsonFile(T& toLoad, const std::string& filePath) {
+		deserializeFile<cereal::JSONInputArchive>(filePath, toLoad);
 	}
 
 	template<class T>
-	loadXmlFile(const std::string& filePath, const T& toLoad) {
-		serializeFile<cereal::XMLInputArchive>(filePath, toLoad);
+	void loadXmlFile(T& toLoad, const std::string& filePath) {
+		deserializeFile<cereal::XMLInputArchive>(filePath, toLoad);
 	}
 }
 
 namespace s = serialization;
 
 }
+
+#define MAGE_DeclareSerializationBase(type) CEREAL_REGISTER_TYPE(type)
+
+#define MAGE_DeclareSerializationList(...)\
+template<class Archive>\
+void serialize(Archive& archive) {\
+	archive(__VA_ARGS__);\
+}
+
+#define MAGE_SerializedBase(baseClass) cereal::base_class<baseClass>(this)
+#define MAGE_SerializedNVP cereal::make_nvp
+#define MAGE_SerializedN CEREAL_NVP

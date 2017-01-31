@@ -153,6 +153,9 @@ void batchRenderer::pushFrameRecipe(renderRecipe& r)
 		pushFrameRecipe(r.children[i]);
 	}
 
+	if (r.triangles.size() == 0)
+		return; // no triangles, nothing to display
+
 	if (m_frameChunks.size() > 0) {
 		renderChunk& lastChunk = m_frameChunks[m_frameChunks.size() - 1];
 
@@ -161,22 +164,17 @@ void batchRenderer::pushFrameRecipe(renderRecipe& r)
 			// things become slightly more complicated to keep depth.
 			// thankfully, that is now the pushFrameChunk function's problem.
 			renderChunk newChunk(r.states);
-
-			for (unsigned int i = 0; i < r.triangles.size(); i++) {
-				newChunk.pushRecipe(r);
-			}
-
+			newChunk.pushRecipe(r);
 			pushFrameChunk(newChunk);
 		}
-
-		lastChunk.pushRecipe(r);
+		else {
+			lastChunk.pushRecipe(r);
+		}
 	}
 	else {
 		// create "chunk 1".
 		renderChunk newChunk(r.states);
-
 		newChunk.pushRecipe(r);
-
 		pushFrameChunk(newChunk);
 	}
 }

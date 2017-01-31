@@ -4,7 +4,6 @@
 #include "Game.h"
 
 #include "gmo.h"
-#include "resourceScene.h"
 #include "prefabs.h"
 
 using namespace mage;
@@ -14,19 +13,6 @@ scene::scene()
 {
 	m_objectListDirty = true;
 	ignoreIncorporation = false;
-}
-
-scene::scene(std::shared_ptr<resourceScene> gr)
-{
-	if (!gr)
-		return;
-
-	if (!gr->isLoaded()) {
-		p::warn("Unloaded resourceScene was passed to state instantiation, so nothing was loaded from the resource");
-	}
-	else {
-		set<>(gr.get());
-	}
 }
 
 scene::scene(std::vector<std::shared_ptr<gmo>> initialObjects)
@@ -47,47 +33,6 @@ scene::scene(const scene& gr)
 scene& scene::operator=(const scene &gr) {
 	set<>(&gr);
 	return *this;
-}
-
-std::string scene::serialize() const
-{
-	std::stringstream saveFile;
-
-	// save objects
-	for (unsigned int i = 0; i < getNumObjects(); i++) {
-		auto obj = get(i);
-
-		if (obj->getPrefabSource() != nullptr) {
-			saveFile << theGame()->prefabs->nameOf(obj->getPrefabSource()) << ";";
-			saveFile << obj->serialize();
-			saveFile << "@\n";
-		}
-		else {
-			p::warn("No prefab with which to save basic object " + std::to_string(i) + ". Map file may be incorrect.");
-		}
-	}
-
-	return saveFile.str();
-}
-
-bool scene::deserialize(std::string saveString)
-{
-	auto sss = splitString(saveString, '@');
-
-	// that should have given us a list of all the object sections in our level.
-	// now we just deserialize those as GMOs.
-	for (unsigned int i = 0; i < sss.size(); i++) {
-		auto serializedGmo = splitStringAtFirst(sss[i], ';');
-
-		auto p = theGame()->prefabs->newInstance(serializedGmo[0], this);
-
-		if (p)
-			p->deserialize(serializedGmo[1]);
-		else
-			p::warn("No such prefab as " + serializedGmo[0]);
-	}
-
-	return true;
 }
 
 void scene::preUpdateObjects(interval elapsed)
@@ -249,14 +194,11 @@ std::vector<std::shared_ptr<gmo>> scene::list() const
 using namespace chaiscript;
 
 MAGE_DeclareScriptingType(scene);
-MAGE_DeclareScriptingBaseClass(serializable, scene);
 MAGE_DeclareScriptingConstructor(scene(), "scene");
 MAGE_DeclareScriptingConstructor(scene(const scene&), "scene");
 MAGE_DeclareScriptingCopyOperator(scene);
+MAGE_DeclareScriptingSerializable(scene);
 MAGE_DeclareScriptingFunction(&scene::bringToFront, "bringToFront");
-//MAGE_DeclareScriptingFunction(&scene::clearObjects, "clearObjects");
-MAGE_DeclareScriptingFunction(&scene::serialize, "serialize");
-MAGE_DeclareScriptingFunction(&scene::deserialize, "deserialize");
 MAGE_DeclareScriptingCustom(fun<void, scene, unsigned int>(&scene::detach), "detach");
 MAGE_DeclareScriptingCustom(fun<void, scene, gmo*>(&scene::detach), "detach");
 MAGE_DeclareScriptingFunction(&scene::getNumObjects, "getNumObjects");

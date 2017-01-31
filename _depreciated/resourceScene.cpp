@@ -12,7 +12,7 @@ resourceScene::resourceScene(std::string filepath)
 
 bool resourceScene::load()
 {
-	if (!loadFromFile(getFilepath())) return false;
+	
 	return resourceFilepath::load();
 }
 
