@@ -28,6 +28,8 @@ class Game;
 // BINDING
 // -------------------------------------------------------------
 
+MAGEDLL chaiscript::Module& seGetStartupModule();
+
 class MAGEDLL scriptingEngine {
 public:
 	scriptingEngine();

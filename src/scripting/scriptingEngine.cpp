@@ -5,6 +5,7 @@ using namespace mage;
 
 // Chaiscript Scripting Engine Objects and binding
 
+#include "chaiDetours.h"
 #include "stringHelpers.h"
 #include "platform.h"
 #include "Game.h"

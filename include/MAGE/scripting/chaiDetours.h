@@ -6,6 +6,4 @@ namespace mage {
 	MAGEDLL void chaiCrash(const std::string &data);
 
 	MAGEDLL void handleEvalError(const chaiscript::exception::eval_error &e);
-
-	MAGEDLL chaiscript::Module& seGetStartupModule();
 }

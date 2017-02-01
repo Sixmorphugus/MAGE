@@ -1,5 +1,6 @@
 #include "hook.h"
 
+#include "chaiDetours.h"
 #include "scriptingEngine.h"
 
 using namespace mage;
