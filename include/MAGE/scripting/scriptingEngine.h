@@ -13,7 +13,6 @@
 
 #include "StdAfx.h"
 #include "SfmlAfx.h"
-#include "ChaiAfx.h"
 
 #include "helperMacros.h"
 #include "stringHelpers.h"
@@ -78,17 +77,6 @@ public:
 	seScriptingEngineRegistration(const chaiscript::Boxed_Value t_bv, std::string t_name); // registeres a const to the scripting engine when created
 	seScriptingEngineRegistration(chaiscript::ModulePtr mp); // registeres a const to the scripting engine when created
 };
-
-// -------------------------------------------------------------
-// FUNCTIONS
-// -------------------------------------------------------------
-
-MAGEDLL void chaiPrint(const std::string& data, const std::string& file, const std::string& function, int line);
-MAGEDLL void chaiCrash(const std::string &data);
-
-MAGEDLL void handleEvalError(const chaiscript::exception::eval_error &e);
-
-MAGEDLL chaiscript::Module& seGetStartupModule();
 
 } // namespace mage
 
