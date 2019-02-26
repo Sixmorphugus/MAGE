@@ -1,4 +1,4 @@
-#Multiplatform Arcade Game Engine
+# Multiplatform Arcade Game Engine
 ![Imgur](http://i.imgur.com/Qf707M2.png)
 
 Unfinished SFML-based game engine with:
@@ -25,3 +25,6 @@ You can easily compile the engine with help from CMake (https://cmake.org/) to g
 - Import the MAGE library into your IDE the usual way.
 - MAKE SURE TO ALSO IMPORT /MAGE'S COPY/ OF THE SFML LIBRARY - includes are in extlibs/SFML/include, and libs are in the bin dir next to MAGE.dll.
 - Honestly, MAGEDevkit is quite a bit easier...
+
+# GIFs of the engine running
+![GIF](http://i.imgur.com/m9ghGF6.gif)
