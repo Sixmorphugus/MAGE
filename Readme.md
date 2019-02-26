@@ -26,5 +26,12 @@ You can easily compile the engine with help from CMake (https://cmake.org/) to g
 - MAKE SURE TO ALSO IMPORT /MAGE'S COPY/ OF THE SFML LIBRARY - includes are in extlibs/SFML/include, and libs are in the bin dir next to MAGE.dll.
 - Honestly, MAGEDevkit is quite a bit easier...
 
-# GIFs of the engine running
+# Images of the engine running
 ![GIF](http://i.imgur.com/m9ghGF6.gif)
+![GIF](http://i.imgur.com/HSjQ5Ek.png)
+![GIF](http://i.imgur.com/pPcCPVD.gif)
+![GIF](http://i.imgur.com/PbXY6ee.gif)
+![IMG](http://i.imgur.com/xAaRhDh.png)
+![IMG](http://i.imgur.com/vLhTlaJ.png)
+![GIF](http://i.imgur.com/fvMkg7q.gif)
+![IMG](http://i.imgur.com/yok5V9q.png)
