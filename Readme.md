@@ -29,7 +29,6 @@ You can easily compile the engine with help from CMake (https://cmake.org/) to g
 # Images of the engine running
 ![GIF](http://i.imgur.com/m9ghGF6.gif)
 ![GIF](http://i.imgur.com/HSjQ5Ek.png)
-![GIF](http://i.imgur.com/pPcCPVD.gif)
 ![GIF](http://i.imgur.com/PbXY6ee.gif)
 ![IMG](http://i.imgur.com/xAaRhDh.png)
 ![IMG](http://i.imgur.com/vLhTlaJ.png)
